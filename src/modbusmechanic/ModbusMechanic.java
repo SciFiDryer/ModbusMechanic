@@ -205,7 +205,7 @@ public class ModbusMechanic {
         }
         return response;
     }
-    
+    //todo ideally this should be wrapped into an abstraction in case a different library is desired
     public static ModbusResponse generateModbusMessage(ModbusMaster master, int protocolId, int transactionId, int slaveNode, int functionCode, int register, int quantity) throws Exception
     {
         
@@ -242,41 +242,12 @@ public class ModbusMechanic {
         }
         return response;
     }
-    public static ModbusTCPResponse processModbusTCPResponse(byte[] buf)
-    {
-        int i = 0;
-        int transactionId = ((buf[i] << 8) & 0x0000ff00) | (buf[i+1] & 0x000000ff);
-        i = i +2;
-        int protocolId = ((buf[i] << 8) & 0x0000ff00) | (buf[i+1] & 0x000000ff);
-        i = i +2;
-        int length = ((buf[i] << 8) & 0x0000ff00) | (buf[i+1] & 0x000000ff);
-        i = i +2;
-        int unitId = (int)buf[i];
-        i=i+1;
-        int function = (int)buf[i];
-        i=i+1;
-        int byteCount = (int)buf[i];
-        i=i+1;
-        return new ModbusTCPResponse(transactionId, protocolId, length, unitId, function, byteCount, Arrays.copyOfRange(buf, i, i+byteCount));
-    }
     public static byte[] toU16(int i)
     {
         byte[] b = new byte[2];
         b[0] = (byte) ((i >> 8) & 0xFF);
         b[1] = (byte) (i & 0xFF);
         return b;
-    }
-    public static float bytesToFloat(byte[] b)
-    {
-        ByteBuffer bb = ByteBuffer.wrap(b);
-        byte[] bytes = new byte[] { b[2], b[3], b[0], b[1] };
-
-        bb = ByteBuffer.wrap(bytes);
-        float f = bb.getFloat();
-        System.out.println(f);
-        return f;
-        
-        
     }
     public static byte[] byteSwap(byte[] buf)
     {

@@ -616,6 +616,7 @@ public class PacketFrame extends javax.swing.JFrame {
     {
         if (lastFunctionCode == ModbusMechanic.HOLDING_REGISTER_CODE)
         {
+            //todo all references to the underlying library should be done in the modbus mechanic class
             return ((ReadHoldingRegistersResponse)lastResponse).getBytes();
         }
         if (lastFunctionCode == ModbusMechanic.INPUT_REGISTER_CODE)
