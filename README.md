@@ -21,6 +21,10 @@ This is a NetBeans project. It can be built by pulling it in the NetBeans IDE or
 
 WIP
 
+## Latest release
+
+WIP
+
 ## Completed features and planned features in GUI
 
 - [x] Read holding registers
