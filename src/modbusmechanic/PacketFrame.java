@@ -17,7 +17,7 @@ import javax.swing.*;
 import jssc.SerialPortList;
 /**
  *
- * @author jamesma
+ * @author Matt Jamesson
  */
 public class PacketFrame extends javax.swing.JFrame {
 
