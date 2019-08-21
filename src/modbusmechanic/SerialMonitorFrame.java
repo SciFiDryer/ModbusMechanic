@@ -14,7 +14,7 @@ import javax.xml.bind.DatatypeConverter;
 
 /**
  *
- * @author JAMESMA
+ * @author Matt Jamesson
  */
 public class SerialMonitorFrame extends javax.swing.JFrame {
 

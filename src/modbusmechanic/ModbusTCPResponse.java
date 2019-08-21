@@ -7,7 +7,7 @@ package modbusmechanic;
 
 /**
  *
- * @author jamesma
+ * @author Matt Jamesson
  */
 public class ModbusTCPResponse {
     int transactionId = 0;

@@ -28,7 +28,7 @@ import javax.swing.JOptionPane;
 import javax.xml.bind.DatatypeConverter;
 /**
  *
- * @author jamesma
+ * @author Matt Jamesson
  */
 public class ModbusMechanic {
 
