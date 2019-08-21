@@ -8,10 +8,10 @@ I am not a software engineer, so suggestions to improve coding conventions are w
 
 JlibModbus is a seperate, independant project that this application depends on.
 
-## Bugs
-RTU features do not fully work yet
-No release jar file yet
-Only tested on Windows
+## Known Bugs
+- RTU features do not fully work yet
+- No release jar file yet
+- Only tested on Windows
 
 ## Building
 
