@@ -43,6 +43,7 @@ public class SerialMonitorFrame extends javax.swing.JFrame {
                 {
                     try
                     {
+                        //todo this only monitors RTU frames at the time
                         ModbusMessage msg = connection.getTransport().readMessage(ModbusRequestFactory.getInstance());
                         if (msg instanceof AbstractMultipleRequest)
                         {

@@ -127,7 +127,7 @@
             <Property name="text" type="java.lang.String" value="Data bits"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="jTextField1">
+        <Component class="javax.swing.JTextField" name="dataBitsField">
           <Properties>
             <Property name="columns" type="int" value="2"/>
             <Property name="text" type="java.lang.String" value="8"/>
@@ -138,7 +138,7 @@
             <Property name="text" type="java.lang.String" value="Stop bits"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="jTextField2">
+        <Component class="javax.swing.JTextField" name="stopBitsField">
           <Properties>
             <Property name="columns" type="int" value="2"/>
             <Property name="text" type="java.lang.String" value="1"/>
@@ -176,7 +176,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="serialMonitorButton">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Launch Serial Monitor"/>
+            <Property name="text" type="java.lang.String" value="Launch RTU Serial Monitor"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="serialMonitorButtonActionPerformed"/>

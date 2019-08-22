@@ -58,7 +58,24 @@ public class ModbusMechanic {
         //Modbus.setLogLevel(Modbus.LogLevel.LEVEL_DEBUG);
         
     }
-    
+    public static void startSerialMonitorFrame(String comPort, int baud, int dataBits, int stopBits, int parity)
+    {
+        SerialParameters serialParameters = new SerialParameters(comPort, castToBaud(baud), dataBits, stopBits, castToParity(parity));
+        SerialUtils.setSerialPortFactory(new SerialPortFactoryJSSC());
+        SerialPort sp = null;
+        ModbusConnection connection = null;
+        try
+        {
+            sp = SerialUtils.createSerial(serialParameters);
+            connection = ModbusConnectionFactory.getRTU(sp);
+            connection.open();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        new SerialMonitorFrame(connection);
+    }
     public static ModbusResponse generateModbusTCPRequest(String host, int port, int protocolId, int transactionId, int slaveNode, int functionCode, int register, int quantity) throws Exception
     {
         byte[] buf = null;
@@ -116,12 +133,9 @@ public class ModbusMechanic {
         return response;
         
     }
-    public static ModbusResponse generateModbusRTURequest(String comPort, int baudRate, int dataBits, int stopBits, int parityTmp, int slaveNode, int functionCode, int register, int quantity) throws Exception
+    public static SerialPort.BaudRate castToBaud(int baudRate)
     {
-        ModbusResponse response = null;
-        Exception raisedException = null;
-        try {
-            SerialPort.BaudRate baud = null;
+        SerialPort.BaudRate baud = null;
             if (baudRate == 4800)
             {
                 baud = SerialPort.BaudRate.BAUD_RATE_4800;
@@ -146,27 +160,40 @@ public class ModbusMechanic {
             {
                 baud = SerialPort.BaudRate.BAUD_RATE_57600;
             }
-            SerialPort.Parity parity = null;
-            if (parityTmp == 0)
-            {
-                parity = SerialPort.Parity.NONE;
-            }
-            if (parityTmp == 1)
-            {
-                parity = SerialPort.Parity.ODD;
-            }
-            if (parityTmp == 2)
-            {
-                parity = SerialPort.Parity.EVEN;
-            }
-            if (parityTmp == 3)
-            {
-                parity = SerialPort.Parity.MARK;
-            }
-            if (parityTmp == 4)
-            {
-                parity = SerialPort.Parity.SPACE;
-            }
+            return baud;
+    }
+    public static SerialPort.Parity castToParity(int parityTmp)
+    {
+        SerialPort.Parity parity = null;
+        if (parityTmp == 0)
+        {
+            parity = SerialPort.Parity.NONE;
+        }
+        if (parityTmp == 1)
+        {
+            parity = SerialPort.Parity.ODD;
+        }
+        if (parityTmp == 2)
+        {
+            parity = SerialPort.Parity.EVEN;
+        }
+        if (parityTmp == 3)
+        {
+            parity = SerialPort.Parity.MARK;
+        }
+        if (parityTmp == 4)
+        {
+            parity = SerialPort.Parity.SPACE;
+        }
+        return parity;
+    }
+    public static ModbusResponse generateModbusRTURequest(String comPort, int baudRate, int dataBits, int stopBits, int parityTmp, int slaveNode, int functionCode, int register, int quantity) throws Exception
+    {
+        ModbusResponse response = null;
+        Exception raisedException = null;
+        try {
+            SerialPort.BaudRate baud = castToBaud(baudRate);
+            SerialPort.Parity parity = castToParity(parityTmp);
             SerialParameters serialParameters = new SerialParameters(comPort, baud, dataBits, stopBits, parity);
             SerialUtils.setSerialPortFactory(new SerialPortFactoryJSSC());
             ModbusMaster master = ModbusMasterFactory.createModbusMasterRTU(serialParameters);

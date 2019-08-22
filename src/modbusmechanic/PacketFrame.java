@@ -98,9 +98,9 @@ public class PacketFrame extends javax.swing.JFrame {
         jLabel13 = new javax.swing.JLabel();
         baudRateSelector = new javax.swing.JComboBox<>();
         jLabel15 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        dataBitsField = new javax.swing.JTextField();
         jLabel16 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        stopBitsField = new javax.swing.JTextField();
         serialPanel2 = new javax.swing.JPanel();
         jLabel17 = new javax.swing.JLabel();
         paritySelector = new javax.swing.JComboBox<>();
@@ -200,16 +200,16 @@ public class PacketFrame extends javax.swing.JFrame {
         jLabel15.setText("Data bits");
         serialPanel.add(jLabel15);
 
-        jTextField1.setColumns(2);
-        jTextField1.setText("8");
-        serialPanel.add(jTextField1);
+        dataBitsField.setColumns(2);
+        dataBitsField.setText("8");
+        serialPanel.add(dataBitsField);
 
         jLabel16.setText("Stop bits");
         serialPanel.add(jLabel16);
 
-        jTextField2.setColumns(2);
-        jTextField2.setText("1");
-        serialPanel.add(jTextField2);
+        stopBitsField.setColumns(2);
+        stopBitsField.setText("1");
+        serialPanel.add(stopBitsField);
 
         getContentPane().add(serialPanel);
 
@@ -224,7 +224,7 @@ public class PacketFrame extends javax.swing.JFrame {
         });
         serialPanel2.add(paritySelector);
 
-        serialMonitorButton.setText("Launch Serial Monitor");
+        serialMonitorButton.setText("Launch RTU Serial Monitor");
         serialMonitorButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 serialMonitorButtonActionPerformed(evt);
@@ -463,7 +463,8 @@ public class PacketFrame extends javax.swing.JFrame {
         {
             try
             {
-                lastResponse = ModbusMechanic.generateModbusRTURequest(comPortSelector.getItemAt(comPortSelector.getSelectedIndex()), Integer.parseInt(baudRateSelector.getItemAt(baudRateSelector.getSelectedIndex())), 8, 1, paritySelector.getSelectedIndex(), slaveNode, functionCode, register, quantity);
+                //todo error check user's input here
+                lastResponse = ModbusMechanic.generateModbusRTURequest(comPortSelector.getItemAt(comPortSelector.getSelectedIndex()), Integer.parseInt(baudRateSelector.getItemAt(baudRateSelector.getSelectedIndex())), Integer.parseInt(dataBitsField.getText()), Integer.parseInt(stopBitsField.getText()), paritySelector.getSelectedIndex(), slaveNode, functionCode, register, quantity);
             }
             catch (Exception e)
             {
@@ -687,27 +688,15 @@ public class PacketFrame extends javax.swing.JFrame {
     private void tcpMsgButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tcpMsgButtonActionPerformed
         if(tcpMsgButton.isSelected())
         {
+            protoIdField.setEnabled(true);
+            transactionField.setEnabled(true);
             destHostField.setEnabled(true);
         }
     }//GEN-LAST:event_tcpMsgButtonActionPerformed
 
     private void serialMonitorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serialMonitorButtonActionPerformed
         
-        SerialParameters serialParameters = new SerialParameters(comPortSelector.getItemAt(comPortSelector.getSelectedIndex()), SerialPort.BaudRate.BAUD_RATE_19200, 8, 1, SerialPort.Parity.NONE);
-        SerialUtils.setSerialPortFactory(new SerialPortFactoryJSerialComm());
-        SerialPort sp = null;
-        ModbusConnection connection = null;
-        try
-        {
-            sp = SerialUtils.createSerial(serialParameters);
-            connection = ModbusConnectionFactory.getRTU(sp);
-            connection.open();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        new SerialMonitorFrame(connection);
+        ModbusMechanic.startSerialMonitorFrame(comPortSelector.getItemAt(comPortSelector.getSelectedIndex()), Integer.parseInt(baudRateSelector.getItemAt(baudRateSelector.getSelectedIndex())), Integer.parseInt(dataBitsField.getText()), Integer.parseInt(stopBitsField.getText()), paritySelector.getSelectedIndex());
         
     }//GEN-LAST:event_serialMonitorButtonActionPerformed
 
@@ -739,6 +728,7 @@ public class PacketFrame extends javax.swing.JFrame {
     private javax.swing.JCheckBox byteSwapCheckbox;
     private javax.swing.JComboBox<String> comPortSelector;
     private javax.swing.JRadioButton customMessageButton;
+    private javax.swing.JTextField dataBitsField;
     private javax.swing.JTextField destHostField;
     private javax.swing.JTextField functionCodeField;
     private javax.swing.JComboBox<String> functionSelector;
@@ -769,8 +759,6 @@ public class PacketFrame extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
     private javax.swing.JSeparator jSeparator6;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
     private javax.swing.JPanel messagePanel;
     private javax.swing.JPanel messagePanel2;
     private javax.swing.JPanel modbusPanel;
@@ -789,6 +777,7 @@ public class PacketFrame extends javax.swing.JFrame {
     private javax.swing.JPanel serialPanel;
     private javax.swing.JPanel serialPanel2;
     private javax.swing.JTextField slaveNodeField;
+    private javax.swing.JTextField stopBitsField;
     private javax.swing.JRadioButton tcpMsgButton;
     private javax.swing.JTextField transactionField;
     private javax.swing.JButton transmitPacketButton;
