@@ -20,7 +20,7 @@ This project depends on the JLibModbus library and the JSSC library. Serial libr
 https://github.com/kochedykov/jlibmodbus  
 https://github.com/scream3r/java-simple-serial-connector
 
-## Building
+## Building from source
 
 This is a NetBeans project. It can be built by pulling it in the NetBeans IDE or manually compiling. The project requires the JLibModbus jar. Serial functionality requires the JSSC jar.
 
