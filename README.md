@@ -2,7 +2,7 @@
 Cross platform GUI tool for reading and testing MODBUS TCP and RTU instruments
 ## Overview
 
-Frustrated by the lack of GUI Modbus testing programs available that could interpret data types (float, unsigned int) I built this application on top of the JLibModbus library. It is a work in progress.
+Frustrated by the lack of GUI Modbus testing tools available that could interpret data types (float, unsigned int) I built this application on top of the JLibModbus library. ModbusMechanic aims to be a tool that can quickly read a float32 int16, int32, or raw hex from an instrument without the need for anything other than the dependant jar files, and the java runtime environment. It is a work in progress.
 
 I am not a software engineer, so suggestions to improve coding conventions are welcome. I'm sure there are opportunities for improvement within my code.
 
@@ -18,7 +18,7 @@ Download & extract the [latest release](#latest-release) and double click Modbus
 
 ## Dependencies
 
-This project depends on the JLibModbus library and the JSSC library. Serial library selector coming soon.
+This project depends on the JLibModbus library and the JSSC library for serial functionality. Serial library selector coming soon.
 
 https://github.com/kochedykov/jlibmodbus  
 https://github.com/scream3r/java-simple-serial-connector
