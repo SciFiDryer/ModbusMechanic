@@ -13,9 +13,16 @@ JlibModbus is a seperate, independant project that this application depends on.
 - Only tested on Windows
 - Modbus ASCII bus monitoring is not supported yet
 
-## Building
+## Dependencies
 
-This is a NetBeans project. It can be built by pulling it in the NetBeans IDE or manually compiling. The project requires the JLibModbus jar.
+This project depends on the JLibModbus library and the JSSC library. Serial library selector coming soon.
+
+https://github.com/kochedykov/jlibmodbus  
+https://github.com/scream3r/java-simple-serial-connector
+
+## Building from source
+
+This is a NetBeans project. It can be built by pulling it in the NetBeans IDE or manually compiling. The project requires the JLibModbus jar. Serial functionality requires the JSSC jar.
 
 ## Guide
 
