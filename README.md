@@ -8,8 +8,11 @@ I am not a software engineer, so suggestions to improve coding conventions are w
 
 JlibModbus is a seperate, independant project that this application depends on.
 
+## Quickstart
+
+Download & extract the [latest release](#latest-release) and double click ModbusMechanic.jar.
+
 ## Known Bugs
-- No release jar file yet
 - Only tested on Windows
 - Modbus ASCII bus monitoring is not supported yet
 
@@ -30,7 +33,7 @@ WIP
 
 ## Latest release
 
-WIP
+[ModbusMechanic.v0.1.zip](https://github.com/SciFiDryer/ModbusMechanic/releases/download/v0.1/ModbusMechanic.v0.1.zip)
 
 ## Completed features and planned features in GUI
 
