@@ -82,189 +82,83 @@ public class PacketFrame extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         buttonGroup2 = new javax.swing.ButtonGroup();
-        jLabel1 = new javax.swing.JLabel();
-        destHostField = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        slaveNodeField = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        transactionField = new javax.swing.JTextField();
-        protoIdField = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        registerField = new javax.swing.JTextField();
-        jLabel7 = new javax.swing.JLabel();
-        quantityField = new javax.swing.JTextField();
-        transmitPacketButton = new javax.swing.JButton();
-        customMessageButton = new javax.swing.JRadioButton();
-        readFloatButton = new javax.swing.JRadioButton();
-        jSeparator1 = new javax.swing.JSeparator();
-        jLabel8 = new javax.swing.JLabel();
-        responseField = new javax.swing.JLabel();
-        jSeparator2 = new javax.swing.JSeparator();
-        jLayeredPane1 = new javax.swing.JLayeredPane();
-        functionSelector = new javax.swing.JComboBox<>();
-        functionCodeField = new javax.swing.JTextField();
-        asciiReadButton = new javax.swing.JRadioButton();
-        jSeparator3 = new javax.swing.JSeparator();
-        jLabel9 = new javax.swing.JLabel();
-        byteSwapCheckbox = new javax.swing.JCheckBox();
-        wordSwapCheckbox = new javax.swing.JCheckBox();
-        jSeparator4 = new javax.swing.JSeparator();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        rawTextBox = new javax.swing.JTextArea();
-        jLabel10 = new javax.swing.JLabel();
-        u16ReadButton = new javax.swing.JRadioButton();
-        u32ReadButton = new javax.swing.JRadioButton();
-        jSeparator5 = new javax.swing.JSeparator();
+        typePanel = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
         tcpMsgButton = new javax.swing.JRadioButton();
         rtuMsgButton = new javax.swing.JRadioButton();
-        comPortSelector = new javax.swing.JComboBox<>();
+        jSeparator1 = new javax.swing.JSeparator();
+        serialPanel = new javax.swing.JPanel();
+        jLabel14 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
+        comPortSelector = new javax.swing.JComboBox<>();
         jLabel13 = new javax.swing.JLabel();
         baudRateSelector = new javax.swing.JComboBox<>();
-        jSeparator6 = new javax.swing.JSeparator();
-        jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jLabel16 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
+        serialPanel2 = new javax.swing.JPanel();
         jLabel17 = new javax.swing.JLabel();
         paritySelector = new javax.swing.JComboBox<>();
         serialMonitorButton = new javax.swing.JButton();
+        jSeparator2 = new javax.swing.JSeparator();
+        modbusPanel = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        destHostField = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        slaveNodeField = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        jLayeredPane1 = new javax.swing.JLayeredPane();
+        jPanel5 = new javax.swing.JPanel();
+        functionCodeField = new javax.swing.JTextField();
+        functionSelector = new javax.swing.JComboBox<>();
+        modbusPanel2 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        registerField = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        transactionField = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        protoIdField = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        quantityField = new javax.swing.JTextField();
+        jSeparator3 = new javax.swing.JSeparator();
+        messagePanel = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        customMessageButton = new javax.swing.JRadioButton();
+        readFloatButton = new javax.swing.JRadioButton();
+        asciiReadButton = new javax.swing.JRadioButton();
+        u16ReadButton = new javax.swing.JRadioButton();
+        u32ReadButton = new javax.swing.JRadioButton();
+        messagePanel2 = new javax.swing.JPanel();
+        transmitPacketButton = new javax.swing.JButton();
+        jSeparator4 = new javax.swing.JSeparator();
+        interpPanel = new javax.swing.JPanel();
+        jLabel9 = new javax.swing.JLabel();
+        byteSwapCheckbox = new javax.swing.JCheckBox();
+        wordSwapCheckbox = new javax.swing.JCheckBox();
+        jSeparator5 = new javax.swing.JSeparator();
+        responsePanel = new javax.swing.JPanel();
+        responseField = new javax.swing.JLabel();
+        jSeparator6 = new javax.swing.JSeparator();
+        packetPanel = new javax.swing.JPanel();
+        jLabel10 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        rawTextBox = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Modbus Mechanic");
+        setPreferredSize(new java.awt.Dimension(751, 900));
+        setSize(new java.awt.Dimension(751, 1000));
+        getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.Y_AXIS));
 
-        jLabel1.setText("IP");
-
-        destHostField.setColumns(12);
-        destHostField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                destHostFieldActionPerformed(evt);
-            }
-        });
-
-        jLabel2.setText("Slave Node");
-
-        slaveNodeField.setColumns(3);
-
-        jLabel3.setText("Transaction");
-
-        jLabel4.setText("Protocol ID");
-
-        transactionField.setColumns(5);
-        transactionField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                transactionFieldActionPerformed(evt);
-            }
-        });
-
-        protoIdField.setColumns(5);
-
-        jLabel5.setText("Function");
-
-        jLabel6.setText("Register");
-
-        registerField.setColumns(4);
-
-        jLabel7.setText("Quantity");
-
-        quantityField.setColumns(2);
-
-        transmitPacketButton.setText("Transmit packet");
-        transmitPacketButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                transmitPacketButtonActionPerformed(evt);
-            }
-        });
-
-        buttonGroup1.add(customMessageButton);
-        customMessageButton.setSelected(true);
-        customMessageButton.setText("Custom");
-        customMessageButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                customMessageButtonActionPerformed(evt);
-            }
-        });
-
-        buttonGroup1.add(readFloatButton);
-        readFloatButton.setText("Read Float");
-        readFloatButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                readFloatButtonActionPerformed(evt);
-            }
-        });
-
-        jLabel8.setText("Meassage type");
-
-        responseField.setText("Response value: ");
-
-        jLayeredPane1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        functionSelector.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Read Holding Registers (0x03)", "Read Input Registers (0x04)" }));
-        functionSelector.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                functionSelectorActionPerformed(evt);
-            }
-        });
-        jLayeredPane1.add(functionSelector, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 250, -1));
-
-        functionCodeField.setColumns(3);
-        jLayeredPane1.add(functionCodeField, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, -1, -1));
-
-        buttonGroup1.add(asciiReadButton);
-        asciiReadButton.setText("Read ASCII");
-        asciiReadButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                asciiReadButtonActionPerformed(evt);
-            }
-        });
-
-        jLabel9.setText("Interpretation options");
-
-        byteSwapCheckbox.setText("Byte Swap");
-        byteSwapCheckbox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                byteSwapCheckboxActionPerformed(evt);
-            }
-        });
-
-        wordSwapCheckbox.setText("Word Swap");
-        wordSwapCheckbox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                wordSwapCheckboxActionPerformed(evt);
-            }
-        });
-
-        rawTextBox.setColumns(20);
-        rawTextBox.setFont(new java.awt.Font("Monospaced", 0, 18)); // NOI18N
-        rawTextBox.setRows(5);
-        jScrollPane1.setViewportView(rawTextBox);
-
-        jLabel10.setText("Raw packet:");
-
-        buttonGroup1.add(u16ReadButton);
-        u16ReadButton.setText("Read U16");
-        u16ReadButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                u16ReadButtonActionPerformed(evt);
-            }
-        });
-
-        buttonGroup1.add(u32ReadButton);
-        u32ReadButton.setText("Read U32");
-        u32ReadButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                u32ReadButtonActionPerformed(evt);
-            }
-        });
+        typePanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         jLabel11.setText("Type:");
+        typePanel.add(jLabel11);
 
         buttonGroup2.add(tcpMsgButton);
         tcpMsgButton.setSelected(true);
@@ -274,6 +168,7 @@ public class PacketFrame extends javax.swing.JFrame {
                 tcpMsgButtonActionPerformed(evt);
             }
         });
+        typePanel.add(tcpMsgButton);
 
         buttonGroup2.add(rtuMsgButton);
         rtuMsgButton.setText("RTU");
@@ -282,28 +177,44 @@ public class PacketFrame extends javax.swing.JFrame {
                 rtuMsgButtonActionPerformed(evt);
             }
         });
+        typePanel.add(rtuMsgButton);
 
-        comPortSelector.setModel(new DefaultComboBoxModel(SerialPortList.getPortNames()));
-
-        jLabel12.setText("Port");
-
-        jLabel13.setText("Baud");
-
-        baudRateSelector.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "4800", "9600", "14400", "19200", "38400", "57600" }));
+        getContentPane().add(typePanel);
+        getContentPane().add(jSeparator1);
 
         jLabel14.setText("Serial settings");
+        serialPanel.add(jLabel14);
+
+        jLabel12.setText("Port");
+        serialPanel.add(jLabel12);
+
+        comPortSelector.setModel(new DefaultComboBoxModel(SerialPortList.getPortNames()));
+        serialPanel.add(comPortSelector);
+
+        jLabel13.setText("Baud");
+        serialPanel.add(jLabel13);
+
+        baudRateSelector.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "4800", "9600", "14400", "19200", "38400", "57600" }));
+        serialPanel.add(baudRateSelector);
 
         jLabel15.setText("Data bits");
+        serialPanel.add(jLabel15);
 
         jTextField1.setColumns(2);
         jTextField1.setText("8");
+        serialPanel.add(jTextField1);
 
         jLabel16.setText("Stop bits");
+        serialPanel.add(jLabel16);
 
         jTextField2.setColumns(2);
         jTextField2.setText("1");
+        serialPanel.add(jTextField2);
+
+        getContentPane().add(serialPanel);
 
         jLabel17.setText("Parity");
+        serialPanel2.add(jLabel17);
 
         paritySelector.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "None", "Odd", "Even", "Mark", "Space" }));
         paritySelector.addActionListener(new java.awt.event.ActionListener() {
@@ -311,6 +222,7 @@ public class PacketFrame extends javax.swing.JFrame {
                 paritySelectorActionPerformed(evt);
             }
         });
+        serialPanel2.add(paritySelector);
 
         serialMonitorButton.setText("Launch Serial Monitor");
         serialMonitorButton.addActionListener(new java.awt.event.ActionListener() {
@@ -318,204 +230,193 @@ public class PacketFrame extends javax.swing.JFrame {
                 serialMonitorButtonActionPerformed(evt);
             }
         });
+        serialPanel2.add(serialMonitorButton);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jSeparator4, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jSeparator2)
-                            .addComponent(jSeparator3)
-                            .addComponent(jSeparator1))
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(154, 154, 154))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(18, 18, 18)
-                                .addComponent(destHostField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel2)
-                                .addGap(18, 18, 18)
-                                .addComponent(slaveNodeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel5)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap())))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel10)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(24, 24, 24)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel8)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(customMessageButton)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(readFloatButton)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(asciiReadButton)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(u16ReadButton)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(u32ReadButton))))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(250, 250, 250)
-                                        .addComponent(transmitPacketButton))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel6)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(registerField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jLabel3)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(transactionField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jLabel4)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(protoIdField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel7)
-                                .addGap(18, 18, 18)
-                                .addComponent(quantityField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel9)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(byteSwapCheckbox)
-                                .addGap(18, 18, 18)
-                                .addComponent(wordSwapCheckbox))
-                            .addComponent(responseField))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jSeparator5)
-                    .addComponent(jSeparator6)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel11)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(tcpMsgButton)
-                                .addGap(18, 18, 18)
-                                .addComponent(rtuMsgButton))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel14)
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel12)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(comPortSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jLabel13))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel17)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(paritySelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(baudRateSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jLabel15)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jLabel16)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(serialMonitorButton))))
-                        .addGap(0, 0, Short.MAX_VALUE))))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel11)
-                    .addComponent(tcpMsgButton)
-                    .addComponent(rtuMsgButton))
-                .addGap(18, 18, 18)
-                .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(comPortSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel12)
-                    .addComponent(jLabel13)
-                    .addComponent(baudRateSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel14)
-                    .addComponent(jLabel15)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel16)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel17)
-                    .addComponent(paritySelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(serialMonitorButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
-                .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel1)
-                        .addComponent(destHostField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(slaveNodeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel5)
-                        .addComponent(jLabel2)))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(transactionField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3)
-                    .addComponent(registerField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel4)
-                    .addComponent(protoIdField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7)
-                    .addComponent(quantityField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(29, 29, 29)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel8)
-                .addGap(20, 20, 20)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(readFloatButton)
-                    .addComponent(customMessageButton)
-                    .addComponent(asciiReadButton)
-                    .addComponent(u16ReadButton)
-                    .addComponent(u32ReadButton))
-                .addGap(30, 30, 30)
-                .addComponent(transmitPacketButton)
-                .addGap(18, 18, 18)
-                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(byteSwapCheckbox)
-                    .addComponent(wordSwapCheckbox))
-                .addGap(18, 18, 18)
-                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(responseField)
-                .addGap(18, 18, 18)
-                .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel10)
-                .addGap(25, 25, 25)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
+        getContentPane().add(serialPanel2);
+        getContentPane().add(jSeparator2);
+
+        jLabel1.setText("IP");
+        modbusPanel.add(jLabel1);
+
+        destHostField.setColumns(12);
+        destHostField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                destHostFieldActionPerformed(evt);
+            }
+        });
+        modbusPanel.add(destHostField);
+
+        jLabel2.setText("Slave Node");
+        modbusPanel.add(jLabel2);
+
+        slaveNodeField.setColumns(3);
+        modbusPanel.add(slaveNodeField);
+
+        jLabel5.setText("Function");
+        modbusPanel.add(jLabel5);
+
+        jLayeredPane1.setLayout(new java.awt.CardLayout());
+
+        jPanel5.setPreferredSize(new java.awt.Dimension(250, 30));
+        jPanel5.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 0, 0));
+
+        functionCodeField.setColumns(3);
+        functionCodeField.setPreferredSize(new java.awt.Dimension(6, 26));
+        jPanel5.add(functionCodeField);
+
+        jLayeredPane1.add(jPanel5, "card4");
+
+        functionSelector.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Read Holding Registers (0x03)", "Read Input Registers (0x04)" }));
+        functionSelector.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                functionSelectorActionPerformed(evt);
+            }
+        });
+        jLayeredPane1.add(functionSelector, "card2");
+
+        modbusPanel.add(jLayeredPane1);
+
+        getContentPane().add(modbusPanel);
+
+        modbusPanel2.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+
+        jLabel6.setText("Register");
+        modbusPanel2.add(jLabel6);
+
+        registerField.setColumns(4);
+        modbusPanel2.add(registerField);
+
+        jLabel3.setText("Transaction");
+        modbusPanel2.add(jLabel3);
+
+        transactionField.setColumns(5);
+        transactionField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                transactionFieldActionPerformed(evt);
+            }
+        });
+        modbusPanel2.add(transactionField);
+
+        jLabel4.setText("Protocol ID");
+        modbusPanel2.add(jLabel4);
+
+        protoIdField.setColumns(5);
+        modbusPanel2.add(protoIdField);
+
+        jLabel7.setText("Quantity");
+        modbusPanel2.add(jLabel7);
+
+        quantityField.setColumns(2);
+        modbusPanel2.add(quantityField);
+
+        getContentPane().add(modbusPanel2);
+        getContentPane().add(jSeparator3);
+
+        jLabel8.setText("Meassage type");
+        messagePanel.add(jLabel8);
+
+        buttonGroup1.add(customMessageButton);
+        customMessageButton.setSelected(true);
+        customMessageButton.setText("Custom");
+        customMessageButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                customMessageButtonActionPerformed(evt);
+            }
+        });
+        messagePanel.add(customMessageButton);
+
+        buttonGroup1.add(readFloatButton);
+        readFloatButton.setText("Read Float");
+        readFloatButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                readFloatButtonActionPerformed(evt);
+            }
+        });
+        messagePanel.add(readFloatButton);
+
+        buttonGroup1.add(asciiReadButton);
+        asciiReadButton.setText("Read ASCII");
+        asciiReadButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                asciiReadButtonActionPerformed(evt);
+            }
+        });
+        messagePanel.add(asciiReadButton);
+
+        buttonGroup1.add(u16ReadButton);
+        u16ReadButton.setText("Read U16");
+        u16ReadButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                u16ReadButtonActionPerformed(evt);
+            }
+        });
+        messagePanel.add(u16ReadButton);
+
+        buttonGroup1.add(u32ReadButton);
+        u32ReadButton.setText("Read U32");
+        u32ReadButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                u32ReadButtonActionPerformed(evt);
+            }
+        });
+        messagePanel.add(u32ReadButton);
+
+        getContentPane().add(messagePanel);
+
+        transmitPacketButton.setText("Transmit packet");
+        transmitPacketButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                transmitPacketButtonActionPerformed(evt);
+            }
+        });
+        messagePanel2.add(transmitPacketButton);
+
+        getContentPane().add(messagePanel2);
+        getContentPane().add(jSeparator4);
+
+        interpPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+
+        jLabel9.setText("Interpretation options");
+        interpPanel.add(jLabel9);
+
+        byteSwapCheckbox.setText("Byte Swap");
+        byteSwapCheckbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                byteSwapCheckboxActionPerformed(evt);
+            }
+        });
+        interpPanel.add(byteSwapCheckbox);
+
+        wordSwapCheckbox.setText("Word Swap");
+        wordSwapCheckbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                wordSwapCheckboxActionPerformed(evt);
+            }
+        });
+        interpPanel.add(wordSwapCheckbox);
+
+        getContentPane().add(interpPanel);
+        getContentPane().add(jSeparator5);
+
+        responsePanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+
+        responseField.setText("Response value: ");
+        responsePanel.add(responseField);
+
+        getContentPane().add(responsePanel);
+        getContentPane().add(jSeparator6);
+
+        jLabel10.setText("Raw packet:");
+        packetPanel.add(jLabel10);
+
+        rawTextBox.setColumns(20);
+        rawTextBox.setFont(new java.awt.Font("Monospaced", 0, 18)); // NOI18N
+        rawTextBox.setRows(5);
+        jScrollPane1.setViewportView(rawTextBox);
+
+        packetPanel.add(jScrollPane1);
+
+        getContentPane().add(packetPanel);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -705,8 +606,8 @@ public class PacketFrame extends javax.swing.JFrame {
             protoIdField.setEnabled(true);
             transactionField.setEnabled(true);
             quantityField.setEnabled(true);
-            functionCodeField.setVisible(true);
             functionSelector.setVisible(false);
+            jPanel5.setVisible(true);
         }
     }//GEN-LAST:event_customMessageButtonActionPerformed
 
@@ -718,7 +619,7 @@ public class PacketFrame extends javax.swing.JFrame {
             transactionField.setEnabled(false);
             quantityField.setEnabled(false);
             quantityField.setText("2");
-            functionCodeField.setVisible(false);
+            jPanel5.setVisible(false);
             functionSelector.setVisible(true);
             
         }
@@ -736,7 +637,7 @@ public class PacketFrame extends javax.swing.JFrame {
             protoIdField.setEnabled(false);
             transactionField.setEnabled(false);
             quantityField.setEnabled(true);
-            functionCodeField.setVisible(false);
+            jPanel5.setVisible(false);
             functionSelector.setVisible(true);
             
         }
@@ -757,7 +658,7 @@ public class PacketFrame extends javax.swing.JFrame {
             transactionField.setEnabled(false);
             quantityField.setEnabled(false);
             quantityField.setText("1");
-            functionCodeField.setVisible(false);
+            jPanel5.setVisible(false);
             functionSelector.setVisible(true);
         }
     }//GEN-LAST:event_u16ReadButtonActionPerformed
@@ -769,7 +670,7 @@ public class PacketFrame extends javax.swing.JFrame {
             transactionField.setEnabled(false);
             quantityField.setEnabled(false);
             quantityField.setText("2");
-            functionCodeField.setVisible(false);
+            jPanel5.setVisible(false);
             functionSelector.setVisible(true);
         }
     }//GEN-LAST:event_u32ReadButtonActionPerformed
@@ -841,6 +742,7 @@ public class PacketFrame extends javax.swing.JFrame {
     private javax.swing.JTextField destHostField;
     private javax.swing.JTextField functionCodeField;
     private javax.swing.JComboBox<String> functionSelector;
+    private javax.swing.JPanel interpPanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -859,6 +761,7 @@ public class PacketFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLayeredPane jLayeredPane1;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
@@ -868,6 +771,11 @@ public class PacketFrame extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator6;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JPanel messagePanel;
+    private javax.swing.JPanel messagePanel2;
+    private javax.swing.JPanel modbusPanel;
+    private javax.swing.JPanel modbusPanel2;
+    private javax.swing.JPanel packetPanel;
     private javax.swing.JComboBox<String> paritySelector;
     private javax.swing.JTextField protoIdField;
     private javax.swing.JTextField quantityField;
@@ -875,12 +783,16 @@ public class PacketFrame extends javax.swing.JFrame {
     private javax.swing.JRadioButton readFloatButton;
     private javax.swing.JTextField registerField;
     private javax.swing.JLabel responseField;
+    private javax.swing.JPanel responsePanel;
     private javax.swing.JRadioButton rtuMsgButton;
     private javax.swing.JButton serialMonitorButton;
+    private javax.swing.JPanel serialPanel;
+    private javax.swing.JPanel serialPanel2;
     private javax.swing.JTextField slaveNodeField;
     private javax.swing.JRadioButton tcpMsgButton;
     private javax.swing.JTextField transactionField;
     private javax.swing.JButton transmitPacketButton;
+    private javax.swing.JPanel typePanel;
     private javax.swing.JRadioButton u16ReadButton;
     private javax.swing.JRadioButton u32ReadButton;
     private javax.swing.JCheckBox wordSwapCheckbox;
