@@ -15,13 +15,10 @@
  */
 package modbusmechanic;
 
-import com.intelligt.modbus.jlibmodbus.net.*;
-import com.intelligt.modbus.jlibmodbus.msg.*;
 import com.intelligt.modbus.jlibmodbus.exception.*;
 import com.intelligt.modbus.jlibmodbus.utils.DataUtils;
 import com.intelligt.modbus.jlibmodbus.msg.base.*;
 import com.intelligt.modbus.jlibmodbus.msg.response.*;
-import com.intelligt.modbus.jlibmodbus.serial.*;
 import javax.xml.bind.DatatypeConverter;
 import javax.swing.*;
 import jssc.SerialPortList;
