@@ -32,7 +32,8 @@ WIP
 - [x] Slave stress test with custom packet crafter
 - [x] Data interpreter
 - [x] Word and byte swapper
-- [ ] RTU bus monitor
+- [x] RTU bus monitor
+- [ ] ASCII bus monitor
 - [ ] Read coils
 - [ ] Write registers
 - [ ] Write coils
