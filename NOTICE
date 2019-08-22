@@ -1,0 +1,17 @@
+The libraries used in this application carry different licenses.
+
+
+
+JSSC Library
+
+
+
+This program is covered with the LGPL License. A full copy of the license can be found in the JSSC-LGPL file or from https://www.gnu.org. The source code of this program may be downloaded from https://github.com/scream3r/java-simple-serial-connector.
+
+
+
+JLibModbus Library
+
+
+
+This program is covered with the Apache 2.0 license, the same license provided with ModbusMechanic. The source code of this program can be downloaded from https://github.com/kochedykov/jlibmodbus.
