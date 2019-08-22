@@ -2,7 +2,9 @@
 Cross platform GUI tool for reading and testing MODBUS TCP and RTU instruments
 ## Overview
 
-Frustrated by the lack of GUI Modbus testing tools available that could interpret data types (float, unsigned int) I built this application on top of the JLibModbus library. ModbusMechanic aims to be a tool that can quickly read a float32, unsigned int16, unsigned int32, or raw hex from an instrument without the need for anything other than the dependant jar files, and the java runtime environment. It also aims to be 100% driverless. It is a work in progress.
+Frustrated by the lack of GUI Modbus testing tools available that could interpret data types (float, unsigned int) I built this application on top of the JLibModbus library.
+
+ModbusMechanic aims to be a tool that can quickly read a float32, unsigned int16, unsigned int32, or raw hex from an instrument without the need for anything other than the dependant jar files, and the java runtime environment. It also aims to be 100% driverless. It is a work in progress.
 
 I am not a software engineer, so suggestions to improve coding conventions are welcome. I'm sure there are opportunities for improvement within my code.
 
