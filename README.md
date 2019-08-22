@@ -17,7 +17,7 @@ JlibModbus is a seperate, independant project that this application depends on.
 
 This project depends on the JLibModbus library and the JSSC library. Serial library selector coming soon.
 
-https://github.com/kochedykov/jlibmodbus
+https://github.com/kochedykov/jlibmodbus  
 https://github.com/scream3r/java-simple-serial-connector
 
 ## Building
