@@ -1,5 +1,5 @@
 # ModbusMechanic
-Simple GUI program for reading and testing MODBUS TCP and RTU instruments
+Cross platform GUI program for reading and testing MODBUS TCP and RTU instruments
 ## Overview
 
 Frustrated by the lack of GUI Modbus testing programs available that could interpret data types (float, unsigned int) I built this application on top of the JLibModbus library. It is a work in progress.
@@ -18,6 +18,10 @@ JlibModbus is a seperate, independant project that this application depends on.
 This is a NetBeans project. It can be built by pulling it in the NetBeans IDE or manually compiling. The project requires the JLibModbus jar.
 
 ## Guide
+
+WIP
+
+## Latest release
 
 WIP
 
