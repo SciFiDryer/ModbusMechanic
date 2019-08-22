@@ -70,7 +70,8 @@ public class ModbusMechanic {
             tcpParameters.setHost(InetAddress.getByName(host));
             tcpParameters.setKeepAlive(true);
             tcpParameters.setPort(Modbus.TCP_PORT);
-            tcpParameters.setConnectionTimeout(3000);
+            //this should work but somehow doesn't
+            //tcpParameters.setConnectionTimeout(3000);
             
             ModbusMaster master = ModbusMasterFactory.createModbusMasterTCP(tcpParameters);
             master.setResponseTimeout(3000);
