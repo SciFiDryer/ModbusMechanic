@@ -19,7 +19,6 @@ import com.intelligt.modbus.jlibmodbus.exception.*;
 import com.intelligt.modbus.jlibmodbus.utils.DataUtils;
 import com.intelligt.modbus.jlibmodbus.msg.base.*;
 import com.intelligt.modbus.jlibmodbus.msg.response.*;
-import javax.xml.bind.DatatypeConverter;
 import javax.swing.*;
 import jssc.SerialPortList;
 /**
@@ -79,7 +78,6 @@ public class PacketFrame extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         buttonGroup2 = new javax.swing.ButtonGroup();
@@ -148,11 +146,11 @@ public class PacketFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Modbus Mechanic");
-        setPreferredSize(new java.awt.Dimension(751, 900));
-        setSize(new java.awt.Dimension(751, 1000));
+        setPreferredSize(new java.awt.Dimension(550, 600));
+        setSize(new java.awt.Dimension(751, 700));
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.Y_AXIS));
 
-        typePanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        typePanel.setLayout(new java.awt.FlowLayout(0));
 
         jLabel11.setText("Type:");
         typePanel.add(jLabel11);
@@ -255,7 +253,7 @@ public class PacketFrame extends javax.swing.JFrame {
         jLayeredPane1.setLayout(new java.awt.CardLayout());
 
         jPanel5.setPreferredSize(new java.awt.Dimension(250, 30));
-        jPanel5.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 0, 0));
+        jPanel5.setLayout(new java.awt.FlowLayout(0, 0, 0));
 
         functionCodeField.setColumns(3);
         functionCodeField.setPreferredSize(new java.awt.Dimension(6, 26));
@@ -275,7 +273,7 @@ public class PacketFrame extends javax.swing.JFrame {
 
         getContentPane().add(modbusPanel);
 
-        modbusPanel2.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        modbusPanel2.setLayout(new java.awt.FlowLayout(0));
 
         jLabel6.setText("Register");
         modbusPanel2.add(jLabel6);
@@ -371,7 +369,7 @@ public class PacketFrame extends javax.swing.JFrame {
         getContentPane().add(messagePanel2);
         getContentPane().add(jSeparator4);
 
-        interpPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        interpPanel.setLayout(new java.awt.FlowLayout(0));
 
         jLabel9.setText("Interpretation options");
         interpPanel.add(jLabel9);
@@ -395,7 +393,7 @@ public class PacketFrame extends javax.swing.JFrame {
         getContentPane().add(interpPanel);
         getContentPane().add(jSeparator5);
 
-        responsePanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        responsePanel.setLayout(new java.awt.FlowLayout(0));
 
         responseField.setText("Response value: ");
         responsePanel.add(responseField);
@@ -566,7 +564,7 @@ public class PacketFrame extends javax.swing.JFrame {
         byte[] responseBytes = getLastResponseBytes();
         for (int i = 0; i < responseBytes.length; i = i + 2)
         {
-            sb.append(DatatypeConverter.printHexBinary(new byte[] {responseBytes[i], responseBytes[i+1]}) + " ");
+            sb.append(ModbusMechanic.byteToHex(new byte[] {responseBytes[i], responseBytes[i+1]}) + " ");
             if ((i+2) % 4 == 0)
             {
                 sb.append("\n");

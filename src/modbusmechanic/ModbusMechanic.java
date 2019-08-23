@@ -35,7 +35,6 @@ import com.intelligt.modbus.jlibmodbus.net.*;
 import com.intelligt.modbus.jlibmodbus.net.stream.*;
 import com.intelligt.modbus.jlibmodbus.net.stream.base.*;
 import javax.swing.JOptionPane;
-import javax.xml.bind.DatatypeConverter;
 /**
  *
  * @author Matt Jamesson
@@ -298,5 +297,14 @@ public class ModbusMechanic {
             returnBuf[i+3] = buf[i+1];
         }
         return returnBuf;
+    }
+    public static String byteToHex(byte[] buf)
+    {
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < buf.length; i++)
+        {
+            sb.append(String.format("%02X", buf[i]));
+        }
+        return sb.toString();
     }
 }

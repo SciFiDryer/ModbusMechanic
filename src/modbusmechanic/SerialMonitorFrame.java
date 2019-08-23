@@ -20,7 +20,6 @@ import com.intelligt.modbus.jlibmodbus.msg.base.AbstractMultipleRequest;
 import com.intelligt.modbus.jlibmodbus.msg.base.ModbusMessage;
 import com.intelligt.modbus.jlibmodbus.msg.response.ReadHoldingRegistersResponse;
 import com.intelligt.modbus.jlibmodbus.net.*;
-import javax.xml.bind.DatatypeConverter;
 
 /**
  *
@@ -53,7 +52,7 @@ public class SerialMonitorFrame extends javax.swing.JFrame {
                         else if (msg instanceof ReadHoldingRegistersResponse)
                         {
                             ReadHoldingRegistersResponse response = (ReadHoldingRegistersResponse)msg;
-                            busTextArea.setText(busTextArea.getText() + "RESPONSE From Node:" + response.getServerAddress() + " Bytes:" + DatatypeConverter.printHexBinary(response.getBytes()) + "\n");
+                            busTextArea.setText(busTextArea.getText() + "RESPONSE From Node:" + response.getServerAddress() + " Bytes:" + ModbusMechanic.byteToHex(response.getBytes()) + "\n");
                         }
                         if (autoScrollCheckbox.isSelected())
                         {
