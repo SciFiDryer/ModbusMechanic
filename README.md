@@ -15,8 +15,9 @@ JlibModbus is a seperate, independant project that this application depends on.
 Download & extract the [latest release](#latest-release) and double click ModbusMechanic.jar.
 
 ## Known Bugs
-- Only tested on Windows
 - Modbus ASCII bus monitoring is not supported yet
+- USB serial adapters untested on MacOS
+- Untested on Linux
 
 ## Dependencies
 
