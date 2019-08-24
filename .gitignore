@@ -1,3 +1,6 @@
 /dist/
 /lib/
 /release/
+/nbproject/private/
+/build/
+/bookmarks.csv

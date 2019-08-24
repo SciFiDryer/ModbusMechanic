@@ -21,6 +21,8 @@ import com.intelligt.modbus.jlibmodbus.msg.base.*;
 import com.intelligt.modbus.jlibmodbus.msg.response.*;
 import javax.swing.*;
 import jssc.SerialPortList;
+import java.io.*;
+import java.util.*;
 /**
  *
  * @author Matt Jamesson
@@ -34,6 +36,8 @@ public class PacketFrame extends javax.swing.JFrame {
     public int lastResponseType = 0;
     public int lastFunctionCode = 0;
     public int mediumType = 0;
+    public ArrayList<String[]> bookmarkList = new ArrayList<String[]>();
+    public int selectedBookmarkIndex = 0;
     public PacketFrame()
     {
         try
@@ -81,6 +85,13 @@ public class PacketFrame extends javax.swing.JFrame {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         buttonGroup2 = new javax.swing.ButtonGroup();
+        jPanel1 = new javax.swing.JPanel();
+        bookmarkSelector = new javax.swing.JComboBox<>();
+        updateBookmarkButton = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        addBookmarkButton = new javax.swing.JButton();
+        deleteBookmarkButton = new javax.swing.JButton();
+        jSeparator7 = new javax.swing.JSeparator();
         typePanel = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
         tcpMsgButton = new javax.swing.JRadioButton();
@@ -146,11 +157,48 @@ public class PacketFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Modbus Mechanic");
-        setPreferredSize(new java.awt.Dimension(550, 600));
+        setPreferredSize(new java.awt.Dimension(650, 620));
         setSize(new java.awt.Dimension(751, 700));
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.Y_AXIS));
 
-        typePanel.setLayout(new java.awt.FlowLayout(0));
+        bookmarkSelector.setModel(new DefaultComboBoxModel(getBookmarkNames()));
+        bookmarkSelector.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bookmarkSelectorActionPerformed(evt);
+            }
+        });
+        jPanel1.add(bookmarkSelector);
+
+        updateBookmarkButton.setText("Rename/Update");
+        updateBookmarkButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateBookmarkButtonActionPerformed(evt);
+            }
+        });
+        jPanel1.add(updateBookmarkButton);
+
+        getContentPane().add(jPanel1);
+
+        addBookmarkButton.setText("Add current entry as bookmark");
+        addBookmarkButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addBookmarkButtonActionPerformed(evt);
+            }
+        });
+        jPanel2.add(addBookmarkButton);
+
+        deleteBookmarkButton.setText("Delete current bookmark");
+        deleteBookmarkButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteBookmarkButtonActionPerformed(evt);
+            }
+        });
+        jPanel2.add(deleteBookmarkButton);
+
+        getContentPane().add(jPanel2);
+        getContentPane().add(jSeparator7);
+
+        typePanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         jLabel11.setText("Type:");
         typePanel.add(jLabel11);
@@ -184,6 +232,11 @@ public class PacketFrame extends javax.swing.JFrame {
         serialPanel.add(jLabel12);
 
         comPortSelector.setModel(new DefaultComboBoxModel(SerialPortList.getPortNames()));
+        comPortSelector.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comPortSelectorActionPerformed(evt);
+            }
+        });
         serialPanel.add(comPortSelector);
 
         jLabel13.setText("Baud");
@@ -253,7 +306,7 @@ public class PacketFrame extends javax.swing.JFrame {
         jLayeredPane1.setLayout(new java.awt.CardLayout());
 
         jPanel5.setPreferredSize(new java.awt.Dimension(250, 30));
-        jPanel5.setLayout(new java.awt.FlowLayout(0, 0, 0));
+        jPanel5.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 0, 0));
 
         functionCodeField.setColumns(3);
         functionCodeField.setPreferredSize(new java.awt.Dimension(6, 26));
@@ -273,7 +326,7 @@ public class PacketFrame extends javax.swing.JFrame {
 
         getContentPane().add(modbusPanel);
 
-        modbusPanel2.setLayout(new java.awt.FlowLayout(0));
+        modbusPanel2.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         jLabel6.setText("Register");
         modbusPanel2.add(jLabel6);
@@ -369,7 +422,7 @@ public class PacketFrame extends javax.swing.JFrame {
         getContentPane().add(messagePanel2);
         getContentPane().add(jSeparator4);
 
-        interpPanel.setLayout(new java.awt.FlowLayout(0));
+        interpPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         jLabel9.setText("Interpretation options");
         interpPanel.add(jLabel9);
@@ -393,7 +446,7 @@ public class PacketFrame extends javax.swing.JFrame {
         getContentPane().add(interpPanel);
         getContentPane().add(jSeparator5);
 
-        responsePanel.setLayout(new java.awt.FlowLayout(0));
+        responsePanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         responseField.setText("Response value: ");
         responsePanel.add(responseField);
@@ -508,7 +561,39 @@ public class PacketFrame extends javax.swing.JFrame {
             displayRaw();
         }
     }//GEN-LAST:event_transmitPacketButtonActionPerformed
-
+    public String[] getBookmarkNames()
+    {
+        bookmarkList.clear();
+        String[] names = null;
+        try
+        {
+            BufferedReader br = new BufferedReader(new FileReader(new File("bookmarks.csv")));
+            String line = null;
+            line = br.readLine();
+            while (line != null)
+            {
+                //storing by position for now friendlyname,tcp/rtu,port,baud,databits,stopbits,parity,ip,slavenode,function,register,transaction,protocolid,quantity,messagetype,byteswap,wordswap
+                String[] bookmark = line.split(",");
+                if (bookmark.length== 17)
+                {
+                    bookmarkList.add(bookmark);
+                }
+                line = br.readLine();
+            }
+            br.close();
+            names = new String[bookmarkList.size()+1];
+            names[0] = "--Select Quick Access Bookmark--";
+            for (int i = 1; i < names.length; i++)
+            {
+                names[i] = bookmarkList.get(i-1)[0];
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return names;
+    }
     public byte[] getLastResponseBytes()
     {
         if (lastFunctionCode == ModbusMechanic.HOLDING_REGISTER_CODE)
@@ -525,30 +610,33 @@ public class PacketFrame extends javax.swing.JFrame {
     public void displayResponse()
     {
         byte[] result = getLastResponseBytes();
-        if (byteSwapCheckbox.isSelected())
+        if (result != null)
         {
-            result = ModbusMechanic.byteSwap(result); 
-        }
-        if (wordSwapCheckbox.isSelected())
-        {
-            result = ModbusMechanic.wordSwap(result); 
-        }
-        if (lastResponseType == ModbusMechanic.RESPONSE_TYPE_ASCII)
-        {
-            responseField.setText("Response value: " + new String(result));
-        }
-        if (lastResponseType == ModbusMechanic.RESPONSE_TYPE_FLOAT)
-        {
-             responseField.setText("Response value: " + DataUtils.toFloat(result));
-        }
-        if (lastResponseType == ModbusMechanic.RESPONSE_TYPE_UINT16)
-        {
-             responseField.setText("Response value: " + DataUtils.BeToIntArray(result)[0]);
-        }
-        if (lastResponseType == ModbusMechanic.RESPONSE_TYPE_UINT32)
-        {
-             int[] regs = DataUtils.BeToIntArray(result);
-             responseField.setText("Response value: " + (((long)regs[0]*65536) + (long)regs[1]));
+            if (byteSwapCheckbox.isSelected())
+            {
+                result = ModbusMechanic.byteSwap(result); 
+            }
+            if (wordSwapCheckbox.isSelected())
+            {
+                result = ModbusMechanic.wordSwap(result); 
+            }
+            if (lastResponseType == ModbusMechanic.RESPONSE_TYPE_ASCII)
+            {
+                responseField.setText("Response value: " + new String(result));
+            }
+            if (lastResponseType == ModbusMechanic.RESPONSE_TYPE_FLOAT)
+            {
+                 responseField.setText("Response value: " + DataUtils.toFloat(result));
+            }
+            if (lastResponseType == ModbusMechanic.RESPONSE_TYPE_UINT16)
+            {
+                 responseField.setText("Response value: " + DataUtils.BeToIntArray(result)[0]);
+            }
+            if (lastResponseType == ModbusMechanic.RESPONSE_TYPE_UINT32)
+            {
+                 int[] regs = DataUtils.BeToIntArray(result);
+                 responseField.setText("Response value: " + (((long)regs[0]*65536) + (long)regs[1]));
+            }
         }
     }
     public void displayRaw()
@@ -596,6 +684,20 @@ public class PacketFrame extends javax.swing.JFrame {
                 e.printStackTrace();
             }
     }
+    public String parseFieldToText(String field)
+    {
+        try
+        {
+            Integer.parseInt(field);
+            //as long as it is an int we get here
+            return field;
+        }
+        catch (NumberFormatException e)
+        {
+            System.err.println("Unparsable bookmark field found");
+        }
+        return "";
+    }
     private void customMessageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customMessageButtonActionPerformed
         if (customMessageButton.isSelected())
         {
@@ -638,7 +740,285 @@ public class PacketFrame extends javax.swing.JFrame {
             
         }
     }//GEN-LAST:event_asciiReadButtonActionPerformed
-
+    public void fireBookmarkEvent()
+    {
+        //subtract 1 because we have the top entry for the drop down menu
+        String[] currentBookmark = bookmarkList.get(selectedBookmarkIndex-1);
+        if (currentBookmark[1].equals("tcp"))
+        {
+            tcpMsgButton.doClick();
+        }
+        if (currentBookmark[1].equals("rtu"))
+        {
+            //this takes care of the corresponding "greying out"
+            rtuMsgButton.doClick();
+        }
+        //port
+        if (currentBookmark[3].equals("4800"))
+        {
+            baudRateSelector.setSelectedIndex(0);
+        }
+        if (currentBookmark[3].equals("9600"))
+        {
+            baudRateSelector.setSelectedIndex(1);
+        }
+        if (currentBookmark[3].equals("14400"))
+        {
+            baudRateSelector.setSelectedIndex(2);
+        }
+        if (currentBookmark[3].equals("19200"))
+        {
+            baudRateSelector.setSelectedIndex(3);
+        }
+        if (currentBookmark[3].equals("38400"))
+        {
+            baudRateSelector.setSelectedIndex(4);
+        }
+        if (currentBookmark[3].equals("57600"))
+        {
+            baudRateSelector.setSelectedIndex(5);
+        }
+        stopBitsField.setText(parseFieldToText(currentBookmark[4]));
+        dataBitsField.setText(parseFieldToText(currentBookmark[5]));
+        if (currentBookmark[6].equals("none"))
+        {
+            paritySelector.setSelectedIndex(0);
+        }
+        if (currentBookmark[6].equals("odd"))
+        {
+            paritySelector.setSelectedIndex(1);
+        }
+        if (currentBookmark[6].equals("even"))
+        {
+            paritySelector.setSelectedIndex(2);
+        }
+        if (currentBookmark[6].equals("mark"))
+        {
+            paritySelector.setSelectedIndex(3);
+        }
+        if (currentBookmark[6].equals("space"))
+        {
+            paritySelector.setSelectedIndex(4);
+        }
+        if (destHostField.isEnabled())
+        {
+            destHostField.setText(currentBookmark[7]);
+        }
+        slaveNodeField.setText(parseFieldToText(currentBookmark[8]));
+        functionCodeField.setText(parseFieldToText(currentBookmark[9]));
+        if (currentBookmark[9].equals("3"))
+        {
+            functionSelector.setSelectedIndex(0);
+        }
+        if (currentBookmark[9].equals("4"))
+        {
+            functionSelector.setSelectedIndex(1);
+        }
+        registerField.setText(parseFieldToText(currentBookmark[10]));
+        transactionField.setText(parseFieldToText(currentBookmark[11]));
+        protoIdField.setText(parseFieldToText(currentBookmark[12]));
+        quantityField.setText(parseFieldToText(currentBookmark[13]));
+        if (currentBookmark[14].equals("float"))
+        {
+            readFloatButton.doClick();
+        }
+        if (currentBookmark[14].equals("u16"))
+        {
+            u16ReadButton.doClick();
+        }
+        if (currentBookmark[14].equals("u32"))
+        {
+            u32ReadButton.doClick();
+        }
+        if (currentBookmark[14].equals("ascii"))
+        {
+            asciiReadButton.doClick();
+        }
+        if (currentBookmark[14].equals("custom"))
+        {
+            customMessageButton.doClick();
+        }
+        if (currentBookmark[15].equals("1"))
+        {
+           byteSwapCheckbox.setSelected(true);
+        }
+        if (currentBookmark[15].equals("0"))
+        {
+           byteSwapCheckbox.setSelected(false);
+        }
+        if (currentBookmark[16].equals("1"))
+        {
+           wordSwapCheckbox.setSelected(true);
+        }
+        if (currentBookmark[16].equals("0"))
+        {
+           wordSwapCheckbox.setSelected(false);
+        }
+    }
+    public void saveBookmark(int addIndex, String friendlyName)
+    {
+        
+        String[] currentBookmark = new String[17];
+        
+        currentBookmark[0] = friendlyName;
+        if (tcpMsgButton.isSelected())
+        {
+            currentBookmark[1] = "tcp";
+        }
+        if (rtuMsgButton.isSelected())
+        {
+            currentBookmark[1] = "rtu";
+        }
+        String comPort = comPortSelector.getItemAt(comPortSelector.getSelectedIndex());
+        if (comPort == null)
+        {
+            comPort = "";
+        }
+        currentBookmark[2] = comPort;
+        if (baudRateSelector.getSelectedIndex() == 0)
+        {
+            currentBookmark[3] = "4800";
+        }
+        if (baudRateSelector.getSelectedIndex() == 1)
+        {
+            currentBookmark[3] = "9600";
+        }
+        if (baudRateSelector.getSelectedIndex() == 2)
+        {
+            currentBookmark[3] = "14400";
+        }
+        if (baudRateSelector.getSelectedIndex() == 3)
+        {
+            currentBookmark[3] = "19200";
+        }
+        if (baudRateSelector.getSelectedIndex() == 4)
+        {
+            currentBookmark[3] = "38400";
+        }
+        if (baudRateSelector.getSelectedIndex() == 5)
+        {
+            currentBookmark[3] = "57600";
+        }
+        currentBookmark[4] = dataBitsField.getText();
+        currentBookmark[5] = stopBitsField.getText();
+        if (paritySelector.getSelectedIndex() == 0)
+        {
+            currentBookmark[6] = "none";
+        }
+        if (paritySelector.getSelectedIndex() == 1)
+        {
+            currentBookmark[6] = "odd";
+        }
+        if (paritySelector.getSelectedIndex() == 2)
+        {
+            currentBookmark[6] = "even";
+        }
+        if (paritySelector.getSelectedIndex() == 3)
+        {
+            currentBookmark[6] = "mark";
+        }
+        if (paritySelector.getSelectedIndex() == 4)
+        {
+            currentBookmark[6] = "space";
+        }
+        String destHost = "";
+        if (destHostField.isEnabled())
+        {
+            destHost = destHostField.getText();
+        }
+        currentBookmark[7] = destHost;
+        currentBookmark[8] = slaveNodeField.getText();
+        if (functionCodeField.isVisible())
+        {
+            currentBookmark[9] = functionCodeField.getText();
+        }
+        else
+        {
+            if (functionSelector.getSelectedIndex() == 0)
+            {
+                currentBookmark[9] = "3";
+            }
+            if (functionSelector.getSelectedIndex() == 4)
+            {
+                currentBookmark[9] = "4";
+            }
+        }
+        currentBookmark[10] = registerField.getText();
+        currentBookmark[11] = transactionField.getText();
+        currentBookmark[12] = protoIdField.getText();
+        currentBookmark[13] = quantityField.getText();
+        if(readFloatButton.isSelected())
+        {
+            currentBookmark[14] = "float";
+        }
+        if(u16ReadButton.isSelected())
+        {
+            currentBookmark[14] = "u16";
+        }
+        if(u32ReadButton.isSelected())
+        {
+            currentBookmark[14] = "u32";
+        }
+        if(asciiReadButton.isSelected())
+        {
+            currentBookmark[14] = "ascii";
+        }
+        if(customMessageButton.isSelected())
+        {
+            currentBookmark[14] = "custom";
+        }
+        String byteSwap = "0,";
+        String wordSwap = "0,";
+        if (byteSwapCheckbox.isSelected())
+        {
+            byteSwap = "1";
+        }
+        if (wordSwapCheckbox.isSelected())
+        {
+            wordSwap = "1";
+        }
+        currentBookmark[15] = byteSwap;
+        currentBookmark[16] = wordSwap;
+        bookmarkList.add(addIndex, currentBookmark);
+        
+        writeBookmarks();
+    }
+    public void saveBookmark(String friendlyName)
+    {
+        saveBookmark(bookmarkList.size(), friendlyName);
+    }
+    public boolean writeBookmarks()
+    {
+        try
+        {
+            PrintWriter pw = new PrintWriter(new FileWriter("bookmarks.csv"));
+            for (int i = 0; i < bookmarkList.size(); i++)
+            {
+                String theLine = bookmarkList.get(i)[0];
+                for (int j = 1; j < bookmarkList.get(i).length; j++)
+                {
+                    theLine = theLine + "," + bookmarkList.get(i)[j];
+                }
+                pw.println(theLine);
+            }
+            pw.flush();
+            pw.close();
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+    public void deleteBookmark(int bookmarkIndex)
+    {
+        bookmarkList.remove(bookmarkIndex);
+        writeBookmarks();
+        bookmarkSelector.setModel(new DefaultComboBoxModel<String>(getBookmarkNames()));
+        bookmarkSelector.setSelectedIndex(0);
+    }
+    
     private void byteSwapCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_byteSwapCheckboxActionPerformed
         displayResponse();
     }//GEN-LAST:event_byteSwapCheckboxActionPerformed
@@ -699,6 +1079,62 @@ public class PacketFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_paritySelectorActionPerformed
 
+    private void comPortSelectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comPortSelectorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comPortSelectorActionPerformed
+
+    private void bookmarkSelectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bookmarkSelectorActionPerformed
+        if (selectedBookmarkIndex != bookmarkSelector.getSelectedIndex() && bookmarkSelector.getSelectedIndex() != 0)
+        {
+            selectedBookmarkIndex = bookmarkSelector.getSelectedIndex();
+            fireBookmarkEvent();
+        }
+    }//GEN-LAST:event_bookmarkSelectorActionPerformed
+
+    private void addBookmarkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBookmarkButtonActionPerformed
+        String friendlyName = JOptionPane.showInputDialog(this, "Enter a name for the bookmark:");
+        if (friendlyName != null)
+        {
+            if (!friendlyName.contains(","))
+            {
+                saveBookmark(friendlyName);
+                bookmarkSelector.setModel(new DefaultComboBoxModel<String>(getBookmarkNames()));
+                bookmarkSelector.setSelectedIndex(bookmarkSelector.getItemCount()-1);
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(this, "Commas in name not supported", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_addBookmarkButtonActionPerformed
+
+    private void deleteBookmarkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBookmarkButtonActionPerformed
+        if (bookmarkSelector.getSelectedIndex() != 0)
+        {
+            deleteBookmark(bookmarkSelector.getSelectedIndex() - 1);
+        }
+    }//GEN-LAST:event_deleteBookmarkButtonActionPerformed
+
+    private void updateBookmarkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBookmarkButtonActionPerformed
+        String friendlyName = JOptionPane.showInputDialog(this, "Enter a name for the bookmark:");
+        if (friendlyName != null)
+        {
+            if (!friendlyName.contains(","))
+            {
+                //delete and re add
+                int selectedIndex = bookmarkSelector.getSelectedIndex();
+                bookmarkList.remove(selectedIndex-1);
+                saveBookmark(selectedIndex-1, friendlyName);
+                bookmarkSelector.setModel(new DefaultComboBoxModel<String>(getBookmarkNames()));
+                bookmarkSelector.setSelectedIndex(selectedIndex);
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(this, "Commas in name not supported", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_updateBookmarkButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -716,14 +1152,17 @@ public class PacketFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addBookmarkButton;
     private javax.swing.JRadioButton asciiReadButton;
     private javax.swing.JComboBox<String> baudRateSelector;
+    private javax.swing.JComboBox<String> bookmarkSelector;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.JCheckBox byteSwapCheckbox;
     private javax.swing.JComboBox<String> comPortSelector;
     private javax.swing.JRadioButton customMessageButton;
     private javax.swing.JTextField dataBitsField;
+    private javax.swing.JButton deleteBookmarkButton;
     private javax.swing.JTextField destHostField;
     private javax.swing.JTextField functionCodeField;
     private javax.swing.JComboBox<String> functionSelector;
@@ -746,6 +1185,8 @@ public class PacketFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLayeredPane jLayeredPane1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
@@ -754,6 +1195,7 @@ public class PacketFrame extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
     private javax.swing.JSeparator jSeparator6;
+    private javax.swing.JSeparator jSeparator7;
     private javax.swing.JPanel messagePanel;
     private javax.swing.JPanel messagePanel2;
     private javax.swing.JPanel modbusPanel;
@@ -779,6 +1221,7 @@ public class PacketFrame extends javax.swing.JFrame {
     private javax.swing.JPanel typePanel;
     private javax.swing.JRadioButton u16ReadButton;
     private javax.swing.JRadioButton u32ReadButton;
+    private javax.swing.JButton updateBookmarkButton;
     private javax.swing.JCheckBox wordSwapCheckbox;
     // End of variables declaration//GEN-END:variables
 }
