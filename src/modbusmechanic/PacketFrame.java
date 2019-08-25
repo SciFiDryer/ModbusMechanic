@@ -780,23 +780,23 @@ public class PacketFrame extends javax.swing.JFrame {
         }
         stopBitsField.setText(parseFieldToText(currentBookmark[4]));
         dataBitsField.setText(parseFieldToText(currentBookmark[5]));
-        if (currentBookmark[6].equals("none"))
+        if (currentBookmark[6].equalsIgnoreCase("none"))
         {
             paritySelector.setSelectedIndex(0);
         }
-        if (currentBookmark[6].equals("odd"))
+        if (currentBookmark[6].equalsIgnoreCase("odd"))
         {
             paritySelector.setSelectedIndex(1);
         }
-        if (currentBookmark[6].equals("even"))
+        if (currentBookmark[6].equalsIgnoreCase("even"))
         {
             paritySelector.setSelectedIndex(2);
         }
-        if (currentBookmark[6].equals("mark"))
+        if (currentBookmark[6].equalsIgnoreCase("mark"))
         {
             paritySelector.setSelectedIndex(3);
         }
-        if (currentBookmark[6].equals("space"))
+        if (currentBookmark[6].equalsIgnoreCase("space"))
         {
             paritySelector.setSelectedIndex(4);
         }
@@ -818,23 +818,23 @@ public class PacketFrame extends javax.swing.JFrame {
         transactionField.setText(parseFieldToText(currentBookmark[11]));
         protoIdField.setText(parseFieldToText(currentBookmark[12]));
         quantityField.setText(parseFieldToText(currentBookmark[13]));
-        if (currentBookmark[14].equals("float"))
+        if (currentBookmark[14].equalsIgnoreCase("float"))
         {
             readFloatButton.doClick();
         }
-        if (currentBookmark[14].equals("u16"))
+        if (currentBookmark[14].equalsIgnoreCase("u16"))
         {
             u16ReadButton.doClick();
         }
-        if (currentBookmark[14].equals("u32"))
+        if (currentBookmark[14].equalsIgnoreCase("u32"))
         {
             u32ReadButton.doClick();
         }
-        if (currentBookmark[14].equals("ascii"))
+        if (currentBookmark[14].equalsIgnoreCase("ascii"))
         {
             asciiReadButton.doClick();
         }
-        if (currentBookmark[14].equals("custom"))
+        if (currentBookmark[14].equalsIgnoreCase("custom"))
         {
             customMessageButton.doClick();
         }
