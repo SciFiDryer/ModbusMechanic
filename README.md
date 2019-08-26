@@ -21,14 +21,14 @@ Download & extract the [latest release](#latest-release) and double click Modbus
 
 ## Dependencies
 
-This project depends on the JLibModbus library and the JSSC library for serial functionality. Serial library selector coming soon.
+This project depends on the JLibModbus library and the PureJavaComm library for serial functionality. Serial library selector coming soon.
 
 https://github.com/kochedykov/jlibmodbus  
-https://github.com/scream3r/java-simple-serial-connector
+https://github.com/nyholku/purejavacomm
 
 ## Building from source
 
-This is a NetBeans project. It can be built by pulling it in the NetBeans IDE or manually compiling. The project requires the JLibModbus jar. Serial functionality requires the JSSC jar.
+This is a NetBeans project. It can be built by pulling it in the NetBeans IDE or manually compiling. The project requires the JLibModbus jar. Serial functionality requires the PureJavaComm and JNA libraries.
 
 ## Guide
 
@@ -36,7 +36,7 @@ WIP
 
 ## Latest release
 
-[ModbusMechanic.v0.1.zip](https://github.com/SciFiDryer/ModbusMechanic/releases/download/v0.1/ModbusMechanic.v0.1.zip)
+[ModbusMechanic.v0.2.zip](https://github.com/SciFiDryer/ModbusMechanic/releases/download/v0.2/ModbusMechanic.v0.2.zip)
 
 ## Completed features and planned features in GUI
 
@@ -46,6 +46,7 @@ WIP
 - [x] Data interpreter
 - [x] Word and byte swapper
 - [x] RTU bus monitor
+- [x] Bookmarks
 - [ ] ASCII bus monitor
 - [ ] Read coils
 - [ ] Write registers
