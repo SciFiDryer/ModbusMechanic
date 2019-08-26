@@ -591,6 +591,7 @@ public class PacketFrame extends javax.swing.JFrame {
         catch (Exception e)
         {
             e.printStackTrace();
+            names = new String[] { "--Select Quick Access Bookmark--" };
         }
         return names;
     }
