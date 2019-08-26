@@ -2,11 +2,18 @@ The libraries used in this application carry different licenses.
 
 
 
-JSSC Library
+PureJavaComm Library
 
 
 
-This program is covered with the LGPL License. A full copy of the license can be found in the JSSC-LGPL file or from https://www.gnu.org. The source code of this program may be downloaded from https://github.com/scream3r/java-simple-serial-connector.
+This program is covered with the BSD3-Clause License. A full copy of the license can be found in the PJC-BSD3 file. The source code of this program may be downloaded from https://github.com/nyholku/purejavacomm.
+
+
+JNA Library
+
+
+
+This program is dual licensed with both the LGPL and Apache 2.0 Licenses. The LGPL license can be found in the JNA-LGPL license, and the Apache 2.0 license can be found with the ModbusMechanic program. The source code for JNA can be downloaded from https://github.com/java-native-access/jna.
 
 
 
