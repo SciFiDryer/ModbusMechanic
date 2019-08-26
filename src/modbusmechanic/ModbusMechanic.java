@@ -57,10 +57,29 @@ public class ModbusMechanic {
         //Modbus.setLogLevel(Modbus.LogLevel.LEVEL_DEBUG);
         
     }
+    public static String[] getPortNames()
+    {
+        String[] portStrings = null;
+        try
+        {
+            SerialUtils.setSerialPortFactory(new SerialPortFactoryPJC());
+            Object[] ports = SerialUtils.getPortIdentifiers().toArray();
+            portStrings = new String[ports.length];
+            for (int i = 0; i < ports.length; i++)
+            {
+                portStrings[i] = ports[i].toString();
+            }
+        }
+        catch (SerialPortException e)
+        {
+            e.printStackTrace();
+        }
+        return portStrings;
+    }
     public static void startSerialMonitorFrame(String comPort, int baud, int dataBits, int stopBits, int parity)
     {
         SerialParameters serialParameters = new SerialParameters(comPort, castToBaud(baud), dataBits, stopBits, castToParity(parity));
-        SerialUtils.setSerialPortFactory(new SerialPortFactoryJSSC());
+        SerialUtils.setSerialPortFactory(new SerialPortFactoryPJC());
         SerialPort sp = null;
         ModbusConnection connection = null;
         try
@@ -194,7 +213,7 @@ public class ModbusMechanic {
             SerialPort.BaudRate baud = castToBaud(baudRate);
             SerialPort.Parity parity = castToParity(parityTmp);
             SerialParameters serialParameters = new SerialParameters(comPort, baud, dataBits, stopBits, parity);
-            SerialUtils.setSerialPortFactory(new SerialPortFactoryJSSC());
+            SerialUtils.setSerialPortFactory(new SerialPortFactoryPJC());
             ModbusMaster master = ModbusMasterFactory.createModbusMasterRTU(serialParameters);
             master.setResponseTimeout(3000);
             

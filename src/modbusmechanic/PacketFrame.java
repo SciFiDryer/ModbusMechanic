@@ -20,7 +20,7 @@ import com.intelligt.modbus.jlibmodbus.utils.DataUtils;
 import com.intelligt.modbus.jlibmodbus.msg.base.*;
 import com.intelligt.modbus.jlibmodbus.msg.response.*;
 import javax.swing.*;
-import jssc.SerialPortList;
+import com.intelligt.modbus.jlibmodbus.serial.*;
 import java.io.*;
 import java.util.*;
 /**
@@ -157,7 +157,6 @@ public class PacketFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Modbus Mechanic");
-        setPreferredSize(new java.awt.Dimension(650, 620));
         setSize(new java.awt.Dimension(751, 700));
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.Y_AXIS));
 
@@ -231,7 +230,7 @@ public class PacketFrame extends javax.swing.JFrame {
         jLabel12.setText("Port");
         serialPanel.add(jLabel12);
 
-        comPortSelector.setModel(new DefaultComboBoxModel(SerialPortList.getPortNames()));
+        comPortSelector.setModel(new DefaultComboBoxModel(ModbusMechanic.getPortNames()));
         comPortSelector.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comPortSelectorActionPerformed(evt);
@@ -282,6 +281,8 @@ public class PacketFrame extends javax.swing.JFrame {
 
         getContentPane().add(serialPanel2);
         getContentPane().add(jSeparator2);
+
+        modbusPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         jLabel1.setText("IP");
         modbusPanel.add(jLabel1);
@@ -458,7 +459,7 @@ public class PacketFrame extends javax.swing.JFrame {
         packetPanel.add(jLabel10);
 
         rawTextBox.setColumns(20);
-        rawTextBox.setFont(new java.awt.Font("Monospaced", 0, 18)); // NOI18N
+        rawTextBox.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
         rawTextBox.setRows(5);
         jScrollPane1.setViewportView(rawTextBox);
 
@@ -595,6 +596,7 @@ public class PacketFrame extends javax.swing.JFrame {
         }
         return names;
     }
+    
     public byte[] getLastResponseBytes()
     {
         if (lastFunctionCode == ModbusMechanic.HOLDING_REGISTER_CODE)
@@ -754,7 +756,13 @@ public class PacketFrame extends javax.swing.JFrame {
             //this takes care of the corresponding "greying out"
             rtuMsgButton.doClick();
         }
-        //port
+        for (int i = 0; i < comPortSelector.getItemCount(); i++)
+        {
+            if (comPortSelector.getItemAt(i).equalsIgnoreCase(currentBookmark[2]))
+            {
+                comPortSelector.setSelectedIndex(i);
+            }
+        }
         if (currentBookmark[3].equals("4800"))
         {
             baudRateSelector.setSelectedIndex(0);
@@ -779,8 +787,8 @@ public class PacketFrame extends javax.swing.JFrame {
         {
             baudRateSelector.setSelectedIndex(5);
         }
-        stopBitsField.setText(parseFieldToText(currentBookmark[4]));
-        dataBitsField.setText(parseFieldToText(currentBookmark[5]));
+        dataBitsField.setText(parseFieldToText(currentBookmark[4]));
+        stopBitsField.setText(parseFieldToText(currentBookmark[5]));
         if (currentBookmark[6].equalsIgnoreCase("none"))
         {
             paritySelector.setSelectedIndex(0);
@@ -968,8 +976,8 @@ public class PacketFrame extends javax.swing.JFrame {
         {
             currentBookmark[14] = "custom";
         }
-        String byteSwap = "0,";
-        String wordSwap = "0,";
+        String byteSwap = "0";
+        String wordSwap = "0";
         if (byteSwapCheckbox.isSelected())
         {
             byteSwap = "1";
