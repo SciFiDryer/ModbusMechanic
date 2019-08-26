@@ -73,7 +73,8 @@
     <target name="-post-compile">
     	<copy file="LICENSE" todir="${dist.dir}"/>
         <copy file="library notices/NOTICE" todir="${dist.dir}/lib"/>
-        <copy file="library notices/JSSC-LGPL" todir="${dist.dir}/lib"/>
+        <copy file="library notices/JNA-LGPL" todir="${dist.dir}/lib"/>
+        <copy file="library notices/PJC-BSD3" todir="${dist.dir}/lib"/>
     </target>
     <target name="-post-jar">
         <delete file="${dist.dir}/README.TXT"/>
