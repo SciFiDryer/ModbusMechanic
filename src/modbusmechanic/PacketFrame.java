@@ -70,6 +70,16 @@ public class PacketFrame extends javax.swing.JFrame {
         
         
         initComponents();
+        if (!ModbusMechanic.isSerialAvailable())
+        {
+            rtuMsgButton.setEnabled(false);
+            comPortSelector.setEnabled(false);
+            baudRateSelector.setEnabled(false);
+            dataBitsField.setEnabled(false);
+            stopBitsField.setEnabled(false);
+            paritySelector.setEnabled(false);
+            serialMonitorButton.setEnabled(false);
+        }
         functionSelector.setVisible(false);
         
     }
@@ -458,6 +468,7 @@ public class PacketFrame extends javax.swing.JFrame {
         jLabel10.setText("Raw packet:");
         packetPanel.add(jLabel10);
 
+        rawTextBox.setEditable(false);
         rawTextBox.setColumns(20);
         rawTextBox.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
         rawTextBox.setRows(5);

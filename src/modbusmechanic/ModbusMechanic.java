@@ -59,22 +59,39 @@ public class ModbusMechanic {
     }
     public static String[] getPortNames()
     {
-        String[] portStrings = null;
+        String[] portStrings = new String[] { "N/A" };
         try
         {
-            SerialUtils.setSerialPortFactory(new SerialPortFactoryPJC());
-            Object[] ports = SerialUtils.getPortIdentifiers().toArray();
-            portStrings = new String[ports.length];
-            for (int i = 0; i < ports.length; i++)
+            if (isSerialAvailable())
             {
-                portStrings[i] = ports[i].toString();
+                SerialUtils.setSerialPortFactory(new SerialPortFactoryPJC());
+                Object[] ports = SerialUtils.getPortIdentifiers().toArray();
+                portStrings = new String[ports.length];
+                for (int i = 0; i < ports.length; i++)
+                {
+                    portStrings[i] = ports[i].toString();
+                }
             }
         }
         catch (SerialPortException e)
         {
             e.printStackTrace();
         }
+        
         return portStrings;
+    }
+    public static boolean isSerialAvailable()
+    {
+        try
+        {
+            Class.forName("purejavacomm.SerialPortEventListener");
+        }
+        catch (ClassNotFoundException e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
     public static void startSerialMonitorFrame(String comPort, int baud, int dataBits, int stopBits, int parity)
     {

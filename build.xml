@@ -75,6 +75,7 @@
         <copy file="library notices/NOTICE" todir="${dist.dir}/lib"/>
         <copy file="library notices/JNA-LGPL" todir="${dist.dir}/lib"/>
         <copy file="library notices/PJC-BSD3" todir="${dist.dir}/lib"/>
+        <copy file="Running on MacOS X" todir="${dist.dir}"/>
     </target>
     <target name="-post-jar">
         <delete file="${dist.dir}/README.TXT"/>
