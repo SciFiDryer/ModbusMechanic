@@ -37,7 +37,6 @@ public class PacketFrame extends javax.swing.JFrame {
     public int lastFunctionCode = 0;
     public int mediumType = 0;
     public ArrayList<String[]> bookmarkList = new ArrayList<String[]>();
-    public int selectedBookmarkIndex = 0;
     public PacketFrame()
     {
         try
@@ -70,6 +69,7 @@ public class PacketFrame extends javax.swing.JFrame {
         
         
         initComponents();
+        
         if (!ModbusMechanic.isSerialAvailable())
         {
             rtuMsgButton.setEnabled(false);
@@ -97,13 +97,6 @@ public class PacketFrame extends javax.swing.JFrame {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         buttonGroup2 = new javax.swing.ButtonGroup();
-        jPanel1 = new javax.swing.JPanel();
-        bookmarkSelector = new javax.swing.JComboBox<>();
-        updateBookmarkButton = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
-        addBookmarkButton = new javax.swing.JButton();
-        deleteBookmarkButton = new javax.swing.JButton();
-        jSeparator7 = new javax.swing.JSeparator();
         typePanel = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
         tcpMsgButton = new javax.swing.JRadioButton();
@@ -166,48 +159,17 @@ public class PacketFrame extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         rawTextBox = new javax.swing.JTextArea();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        addBookmarkItem = new javax.swing.JMenuItem();
+        updateBookmarkItem = new javax.swing.JMenuItem();
+        deleteBookmarkItem = new javax.swing.JMenuItem();
+        bookmarksMenu = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Modbus Mechanic");
         setSize(new java.awt.Dimension(751, 700));
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.Y_AXIS));
-
-        bookmarkSelector.setModel(new DefaultComboBoxModel(getBookmarkNames()));
-        bookmarkSelector.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bookmarkSelectorActionPerformed(evt);
-            }
-        });
-        jPanel1.add(bookmarkSelector);
-
-        updateBookmarkButton.setText("Rename/Update");
-        updateBookmarkButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                updateBookmarkButtonActionPerformed(evt);
-            }
-        });
-        jPanel1.add(updateBookmarkButton);
-
-        getContentPane().add(jPanel1);
-
-        addBookmarkButton.setText("Add current entry as bookmark");
-        addBookmarkButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addBookmarkButtonActionPerformed(evt);
-            }
-        });
-        jPanel2.add(addBookmarkButton);
-
-        deleteBookmarkButton.setText("Delete current bookmark");
-        deleteBookmarkButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteBookmarkButtonActionPerformed(evt);
-            }
-        });
-        jPanel2.add(deleteBookmarkButton);
-
-        getContentPane().add(jPanel2);
-        getContentPane().add(jSeparator7);
 
         typePanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
@@ -480,6 +442,50 @@ public class PacketFrame extends javax.swing.JFrame {
 
         getContentPane().add(packetPanel);
 
+        jMenu1.setText("Bookmarks");
+
+        addBookmarkItem.setText("Add current entry as new bookmark");
+        addBookmarkItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addBookmarkItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(addBookmarkItem);
+
+        updateBookmarkItem.setText("Update current bookmark...");
+        updateBookmarkItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateBookmarkItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(updateBookmarkItem);
+
+        deleteBookmarkItem.setText("Delete current bookmark");
+        deleteBookmarkItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteBookmarkItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(deleteBookmarkItem);
+
+        bookmarksMenu.setText("Quick access bookmarks");
+        bookmarksMenu.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                bookmarksMenuStateChanged(evt);
+            }
+        });
+        bookmarksMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bookmarksMenuActionPerformed(evt);
+            }
+        });
+        jMenu1.add(bookmarksMenu);
+        addBookmarkItems(bookmarksMenu);
+
+        jMenuBar1.add(jMenu1);
+
+        setJMenuBar(jMenuBar1);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -578,7 +584,7 @@ public class PacketFrame extends javax.swing.JFrame {
     public String[] getBookmarkNames()
     {
         bookmarkList.clear();
-        String[] names = null;
+        String[] names = new String[] {""};
         try
         {
             BufferedReader br = new BufferedReader(new FileReader(new File("bookmarks.csv")));
@@ -595,19 +601,45 @@ public class PacketFrame extends javax.swing.JFrame {
                 line = br.readLine();
             }
             br.close();
-            names = new String[bookmarkList.size()+1];
-            names[0] = "--Select Quick Access Bookmark--";
-            for (int i = 1; i < names.length; i++)
+            names = new String[bookmarkList.size()];
+            for (int i = 0; i < names.length; i++)
             {
-                names[i] = bookmarkList.get(i-1)[0];
+                names[i] = bookmarkList.get(i)[0];
             }
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            names = new String[] { "--Select Quick Access Bookmark--" };
         }
         return names;
+    }
+    public void addBookmarkItems(JMenu theMenu)
+    {
+        String[] names = getBookmarkNames();
+        bookmarksMenu.removeAll();
+        for (int i = 0; i < names.length; i++)
+        {
+            JCheckBoxMenuItem currentItem = new JCheckBoxMenuItem(names[i]);
+            currentItem.addActionListener(new java.awt.event.ActionListener()
+            {
+                public void actionPerformed(java.awt.event.ActionEvent e)
+                {
+                    java.awt.Component[] menuItems = bookmarksMenu.getMenuComponents();
+                    for (int i =0; i < menuItems.length; i++)
+                    {
+                        if (menuItems[i] != currentItem)
+                        {
+                            ((JCheckBoxMenuItem)(menuItems[i])).setSelected(false);
+                        }
+                        else
+                        {
+                            fireBookmarkEvent(getSelectedBookmarkIndex());
+                        }
+                    }
+                } 
+            });
+            theMenu.add(currentItem);
+        }
     }
     
     public byte[] getLastResponseBytes()
@@ -752,10 +784,22 @@ public class PacketFrame extends javax.swing.JFrame {
             
         }
     }//GEN-LAST:event_asciiReadButtonActionPerformed
-    public void fireBookmarkEvent()
+    public int getSelectedBookmarkIndex()
     {
-        //subtract 1 because we have the top entry for the drop down menu
-        String[] currentBookmark = bookmarkList.get(selectedBookmarkIndex-1);
+        java.awt.Component[] menuItems = bookmarksMenu.getMenuComponents();
+        for (int i = 0; i < menuItems.length; i++)
+        {
+            if (((JCheckBoxMenuItem)(menuItems[i])).isSelected())
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+    public void fireBookmarkEvent(int selectedBookmark)
+    {
+        String[] currentBookmark = bookmarkList.get(selectedBookmark);
+        
         if (currentBookmark[1].equals("tcp"))
         {
             tcpMsgButton.doClick();
@@ -1031,10 +1075,9 @@ public class PacketFrame extends javax.swing.JFrame {
     }
     public void deleteBookmark(int bookmarkIndex)
     {
-        bookmarkList.remove(bookmarkIndex);
-        writeBookmarks();
-        bookmarkSelector.setModel(new DefaultComboBoxModel<String>(getBookmarkNames()));
-        bookmarkSelector.setSelectedIndex(0);
+            bookmarkList.remove(bookmarkIndex);
+            writeBookmarks();
+            addBookmarkItems(bookmarksMenu);
     }
     
     private void byteSwapCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_byteSwapCheckboxActionPerformed
@@ -1097,57 +1140,57 @@ public class PacketFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_comPortSelectorActionPerformed
 
-    private void bookmarkSelectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bookmarkSelectorActionPerformed
-        if (selectedBookmarkIndex != bookmarkSelector.getSelectedIndex() && bookmarkSelector.getSelectedIndex() != 0)
+    private void deleteBookmarkItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBookmarkItemActionPerformed
+        if (JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this bookmark?", "Confirm Delete", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION)
         {
-            selectedBookmarkIndex = bookmarkSelector.getSelectedIndex();
-            fireBookmarkEvent();
+            deleteBookmark(getSelectedBookmarkIndex());
         }
-    }//GEN-LAST:event_bookmarkSelectorActionPerformed
+    }//GEN-LAST:event_deleteBookmarkItemActionPerformed
 
-    private void addBookmarkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBookmarkButtonActionPerformed
-        String friendlyName = JOptionPane.showInputDialog(this, "Enter a name for the bookmark:");
-        if (friendlyName != null)
-        {
-            if (!friendlyName.contains(","))
-            {
-                saveBookmark(friendlyName);
-                bookmarkSelector.setModel(new DefaultComboBoxModel<String>(getBookmarkNames()));
-                bookmarkSelector.setSelectedIndex(bookmarkSelector.getItemCount()-1);
-            }
-            else
-            {
-                JOptionPane.showMessageDialog(this, "Commas in name not supported", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }//GEN-LAST:event_addBookmarkButtonActionPerformed
-
-    private void deleteBookmarkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBookmarkButtonActionPerformed
-        if (bookmarkSelector.getSelectedIndex() != 0)
-        {
-            deleteBookmark(bookmarkSelector.getSelectedIndex() - 1);
-        }
-    }//GEN-LAST:event_deleteBookmarkButtonActionPerformed
-
-    private void updateBookmarkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBookmarkButtonActionPerformed
+    private void updateBookmarkItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBookmarkItemActionPerformed
         String friendlyName = JOptionPane.showInputDialog(this, "Enter a name for the bookmark:");
         if (friendlyName != null)
         {
             if (!friendlyName.contains(","))
             {
                 //delete and re add
-                int selectedIndex = bookmarkSelector.getSelectedIndex();
-                bookmarkList.remove(selectedIndex-1);
-                saveBookmark(selectedIndex-1, friendlyName);
-                bookmarkSelector.setModel(new DefaultComboBoxModel<String>(getBookmarkNames()));
-                bookmarkSelector.setSelectedIndex(selectedIndex);
+                int selectedIndex = getSelectedBookmarkIndex();
+                bookmarkList.remove(selectedIndex);
+                saveBookmark(selectedIndex, friendlyName);
+                addBookmarkItems(bookmarksMenu);
+                ((JCheckBoxMenuItem)(bookmarksMenu.getMenuComponent(selectedIndex))).setSelected(true);
             }
             else
             {
                 JOptionPane.showMessageDialog(this, "Commas in name not supported", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
-    }//GEN-LAST:event_updateBookmarkButtonActionPerformed
+    }//GEN-LAST:event_updateBookmarkItemActionPerformed
+
+    private void addBookmarkItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBookmarkItemActionPerformed
+        String friendlyName = JOptionPane.showInputDialog(this, "Enter a name for the bookmark:");
+        if (friendlyName != null)
+        {
+            if (!friendlyName.contains(","))
+            {
+                saveBookmark(friendlyName);
+                addBookmarkItems(bookmarksMenu);
+                ((JCheckBoxMenuItem)(bookmarksMenu.getMenuComponent(bookmarksMenu.getMenuComponents().length-1))).setSelected(true);
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(this, "Commas in name not supported", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_addBookmarkItemActionPerformed
+
+    private void bookmarksMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bookmarksMenuActionPerformed
+        
+    }//GEN-LAST:event_bookmarksMenuActionPerformed
+
+    private void bookmarksMenuStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_bookmarksMenuStateChanged
+        
+    }//GEN-LAST:event_bookmarksMenuStateChanged
 
     /**
      * @param args the command line arguments
@@ -1166,17 +1209,17 @@ public class PacketFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addBookmarkButton;
+    private javax.swing.JMenuItem addBookmarkItem;
     private javax.swing.JRadioButton asciiReadButton;
     private javax.swing.JComboBox<String> baudRateSelector;
-    private javax.swing.JComboBox<String> bookmarkSelector;
+    private javax.swing.JMenu bookmarksMenu;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.JCheckBox byteSwapCheckbox;
     private javax.swing.JComboBox<String> comPortSelector;
     private javax.swing.JRadioButton customMessageButton;
     private javax.swing.JTextField dataBitsField;
-    private javax.swing.JButton deleteBookmarkButton;
+    private javax.swing.JMenuItem deleteBookmarkItem;
     private javax.swing.JTextField destHostField;
     private javax.swing.JTextField functionCodeField;
     private javax.swing.JComboBox<String> functionSelector;
@@ -1199,8 +1242,8 @@ public class PacketFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLayeredPane jLayeredPane1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
@@ -1209,7 +1252,6 @@ public class PacketFrame extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
     private javax.swing.JSeparator jSeparator6;
-    private javax.swing.JSeparator jSeparator7;
     private javax.swing.JPanel messagePanel;
     private javax.swing.JPanel messagePanel2;
     private javax.swing.JPanel modbusPanel;
@@ -1235,7 +1277,7 @@ public class PacketFrame extends javax.swing.JFrame {
     private javax.swing.JPanel typePanel;
     private javax.swing.JRadioButton u16ReadButton;
     private javax.swing.JRadioButton u32ReadButton;
-    private javax.swing.JButton updateBookmarkButton;
+    private javax.swing.JMenuItem updateBookmarkItem;
     private javax.swing.JCheckBox wordSwapCheckbox;
     // End of variables declaration//GEN-END:variables
 }
