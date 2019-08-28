@@ -80,7 +80,9 @@ public class PacketFrame extends javax.swing.JFrame {
             paritySelector.setEnabled(false);
             serialMonitorButton.setEnabled(false);
         }
-        functionSelector.setVisible(false);
+        functionSelector.setVisible(true);
+        jPanel5.setVisible(false);
+        
         
     }
 
@@ -718,8 +720,6 @@ public class PacketFrame extends javax.swing.JFrame {
             protoIdField.setEnabled(true);
             transactionField.setEnabled(true);
             quantityField.setEnabled(true);
-            functionSelector.setVisible(false);
-            jPanel5.setVisible(true);
         }
     }//GEN-LAST:event_customMessageButtonActionPerformed
 
@@ -731,8 +731,6 @@ public class PacketFrame extends javax.swing.JFrame {
             transactionField.setEnabled(false);
             quantityField.setEnabled(false);
             quantityField.setText("2");
-            jPanel5.setVisible(false);
-            functionSelector.setVisible(true);
             
         }
         
@@ -1054,8 +1052,6 @@ public class PacketFrame extends javax.swing.JFrame {
             transactionField.setEnabled(false);
             quantityField.setEnabled(false);
             quantityField.setText("1");
-            jPanel5.setVisible(false);
-            functionSelector.setVisible(true);
         }
     }//GEN-LAST:event_u16ReadButtonActionPerformed
 
@@ -1066,8 +1062,6 @@ public class PacketFrame extends javax.swing.JFrame {
             transactionField.setEnabled(false);
             quantityField.setEnabled(false);
             quantityField.setText("2");
-            jPanel5.setVisible(false);
-            functionSelector.setVisible(true);
         }
     }//GEN-LAST:event_u32ReadButtonActionPerformed
 
