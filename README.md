@@ -47,9 +47,10 @@ WIP
 - [x] Word and byte swapper
 - [x] RTU bus monitor
 - [x] Bookmarks
+- [x] Master simulator
+- [x] Slave simulator
 - [ ] ASCII bus monitor
 - [ ] Read coils
 - [ ] Write registers
 - [ ] Write coils
-- [ ] Master simulator
 - [ ] Data logger
