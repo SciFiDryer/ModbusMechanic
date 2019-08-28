@@ -589,6 +589,8 @@ public class PacketFrame extends javax.swing.JFrame {
         {
             BufferedReader br = new BufferedReader(new FileReader(new File("bookmarks.csv")));
             String line = null;
+            //skip first header line
+            br.readLine();
             line = br.readLine();
             while (line != null)
             {
@@ -1054,6 +1056,7 @@ public class PacketFrame extends javax.swing.JFrame {
         try
         {
             PrintWriter pw = new PrintWriter(new FileWriter("bookmarks.csv"));
+            pw.println("friendlyname,tcp/rtu,port,baud,databits,stopbits,parity,ip,slavenode,function,register,transaction,protocolid,quantity,messagetype,byteswap,wordswap");
             for (int i = 0; i < bookmarkList.size(); i++)
             {
                 String theLine = bookmarkList.get(i)[0];
