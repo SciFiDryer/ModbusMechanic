@@ -19,6 +19,7 @@ import java.io.*;
 import java.nio.*;
 import java.util.Arrays;
 import com.intelligt.modbus.jlibmodbus.*;
+import com.intelligt.modbus.jlibmodbus.data.*;
 import com.intelligt.modbus.jlibmodbus.exception.*;
 import com.intelligt.modbus.jlibmodbus.master.*;
 import com.intelligt.modbus.jlibmodbus.slave.*;
@@ -51,6 +52,12 @@ public class ModbusMechanic {
     public static int RESPONSE_TYPE_RAW = 5;
     public static int HOLDING_REGISTER_CODE = 3;
     public static int INPUT_REGISTER_CODE = 4;
+    public static int SLAVE_SIMULATOR_TCP = 1;
+    public static int SLAVE_SIMULATOR_RTU = 2;
+    public static int DATA_TYPE_FLOAT = 1;
+    public static int DATA_TYPE_INT_16 = 2;
+    public static ModbusSlave slave = null;
+    public static ByteBuffer hrBuf = null;
     public static void main(String[] args)
     {
         new PacketFrame().setVisible(true);
@@ -342,5 +349,86 @@ public class ModbusMechanic {
             sb.append(String.format("%02X", buf[i]));
         }
         return sb.toString();
+    }
+    public static void startSlaveSimulator(int port)
+    {
+        try
+        {
+            TcpParameters parameters = new TcpParameters();
+            parameters.setHost(InetAddress.getLocalHost());
+            parameters.setPort(port);
+            slave = ModbusSlaveFactory.createModbusSlaveTCP(parameters);
+            slave.setServerAddress(1);
+            slave.listen();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+    public static void startSlaveSimulatorRTU(int serverAddress, String comPort, int baud, int dataBits, int stopBits, int parity)
+    {
+        try
+        {
+            SerialParameters parameters = new SerialParameters();
+            parameters.setDevice(comPort);
+            parameters.setBaudRate(castToBaud(baud));
+            parameters.setDataBits(dataBits);
+            parameters.setStopBits(stopBits);
+            parameters.setParity(castToParity(parity));
+            slave = ModbusSlaveFactory.createModbusSlaveRTU(parameters);
+            slave.setServerAddress(serverAddress);
+            slave.listen();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+    public static void setSimulatorRegisterValue(int function, int register, byte[] bytes)
+    {
+        try
+        {
+            if (hrBuf == null)
+            {
+                hrBuf = ByteBuffer.allocate(131070);
+                for (int i = 0; i < hrBuf.capacity(); i++)
+                {
+                    byte b = 0;
+                    hrBuf.put(b);
+                }
+            }
+            if (function == 3)
+            {
+                hrBuf.position(register*2);
+                hrBuf.put(bytes);
+                ModbusHoldingRegisters hr = new ModbusHoldingRegisters(65535);
+                hr.setBytesBe(hrBuf.array());
+                slave.getDataHolder().setHoldingRegisters(hr);
+            }
+            if (function == 2)
+            {
+                hrBuf.position(register*2);
+                hrBuf.put(bytes);
+                ModbusHoldingRegisters hr = new ModbusHoldingRegisters(65535);
+                hr.setBytesBe(hrBuf.array());
+                slave.getDataHolder().setInputRegisters(hr);
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+    public static void stopSlaveSimulator()
+    {
+        try
+        {
+            slave.shutdown();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 }

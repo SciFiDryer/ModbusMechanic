@@ -160,6 +160,8 @@ public class PacketFrame extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         rawTextBox = new javax.swing.JTextArea();
         jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu2 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
         addBookmarkItem = new javax.swing.JMenuItem();
         updateBookmarkItem = new javax.swing.JMenuItem();
@@ -442,6 +444,18 @@ public class PacketFrame extends javax.swing.JFrame {
 
         getContentPane().add(packetPanel);
 
+        jMenu2.setText("Tools");
+
+        jMenuItem1.setText("Start Slave Simulator...");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem1);
+
+        jMenuBar1.add(jMenu2);
+
         jMenu1.setText("Bookmarks");
 
         addBookmarkItem.setText("Add current entry as new bookmark");
@@ -508,7 +522,14 @@ public class PacketFrame extends javax.swing.JFrame {
         int protocolId = 0;
         if (customMessageButton.isSelected())
         {
-            functionCode = Integer.parseInt(functionCodeField.getText());
+            if (functionSelector.getSelectedItem().equals("Read Holding Registers (0x03)"))
+            {
+                functionCode = ModbusMechanic.HOLDING_REGISTER_CODE;
+            }
+            else if (functionSelector.getSelectedItem().equals("Read Input Registers (0x04)"))
+            {
+                functionCode = ModbusMechanic.INPUT_REGISTER_CODE;
+            }
             transactionId = Integer.parseInt(transactionField.getText());
             protocolId = Integer.parseInt(protoIdField.getText());
             quantity = Integer.parseInt(quantityField.getText());
@@ -1195,6 +1216,22 @@ public class PacketFrame extends javax.swing.JFrame {
         
     }//GEN-LAST:event_bookmarksMenuStateChanged
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        if (JOptionPane.showOptionDialog(this, "What type of simulator?", "Simulator type", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] {"TCP", "RTU" }, null) == 0)
+        {
+            System.out.println("tcp started");
+            ModbusMechanic.startSlaveSimulator(502);
+        }
+        else
+        {
+            int slaveId = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter the Slave ID", "1"));
+            ModbusMechanic.startSlaveSimulatorRTU(slaveId, comPortSelector.getItemAt(comPortSelector.getSelectedIndex()), Integer.parseInt(baudRateSelector.getItemAt(baudRateSelector.getSelectedIndex())), Integer.parseInt(dataBitsField.getText()), Integer.parseInt(stopBitsField.getText()), paritySelector.getSelectedIndex());
+        }
+        
+        new SlaveSimulatorFrame(1).setVisible(true);
+        
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1246,7 +1283,9 @@ public class PacketFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
