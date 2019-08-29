@@ -36,12 +36,14 @@ WIP
 
 ## Latest release
 
-[ModbusMechanic.v0.3.zip](https://github.com/SciFiDryer/ModbusMechanic/releases/download/v0.3/ModbusMechanic.v0.3.zip)
+[ModbusMechanic.v0.4.zip](https://github.com/SciFiDryer/ModbusMechanic/releases/download/v0.4/ModbusMechanic.v0.4.zip)
 
 ## Completed features and planned features in GUI
 
 - [x] Read holding registers
 - [x] Read input registers
+- [x] Read coils
+- [x] Read discretes
 - [x] Slave stress test with custom packet crafter
 - [x] Data interpreter
 - [x] Word and byte swapper
@@ -50,7 +52,6 @@ WIP
 - [x] Master simulator
 - [x] Slave simulator
 - [ ] ASCII bus monitor
-- [ ] Read coils
 - [ ] Write registers
 - [ ] Write coils
 - [ ] Data logger
