@@ -290,58 +290,32 @@ public class ModbusMechanic {
         {
             master.connect();
         }
+        AbstractMultipleRequest request = null;
         if (functionCode == 1)
         {
-            ReadCoilsRequest request = new ReadCoilsRequest();
-            request.setServerAddress(slaveNode);
-            request.setStartAddress(register);
-            request.setQuantity(quantity);
-            if (master instanceof ModbusMasterTCP)
-            {
-                master.setTransactionId(transactionId);
-                request.setProtocolId(protocolId);
-            }
-            response = master.processRequest(request);
+            request = new ReadCoilsRequest();
         }
         if (functionCode == 2)
         {
-            ReadDiscreteInputsRequest request = new ReadDiscreteInputsRequest();
-            request.setServerAddress(slaveNode);
-            request.setStartAddress(register);
-            request.setQuantity(quantity);
-            if (master instanceof ModbusMasterTCP)
-            {
-                master.setTransactionId(transactionId);
-                request.setProtocolId(protocolId);
-            }
-            response = master.processRequest(request);
+            request = new ReadDiscreteInputsRequest();
         }
         if (functionCode == 3)
         {
-            ReadHoldingRegistersRequest request = new ReadHoldingRegistersRequest();
-            request.setServerAddress(slaveNode);
-            request.setStartAddress(register);
-            request.setQuantity(quantity);
-            if (master instanceof ModbusMasterTCP)
-            {
-                master.setTransactionId(transactionId);
-                request.setProtocolId(protocolId);
-            }
-            response = master.processRequest(request);
+            request = new ReadHoldingRegistersRequest();
         }
         else if (functionCode == 4)
         {
-            ReadInputRegistersRequest request = new ReadInputRegistersRequest();
-            request.setServerAddress(slaveNode);
-            request.setStartAddress(register);
-            request.setQuantity(quantity);
-            if (master instanceof ModbusMasterTCP)
-            {
-                master.setTransactionId(transactionId);
-                request.setProtocolId(protocolId);
-            }
-            response = master.processRequest(request);
+            request = new ReadInputRegistersRequest();
         }
+        request.setServerAddress(slaveNode);
+        request.setStartAddress(register);
+        request.setQuantity(quantity);
+        if (master instanceof ModbusMasterTCP)
+        {
+            master.setTransactionId(transactionId);
+            request.setProtocolId(protocolId);
+        }
+        response = master.processRequest(request);
         return response;
     }
     public static byte[] toU16(int i)

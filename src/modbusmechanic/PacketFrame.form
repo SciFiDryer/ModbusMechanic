@@ -21,6 +21,14 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem1ActionPerformed"/>
               </Events>
             </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="rtuSerialMonitorItem">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Start RTU Serial Monitor..."/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rtuSerialMonitorItemActionPerformed"/>
+              </Events>
+            </MenuItem>
           </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="jMenu1">
@@ -207,12 +215,6 @@
             <Property name="text" type="java.lang.String" value="1"/>
           </Properties>
         </Component>
-      </SubComponents>
-    </Container>
-    <Container class="javax.swing.JPanel" name="serialPanel2">
-
-      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
-      <SubComponents>
         <Component class="javax.swing.JLabel" name="jLabel17">
           <Properties>
             <Property name="text" type="java.lang.String" value="Parity"/>
@@ -236,14 +238,6 @@
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
-        </Component>
-        <Component class="javax.swing.JButton" name="serialMonitorButton">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Launch RTU Serial Monitor"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="serialMonitorButtonActionPerformed"/>
-          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -319,11 +313,14 @@
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="4">
-                    <StringItem index="0" value="Read Holding Registers (0x03)"/>
-                    <StringItem index="1" value="Read Input Registers (0x04)"/>
-                    <StringItem index="2" value="Read Coils (0x01)"/>
-                    <StringItem index="3" value="Read Discrete Inputs (0x02)"/>
+                    <StringItem index="0" value="Read Coils (0x01)"/>
+                    <StringItem index="1" value="Read Discrete Inputs (0x02)"/>
+                    <StringItem index="2" value="Read Holding Registers (0x03)"/>
+                    <StringItem index="3" value="Read Input Registers (0x04)"/>
                   </StringArray>
+                </Property>
+                <Property name="selectedIndex" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="2" type="code"/>
                 </Property>
               </Properties>
               <Events>
