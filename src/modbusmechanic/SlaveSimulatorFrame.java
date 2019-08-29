@@ -180,6 +180,13 @@ public class SlaveSimulatorFrame extends javax.swing.JFrame {
             if (registerTypeSelector.getSelectedItem().equals("Coils"))
             {
                 functionLabel = new javax.swing.JLabel("Coil " + registerNumber);
+                typeLabel = new javax.swing.JLabel("Type: Bit");
+                String boolValue = "false";
+                if (onButton.isSelected())
+                {
+                    boolValue = "true";
+                }
+                valueLabel = new javax.swing.JLabel("Value: " + boolValue);
                 functionCode = 1;
             }
             if (registerTypeSelector.getSelectedItem().equals("Discrete"))
@@ -245,40 +252,47 @@ public class SlaveSimulatorFrame extends javax.swing.JFrame {
                 if (!error)
                 {
                     ModbusMechanic.setSimulatorRegisterValue(functionCode, registerNumber, buf);
-                    javax.swing.JPanel registerPanel = new javax.swing.JPanel();
-                    registerPanel.setLayout(new java.awt.FlowLayout());;
-                    registerPanel.add(functionLabel);
-                    registerPanel.add(typeLabel);
-                    registerPanel.add(valueLabel);
-                    javax.swing.JButton deleteButton = new javax.swing.JButton("Delete");
-                    final int aFunctionCode = functionCode;
-                    final int aRegisterNumber = registerNumber;
-                    final int aDataType = dataType;
-                    javax.swing.JSeparator seperator = new javax.swing.JSeparator();
-                    deleteButton.addActionListener(new java.awt.event.ActionListener(){
-                        public void actionPerformed(java.awt.event.ActionEvent e)
-                        {
-                            if (aDataType == 1)
-                            {
-                                ModbusMechanic.setSimulatorRegisterValue(aFunctionCode,aRegisterNumber, new byte[] {0,0,0,0});
-
-                            }
-                            java.awt.Component[] components = getContentPane().getComponents();
-                            for (int i = 0; i < components.length; i++)
-                            {
-                                if (components[i] == registerPanel || components[i] == seperator)
-                                {
-                                    getContentPane().remove(components[i]);
-                                }
-                            }
-                            pack();
-                        }
-                    });
-                    registerPanel.add(deleteButton);
-                    getContentPane().add(seperator);
-                    getContentPane().add(registerPanel);
-                    pack();
+                    
                 }
+            }
+            if (!error)
+            {
+                javax.swing.JPanel registerPanel = new javax.swing.JPanel();
+                registerPanel.setLayout(new java.awt.FlowLayout());;
+                registerPanel.add(functionLabel);
+                registerPanel.add(typeLabel);
+                registerPanel.add(valueLabel);
+                javax.swing.JButton deleteButton = new javax.swing.JButton("Delete");
+                final int aFunctionCode = functionCode;
+                final int aRegisterNumber = registerNumber;
+                final int aDataType = dataType;
+                javax.swing.JSeparator seperator = new javax.swing.JSeparator();
+                deleteButton.addActionListener(new java.awt.event.ActionListener(){
+                    public void actionPerformed(java.awt.event.ActionEvent e)
+                    {
+                        if (aFunctionCode == 1 || aFunctionCode == 2)
+                        {
+                            ModbusMechanic.setSimulatorCoilValue(aFunctionCode,aRegisterNumber, false);
+                        }
+                        if (aFunctionCode == 3 || aFunctionCode == 4)
+                        {
+                            ModbusMechanic.setSimulatorRegisterValue(aFunctionCode,aRegisterNumber, new byte[] {0,0,0,0});
+                        }
+                        java.awt.Component[] components = getContentPane().getComponents();
+                        for (int i = 0; i < components.length; i++)
+                        {
+                            if (components[i] == registerPanel || components[i] == seperator)
+                            {
+                                getContentPane().remove(components[i]);
+                            }
+                        }
+                        pack();
+                    }
+                });
+                registerPanel.add(deleteButton);
+                getContentPane().add(seperator);
+                getContentPane().add(registerPanel);
+                pack();
             }
         }
         catch(Exception e)
