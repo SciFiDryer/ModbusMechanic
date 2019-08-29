@@ -50,7 +50,10 @@ public class ModbusMechanic {
     public static int RESPONSE_TYPE_UINT16 = 3;
     public static int RESPONSE_TYPE_UINT32 = 4;
     public static int RESPONSE_TYPE_RAW = 5;
+    public static int RESPONSE_TYPE_BOOLEAN = 6;
     public static int HOLDING_REGISTER_CODE = 3;
+    public static int READ_COILS_CODE = 1;
+    public static int READ_DI_CODE = 2;
     public static int INPUT_REGISTER_CODE = 4;
     public static int SLAVE_SIMULATOR_TCP = 1;
     public static int SLAVE_SIMULATOR_RTU = 2;
@@ -58,6 +61,9 @@ public class ModbusMechanic {
     public static int DATA_TYPE_INT_16 = 2;
     public static ModbusSlave slave = null;
     public static ByteBuffer hrBuf = null;
+    public static ByteBuffer irBuf = null;
+    public static ModbusCoils mc = new ModbusCoils(65535);
+    public static ModbusCoils di = new ModbusCoils(65535);
     public static void main(String[] args)
     {
         new PacketFrame().setVisible(true);
@@ -284,6 +290,32 @@ public class ModbusMechanic {
         {
             master.connect();
         }
+        if (functionCode == 1)
+        {
+            ReadCoilsRequest request = new ReadCoilsRequest();
+            request.setServerAddress(slaveNode);
+            request.setStartAddress(register);
+            request.setQuantity(quantity);
+            if (master instanceof ModbusMasterTCP)
+            {
+                master.setTransactionId(transactionId);
+                request.setProtocolId(protocolId);
+            }
+            response = master.processRequest(request);
+        }
+        if (functionCode == 2)
+        {
+            ReadDiscreteInputsRequest request = new ReadDiscreteInputsRequest();
+            request.setServerAddress(slaveNode);
+            request.setStartAddress(register);
+            request.setQuantity(quantity);
+            if (master instanceof ModbusMasterTCP)
+            {
+                master.setTransactionId(transactionId);
+                request.setProtocolId(protocolId);
+            }
+            response = master.processRequest(request);
+        }
         if (functionCode == 3)
         {
             ReadHoldingRegistersRequest request = new ReadHoldingRegistersRequest();
@@ -389,30 +421,60 @@ public class ModbusMechanic {
     {
         try
         {
-            if (hrBuf == null)
-            {
-                hrBuf = ByteBuffer.allocate(131070);
-                for (int i = 0; i < hrBuf.capacity(); i++)
-                {
-                    byte b = 0;
-                    hrBuf.put(b);
-                }
-            }
             if (function == 3)
             {
+                if (hrBuf == null)
+                {
+                    hrBuf = ByteBuffer.allocate(131070);
+                    for (int i = 0; i < hrBuf.capacity(); i++)
+                    {
+                        byte b = 0;
+                        hrBuf.put(b);
+                    }
+                }
                 hrBuf.position(register*2);
                 hrBuf.put(bytes);
                 ModbusHoldingRegisters hr = new ModbusHoldingRegisters(65535);
                 hr.setBytesBe(hrBuf.array());
                 slave.getDataHolder().setHoldingRegisters(hr);
             }
+            if (function == 4)
+            {
+                if (irBuf == null)
+                {
+                    irBuf = ByteBuffer.allocate(131070);
+                    for (int i = 0; i < irBuf.capacity(); i++)
+                    {
+                        byte b = 0;
+                        irBuf.put(b);
+                    }
+                }
+                irBuf.position(register*2);
+                irBuf.put(bytes);
+                ModbusHoldingRegisters ir = new ModbusHoldingRegisters(65535);
+                ir.setBytesBe(irBuf.array());
+                slave.getDataHolder().setInputRegisters(ir);
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+    public static void setSimulatorCoilValue(int function, int register, boolean coil)
+    {
+        try
+        {
+            if (function == 1)
+            {
+                ModbusCoils mc = new ModbusCoils(65535);
+                mc.setImpl(register, coil);
+                slave.getDataHolder().setCoils(mc);
+            }
             if (function == 2)
             {
-                hrBuf.position(register*2);
-                hrBuf.put(bytes);
-                ModbusHoldingRegisters hr = new ModbusHoldingRegisters(65535);
-                hr.setBytesBe(hrBuf.array());
-                slave.getDataHolder().setInputRegisters(hr);
+                di.setImpl(register, coil);
+                slave.getDataHolder().setDiscreteInputs(di);
             }
         }
         catch (Exception e)

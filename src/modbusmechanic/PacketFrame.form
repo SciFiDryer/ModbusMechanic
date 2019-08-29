@@ -318,9 +318,11 @@
             <Component class="javax.swing.JComboBox" name="functionSelector">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="2">
+                  <StringArray count="4">
                     <StringItem index="0" value="Read Holding Registers (0x03)"/>
                     <StringItem index="1" value="Read Input Registers (0x04)"/>
+                    <StringItem index="2" value="Read Coils (0x01)"/>
+                    <StringItem index="3" value="Read Discrete Inputs (0x02)"/>
                   </StringArray>
                 </Property>
               </Properties>

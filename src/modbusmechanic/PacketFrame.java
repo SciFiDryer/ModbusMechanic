@@ -291,7 +291,7 @@ public class PacketFrame extends javax.swing.JFrame {
 
         jLayeredPane1.add(jPanel5, "card4");
 
-        functionSelector.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Read Holding Registers (0x03)", "Read Input Registers (0x04)" }));
+        functionSelector.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Read Holding Registers (0x03)", "Read Input Registers (0x04)", "Read Coils (0x01)", "Read Discrete Inputs (0x02)" }));
         functionSelector.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 functionSelectorActionPerformed(evt);
@@ -520,31 +520,27 @@ public class PacketFrame extends javax.swing.JFrame {
         int quantity = 0;
         int transactionId = 1;
         int protocolId = 0;
-        if (customMessageButton.isSelected())
+        if (functionSelector.getSelectedItem().equals("Read Holding Registers (0x03)"))
         {
-            if (functionSelector.getSelectedItem().equals("Read Holding Registers (0x03)"))
-            {
-                functionCode = ModbusMechanic.HOLDING_REGISTER_CODE;
-            }
-            else if (functionSelector.getSelectedItem().equals("Read Input Registers (0x04)"))
-            {
-                functionCode = ModbusMechanic.INPUT_REGISTER_CODE;
-            }
+            functionCode = ModbusMechanic.HOLDING_REGISTER_CODE;
+        }
+        if (functionSelector.getSelectedItem().equals("Read Input Registers (0x04)"))
+        {
+            functionCode = ModbusMechanic.INPUT_REGISTER_CODE;
+        }
+        if (functionSelector.getSelectedItem().equals("Read Coils (0x01)"))
+        {
+            functionCode = ModbusMechanic.READ_COILS_CODE;
+        }
+        if (functionSelector.getSelectedItem().equals("Read Discrete Inputs (0x02)"))
+        {
+            functionCode = ModbusMechanic.READ_DI_CODE;
+        }
+        if (customMessageButton.isSelected() && customMessageButton.isEnabled())
+        {
             transactionId = Integer.parseInt(transactionField.getText());
             protocolId = Integer.parseInt(protoIdField.getText());
             quantity = Integer.parseInt(quantityField.getText());
-        }
-        
-        if (!customMessageButton.isSelected())
-        {
-            if (functionSelector.getSelectedItem().equals("Read Holding Registers (0x03)"))
-            {
-                functionCode = ModbusMechanic.HOLDING_REGISTER_CODE;
-            }
-            else if (functionSelector.getSelectedItem().equals("Read Input Registers (0x04)"))
-            {
-                functionCode = ModbusMechanic.INPUT_REGISTER_CODE;
-            }
         }
         lastFunctionCode = functionCode;
         quantity = Integer.parseInt(quantityField.getText());
@@ -591,6 +587,10 @@ public class PacketFrame extends javax.swing.JFrame {
         if (customMessageButton.isSelected())
         {
             lastResponseType = ModbusMechanic.RESPONSE_TYPE_RAW;
+        }
+        if (functionCode == 1 || functionCode == 2)
+        {
+            lastResponseType = ModbusMechanic.RESPONSE_TYPE_BOOLEAN;
         }
         if (lastResponse == null)
         {
@@ -676,6 +676,14 @@ public class PacketFrame extends javax.swing.JFrame {
         {
             return ((ReadInputRegistersResponse)lastResponse).getBytes();
         }
+        if (lastFunctionCode == ModbusMechanic.READ_COILS_CODE)
+        {
+            return ((ReadCoilsResponse)lastResponse).getBytes();
+        }
+        if (lastFunctionCode == ModbusMechanic.READ_DI_CODE)
+        {
+            return ((ReadDiscreteInputsResponse)lastResponse).getBytes();
+        }
         return null;
     }
     public void displayResponse()
@@ -708,6 +716,15 @@ public class PacketFrame extends javax.swing.JFrame {
                  int[] regs = DataUtils.BeToIntArray(result);
                  responseField.setText("Response value: " + (((long)regs[0]*65536) + (long)regs[1]));
             }
+            if (lastResponseType == ModbusMechanic.RESPONSE_TYPE_BOOLEAN)
+            {
+                String boolValue = "false";
+                if (getLastResponseBytes()[0] == 0x1)
+                {
+                    boolValue =  "true";
+                }
+                responseField.setText("Response value: " + boolValue);
+            }
         }
     }
     public void displayRaw()
@@ -721,12 +738,19 @@ public class PacketFrame extends javax.swing.JFrame {
         sb.append("Function code: " + lastFunctionCode + "\n");
         sb.append("Words:\n");
         byte[] responseBytes = getLastResponseBytes();
-        for (int i = 0; i < responseBytes.length; i = i + 2)
+        if (responseBytes.length == 1)
         {
-            sb.append(ModbusMechanic.byteToHex(new byte[] {responseBytes[i], responseBytes[i+1]}) + " ");
-            if ((i+2) % 4 == 0)
+            sb.append(ModbusMechanic.byteToHex(new byte[] {responseBytes[0]}));
+        }
+        else
+        {
+            for (int i = 0; i < responseBytes.length; i = i + 2)
             {
-                sb.append("\n");
+                sb.append(ModbusMechanic.byteToHex(new byte[] {responseBytes[i], responseBytes[i+1]}) + " ");
+                if ((i+2) % 4 == 0)
+                {
+                    sb.append("\n");
+                }
             }
         }
         rawTextBox.setText(sb.toString());
@@ -792,7 +816,33 @@ public class PacketFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_readFloatButtonActionPerformed
 
     private void functionSelectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_functionSelectorActionPerformed
-        // TODO add your handling code here:
+        if (functionSelector.getSelectedItem().equals("Read Coils (0x01)") || functionSelector.getSelectedItem().equals("Read Discrete Inputs (0x02)"))
+        {
+            customMessageButton.setEnabled(false);
+            readFloatButton.setEnabled(false);
+            u16ReadButton.setEnabled(false);
+            u32ReadButton.setEnabled(false);
+            asciiReadButton.setEnabled(false);
+            transactionField.setEnabled(false);
+            protoIdField.setEnabled(false);
+            quantityField.setEnabled(false);
+            wordSwapCheckbox.setEnabled(false);
+            byteSwapCheckbox.setEnabled(false);
+            quantityField.setText("1");
+        }
+        else
+        {
+            customMessageButton.setEnabled(true);
+            readFloatButton.setEnabled(true);
+            u16ReadButton.setEnabled(true);
+            u32ReadButton.setEnabled(true);
+            asciiReadButton.setEnabled(true);
+            transactionField.setEnabled(true);
+            protoIdField.setEnabled(true);
+            quantityField.setEnabled(true);
+            wordSwapCheckbox.setEnabled(true);
+            byteSwapCheckbox.setEnabled(true);
+        }
     }//GEN-LAST:event_functionSelectorActionPerformed
 
     private void asciiReadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_asciiReadButtonActionPerformed
@@ -1219,7 +1269,6 @@ public class PacketFrame extends javax.swing.JFrame {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         if (JOptionPane.showOptionDialog(this, "What type of simulator?", "Simulator type", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] {"TCP", "RTU" }, null) == 0)
         {
-            System.out.println("tcp started");
             ModbusMechanic.startSlaveSimulator(502);
         }
         else
@@ -1227,7 +1276,6 @@ public class PacketFrame extends javax.swing.JFrame {
             int slaveId = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter the Slave ID", "1"));
             ModbusMechanic.startSlaveSimulatorRTU(slaveId, comPortSelector.getItemAt(comPortSelector.getSelectedIndex()), Integer.parseInt(baudRateSelector.getItemAt(baudRateSelector.getSelectedIndex())), Integer.parseInt(dataBitsField.getText()), Integer.parseInt(stopBitsField.getText()), paritySelector.getSelectedIndex());
         }
-        
         new SlaveSimulatorFrame(1).setVisible(true);
         
     }//GEN-LAST:event_jMenuItem1ActionPerformed
