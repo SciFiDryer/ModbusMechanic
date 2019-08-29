@@ -423,7 +423,7 @@ public class ModbusMechanic {
                         irBuf.put(b);
                     }
                 }
-                irBuf.position(register*2);
+                ((Buffer)(irBuf)).position(register*2);
                 irBuf.put(bytes);
                 ModbusHoldingRegisters ir = new ModbusHoldingRegisters(65535);
                 ir.setBytesBe(irBuf.array());

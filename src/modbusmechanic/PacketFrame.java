@@ -427,7 +427,7 @@ public class PacketFrame extends javax.swing.JFrame {
         rawTextBox.setEditable(false);
         rawTextBox.setColumns(20);
         rawTextBox.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
-        rawTextBox.setRows(5);
+        rawTextBox.setRows(6);
         jScrollPane1.setViewportView(rawTextBox);
 
         packetPanel.add(jScrollPane1);
@@ -792,68 +792,19 @@ public class PacketFrame extends javax.swing.JFrame {
         return "";
     }
     private void customMessageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customMessageButtonActionPerformed
-        if (customMessageButton.isSelected())
-        {
-            protoIdField.setEnabled(true);
-            transactionField.setEnabled(true);
-            quantityField.setEnabled(true);
-        }
+        fireSelectionEvent();
     }//GEN-LAST:event_customMessageButtonActionPerformed
 
     private void readFloatButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_readFloatButtonActionPerformed
-        // TODO add your handling code here:
-        if (readFloatButton.isSelected())
-        {
-            protoIdField.setEnabled(false);
-            transactionField.setEnabled(false);
-            quantityField.setEnabled(false);
-            quantityField.setText("2");
-            
-        }
-        
+        fireSelectionEvent();
     }//GEN-LAST:event_readFloatButtonActionPerformed
 
     private void functionSelectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_functionSelectorActionPerformed
-        if (functionSelector.getSelectedItem().equals("Read Coils (0x01)") || functionSelector.getSelectedItem().equals("Read Discrete Inputs (0x02)"))
-        {
-            customMessageButton.setEnabled(false);
-            readFloatButton.setEnabled(false);
-            u16ReadButton.setEnabled(false);
-            u32ReadButton.setEnabled(false);
-            asciiReadButton.setEnabled(false);
-            transactionField.setEnabled(false);
-            protoIdField.setEnabled(false);
-            quantityField.setEnabled(false);
-            wordSwapCheckbox.setEnabled(false);
-            byteSwapCheckbox.setEnabled(false);
-            quantityField.setText("1");
-        }
-        else
-        {
-            customMessageButton.setEnabled(true);
-            readFloatButton.setEnabled(true);
-            u16ReadButton.setEnabled(true);
-            u32ReadButton.setEnabled(true);
-            asciiReadButton.setEnabled(true);
-            transactionField.setEnabled(true);
-            protoIdField.setEnabled(true);
-            quantityField.setEnabled(true);
-            wordSwapCheckbox.setEnabled(true);
-            byteSwapCheckbox.setEnabled(true);
-        }
+        fireSelectionEvent();
     }//GEN-LAST:event_functionSelectorActionPerformed
 
     private void asciiReadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_asciiReadButtonActionPerformed
-        // TODO add your handling code here:
-        if (asciiReadButton.isSelected())
-        {
-            protoIdField.setEnabled(false);
-            transactionField.setEnabled(false);
-            quantityField.setEnabled(true);
-            jPanel5.setVisible(false);
-            functionSelector.setVisible(true);
-            
-        }
+        fireSelectionEvent();
     }//GEN-LAST:event_asciiReadButtonActionPerformed
     public int getSelectedBookmarkIndex()
     {
@@ -1151,6 +1102,69 @@ public class PacketFrame extends javax.swing.JFrame {
             writeBookmarks();
             addBookmarkItems(bookmarksMenu);
     }
+    public void fireSelectionEvent()
+    {
+        if (functionSelector.getSelectedItem().equals("Read Coils (0x01)") || functionSelector.getSelectedItem().equals("Read Discrete Inputs (0x02)"))
+        {
+            customMessageButton.setEnabled(false);
+            readFloatButton.setEnabled(false);
+            u16ReadButton.setEnabled(false);
+            u32ReadButton.setEnabled(false);
+            asciiReadButton.setEnabled(false);
+            transactionField.setEnabled(false);
+            protoIdField.setEnabled(false);
+            quantityField.setEnabled(false);
+            wordSwapCheckbox.setEnabled(false);
+            byteSwapCheckbox.setEnabled(false);
+            quantityField.setText("1");
+        }
+        else
+        {
+            customMessageButton.setEnabled(true);
+            readFloatButton.setEnabled(true);
+            u16ReadButton.setEnabled(true);
+            u32ReadButton.setEnabled(true);
+            asciiReadButton.setEnabled(true);
+            if (customMessageButton.isSelected())
+            {
+                transactionField.setEnabled(true);
+                protoIdField.setEnabled(true);
+                quantityField.setEnabled(true);
+            }
+            if (readFloatButton.isSelected())
+            {
+                protoIdField.setEnabled(false);
+                transactionField.setEnabled(false);
+                quantityField.setEnabled(false);
+                quantityField.setText("2");
+
+            }
+            if (asciiReadButton.isSelected())
+            {
+                protoIdField.setEnabled(false);
+                transactionField.setEnabled(false);
+                quantityField.setEnabled(true);
+                jPanel5.setVisible(false);
+                functionSelector.setVisible(true);
+            }
+            if (u16ReadButton.isSelected())
+            {
+                protoIdField.setEnabled(false);
+                transactionField.setEnabled(false);
+                quantityField.setEnabled(false);
+                quantityField.setText("1");
+            }
+            if (u32ReadButton.isSelected())
+            {
+                protoIdField.setEnabled(false);
+                transactionField.setEnabled(false);
+                quantityField.setEnabled(false);
+                quantityField.setText("2");
+            }
+            wordSwapCheckbox.setEnabled(true);
+            byteSwapCheckbox.setEnabled(true);
+        }
+    }
     
     private void byteSwapCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_byteSwapCheckboxActionPerformed
         displayResponse();
@@ -1161,23 +1175,11 @@ public class PacketFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_wordSwapCheckboxActionPerformed
 
     private void u16ReadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_u16ReadButtonActionPerformed
-        if (u16ReadButton.isSelected())
-        {
-            protoIdField.setEnabled(false);
-            transactionField.setEnabled(false);
-            quantityField.setEnabled(false);
-            quantityField.setText("1");
-        }
+        fireSelectionEvent();
     }//GEN-LAST:event_u16ReadButtonActionPerformed
 
     private void u32ReadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_u32ReadButtonActionPerformed
-        if (u32ReadButton.isSelected())
-        {
-            protoIdField.setEnabled(false);
-            transactionField.setEnabled(false);
-            quantityField.setEnabled(false);
-            quantityField.setText("2");
-        }
+        fireSelectionEvent();
     }//GEN-LAST:event_u32ReadButtonActionPerformed
 
     private void rtuMsgButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rtuMsgButtonActionPerformed

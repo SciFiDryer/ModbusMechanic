@@ -180,13 +180,7 @@ public class SlaveSimulatorFrame extends javax.swing.JFrame {
             if (registerTypeSelector.getSelectedItem().equals("Coils"))
             {
                 functionLabel = new javax.swing.JLabel("Coil " + registerNumber);
-                typeLabel = new javax.swing.JLabel("Type: Bit");
-                String boolValue = "false";
-                if (onButton.isSelected())
-                {
-                    boolValue = "true";
-                }
-                valueLabel = new javax.swing.JLabel("Value: " + boolValue);
+                
                 functionCode = 1;
             }
             if (registerTypeSelector.getSelectedItem().equals("Discrete"))
@@ -204,8 +198,15 @@ public class SlaveSimulatorFrame extends javax.swing.JFrame {
                 functionLabel = new javax.swing.JLabel("Input Register " + registerNumber);
                 functionCode = 4;
             }
-            if (!error && (functionCode == 1 || functionCode == 2))
+            if (functionCode == 1 || functionCode == 2)
             {
+                typeLabel = new javax.swing.JLabel("Type: Bit");
+                String boolValue = "false";
+                if (onButton.isSelected())
+                {
+                    boolValue = "true";
+                }
+                valueLabel = new javax.swing.JLabel("Value: " + boolValue);
                 ModbusMechanic.setSimulatorCoilValue(functionCode, registerNumber, onButton.isSelected());
             }
             if (functionCode == 3 || functionCode == 4)
@@ -251,8 +252,7 @@ public class SlaveSimulatorFrame extends javax.swing.JFrame {
                 }
                 if (!error)
                 {
-                    ModbusMechanic.setSimulatorRegisterValue(functionCode, registerNumber, buf);
-                    
+                    ModbusMechanic.setSimulatorRegisterValue(functionCode, registerNumber, buf);   
                 }
             }
             if (!error)
@@ -265,7 +265,7 @@ public class SlaveSimulatorFrame extends javax.swing.JFrame {
                 javax.swing.JButton deleteButton = new javax.swing.JButton("Delete");
                 final int aFunctionCode = functionCode;
                 final int aRegisterNumber = registerNumber;
-                final int aDataType = dataType;
+                
                 javax.swing.JSeparator seperator = new javax.swing.JSeparator();
                 deleteButton.addActionListener(new java.awt.event.ActionListener(){
                     public void actionPerformed(java.awt.event.ActionEvent e)
