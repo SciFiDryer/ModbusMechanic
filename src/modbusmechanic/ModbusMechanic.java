@@ -365,6 +365,7 @@ public class ModbusMechanic {
             parameters.setPort(port);
             slave = ModbusSlaveFactory.createModbusSlaveTCP(parameters);
             slave.setServerAddress(1);
+            slave.setReadTimeout(30000);
             slave.listen();
         }
         catch(Exception e)
@@ -406,7 +407,7 @@ public class ModbusMechanic {
                         hrBuf.put(b);
                     }
                 }
-                hrBuf.position(register*2);
+                ((Buffer)(hrBuf)).position(register*2);
                 hrBuf.put(bytes);
                 ModbusHoldingRegisters hr = new ModbusHoldingRegisters(65535);
                 hr.setBytesBe(hrBuf.array());

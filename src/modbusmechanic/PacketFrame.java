@@ -822,11 +822,11 @@ public class PacketFrame extends javax.swing.JFrame {
     {
         String[] currentBookmark = bookmarkList.get(selectedBookmark);
         
-        if (currentBookmark[1].equals("tcp"))
+        if (currentBookmark[1].equalsIgnoreCase("tcp"))
         {
             tcpMsgButton.doClick();
         }
-        if (currentBookmark[1].equals("rtu"))
+        if (currentBookmark[1].equalsIgnoreCase("rtu"))
         {
             //this takes care of the corresponding "greying out"
             rtuMsgButton.doClick();
