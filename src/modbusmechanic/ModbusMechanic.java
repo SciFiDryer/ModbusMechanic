@@ -51,10 +51,11 @@ public class ModbusMechanic {
     public static int RESPONSE_TYPE_UINT32 = 4;
     public static int RESPONSE_TYPE_RAW = 5;
     public static int RESPONSE_TYPE_BOOLEAN = 6;
-    public static int HOLDING_REGISTER_CODE = 3;
+    public static int READ_HOLDING_REGISTER_CODE = 3;
     public static int READ_COILS_CODE = 1;
     public static int READ_DI_CODE = 2;
-    public static int INPUT_REGISTER_CODE = 4;
+    public static int READ_INPUT_REGISTER_CODE = 4;
+    public static int WRITE_HOLDING_REGISTERS_CODE = 16;
     public static int SLAVE_SIMULATOR_TCP = 1;
     public static int SLAVE_SIMULATOR_RTU = 2;
     public static int DATA_TYPE_FLOAT = 1;
@@ -124,7 +125,7 @@ public class ModbusMechanic {
         }
         new SerialMonitorFrame(connection);
     }
-    public static ModbusResponse generateModbusTCPRequest(String host, int port, int protocolId, int transactionId, int slaveNode, int functionCode, int register, int quantity) throws Exception
+    public static ModbusResponse generateModbusTCPRequest(String host, int port, int protocolId, int transactionId, int slaveNode, int functionCode, int register, int quantity, byte[] values) throws Exception
     {
         byte[] buf = null;
         ModbusResponse response = null;
@@ -147,7 +148,7 @@ public class ModbusMechanic {
             
             try 
             {
-                response = generateModbusMessage(master, protocolId, transactionId, slaveNode, functionCode, register, quantity);
+                response = generateModbusMessage(master, protocolId, transactionId, slaveNode, functionCode, register, quantity, values);
             }
             catch(Exception e)
             {
@@ -235,7 +236,7 @@ public class ModbusMechanic {
         }
         return parity;
     }
-    public static ModbusResponse generateModbusRTURequest(String comPort, int baudRate, int dataBits, int stopBits, int parityTmp, int slaveNode, int functionCode, int register, int quantity) throws Exception
+    public static ModbusResponse generateModbusRTURequest(String comPort, int baudRate, int dataBits, int stopBits, int parityTmp, int slaveNode, int functionCode, int register, int quantity, byte[] values) throws Exception
     {
         ModbusResponse response = null;
         Exception raisedException = null;
@@ -249,7 +250,7 @@ public class ModbusMechanic {
             
             try 
             {
-                response = generateModbusMessage(master, 0, 0, slaveNode, functionCode, register, quantity);
+                response = generateModbusMessage(master, 0, 0, slaveNode, functionCode, register, quantity, values);
             }
             catch (Exception e)
             {
@@ -282,7 +283,7 @@ public class ModbusMechanic {
         return response;
     }
     //todo ideally this should be wrapped into an abstraction in case a different library is desired
-    public static ModbusResponse generateModbusMessage(ModbusMaster master, int protocolId, int transactionId, int slaveNode, int functionCode, int register, int quantity) throws Exception
+    public static ModbusResponse generateModbusMessage(ModbusMaster master, int protocolId, int transactionId, int slaveNode, int functionCode, int register, int quantity, byte[] values) throws Exception
     {
         
         ModbusResponse response = null;
@@ -307,9 +308,17 @@ public class ModbusMechanic {
         {
             request = new ReadInputRegistersRequest();
         }
+        else if (functionCode == 16)
+        {
+            request = new WriteMultipleRegistersRequest();
+        }
         request.setServerAddress(slaveNode);
         request.setStartAddress(register);
         request.setQuantity(quantity);
+        if (request instanceof AbstractWriteMultipleRequest)
+        {
+            ((AbstractWriteMultipleRequest)(request)).setBytes(values);
+        }
         if (master instanceof ModbusMasterTCP)
         {
             master.setTransactionId(transactionId);
