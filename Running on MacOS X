@@ -1,1 +1,3 @@
 Recent versions of Mac OS X prohibit first time double clicking of new unsigned applications. In order to run this file, right-click on ModbusMechanic.jar (or control-click with a one button mouse) and select open from the menu. You will then be asked to allow the application to run. Launch by double clicking after you have allowed the application.
+
+The TCP slave simulator will not run in OS X without elevated privileges. This is because MODBUS uses port 502 which is a privileged port on *NIX type OSs. One way to launch the application with elevated privileges is to open a terminal, cd to the directory that the jar ia located in and type "sudo java -jar ModbusMechanic.jar". The sudo command will then ask for your user account password.
