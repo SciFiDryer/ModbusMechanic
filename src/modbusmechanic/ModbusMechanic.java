@@ -55,6 +55,7 @@ public class ModbusMechanic {
     public static int READ_COILS_CODE = 1;
     public static int READ_DI_CODE = 2;
     public static int READ_INPUT_REGISTER_CODE = 4;
+    public static int WRITE_COILS_CODE = 15;
     public static int WRITE_HOLDING_REGISTERS_CODE = 16;
     public static int SLAVE_SIMULATOR_TCP = 1;
     public static int SLAVE_SIMULATOR_RTU = 2;
@@ -309,6 +310,10 @@ public class ModbusMechanic {
         {
             request = new ReadInputRegistersRequest();
         }
+        else if (functionCode == 15)
+        {
+            request = new WriteMultipleCoilsRequest();
+        }
         else if (functionCode == 16)
         {
             request = new WriteMultipleRegistersRequest();
@@ -454,7 +459,6 @@ public class ModbusMechanic {
         {
             if (function == 1)
             {
-                ModbusCoils mc = new ModbusCoils(65535);
                 mc.setImpl(register, coil);
                 slave.getDataHolder().setCoils(mc);
             }
@@ -509,6 +513,8 @@ public class ModbusMechanic {
         @Override
         public void writeCoilRange(int offset, boolean[] range) throws IllegalDataAddressException, IllegalDataValueException {
             super.writeCoilRange(offset, range);
+            SimulatorRegisterHolder holder = ModbusMechanic.findRegisterHolderByRegister(registerList, 1, offset);
+            ModbusMechanic.refreshRegisterHolder(holder);
         }
     }
     public static SimulatorRegisterHolder findRegisterHolderByRegister(java.util.ArrayList<SimulatorRegisterHolder> registerList, int functionCode,  int registerNumber)
@@ -566,6 +572,20 @@ public class ModbusMechanic {
                     registers = ModbusMechanic.wordSwap(registers);
                 }
                 holder.getValueField().setText(ModbusMechanic.bytesToInt32(registers) + "");
+            }
+        }
+        if (functionCode == ModbusMechanic.READ_COILS_CODE)
+        {
+            int registerNumber = holder.getRegisterNumber();
+            try
+            {
+                boolean coilValue = mc.get(registerNumber);
+                holder.getTrueButton().setSelected(coilValue);
+                holder.getFalseButton().setSelected(!coilValue);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
             }
         }
     }

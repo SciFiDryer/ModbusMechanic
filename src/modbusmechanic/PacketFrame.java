@@ -97,6 +97,7 @@ public class PacketFrame extends javax.swing.JFrame {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         buttonGroup2 = new javax.swing.ButtonGroup();
+        buttonGroup3 = new javax.swing.ButtonGroup();
         typePanel = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
         tcpMsgButton = new javax.swing.JRadioButton();
@@ -153,6 +154,8 @@ public class PacketFrame extends javax.swing.JFrame {
         responsePanel = new javax.swing.JPanel();
         valueLabel = new javax.swing.JLabel();
         valueField = new javax.swing.JTextField();
+        offButton = new javax.swing.JRadioButton();
+        onButton = new javax.swing.JRadioButton();
         jSeparator6 = new javax.swing.JSeparator();
         packetPanel = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
@@ -281,7 +284,7 @@ public class PacketFrame extends javax.swing.JFrame {
 
         jLayeredPane1.add(jPanel5, "card4");
 
-        functionSelector.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Read Coils (0x01)", "Read Discrete Inputs (0x02)", "Read Holding Registers (0x03)", "Read Input Registers (0x04)", "Write Holding Registers (0x16)" }));
+        functionSelector.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Read Coils (0x01)", "Read Discrete Inputs (0x02)", "Read Holding Registers (0x03)", "Read Input Registers (0x04)", "Write Coils (0x15)", "Write Holding Registers (0x16)" }));
         functionSelector.setSelectedIndex(2);
         functionSelector.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -431,6 +434,17 @@ public class PacketFrame extends javax.swing.JFrame {
         responsePanel.add(valueField);
         valueField.setVisible(false);
 
+        buttonGroup3.add(offButton);
+        offButton.setText("Off");
+        responsePanel.add(offButton);
+        offButton.setVisible(false);
+
+        buttonGroup3.add(onButton);
+        onButton.setSelected(true);
+        onButton.setText("On");
+        responsePanel.add(onButton);
+        onButton.setVisible(false);
+
         getContentPane().add(responsePanel);
         getContentPane().add(jSeparator6);
 
@@ -532,6 +546,7 @@ public class PacketFrame extends javax.swing.JFrame {
         int transactionId = 1;
         int protocolId = 0;
         boolean writingFlag = false;
+        boolean coilsFlag = false;
         byte[] values = null;
         if (functionSelector.getSelectedItem().equals("Read Holding Registers (0x03)"))
         {
@@ -554,6 +569,12 @@ public class PacketFrame extends javax.swing.JFrame {
             functionCode = ModbusMechanic.WRITE_HOLDING_REGISTERS_CODE;
             writingFlag = true;
         }
+        if (functionSelector.getSelectedItem().equals("Write Coils (0x15)"))
+        {
+            functionCode = ModbusMechanic.WRITE_COILS_CODE;
+            writingFlag = true;
+            coilsFlag = true;
+        }
         if (customMessageButton.isSelected() && customMessageButton.isEnabled())
         {
             transactionId = Integer.parseInt(transactionField.getText());
@@ -562,7 +583,7 @@ public class PacketFrame extends javax.swing.JFrame {
         }
         lastFunctionCode = functionCode;
         quantity = Integer.parseInt(quantityField.getText());
-        if (writingFlag)
+        if (writingFlag && !coilsFlag)
         {
             if (readFloatButton.isSelected())
             {
@@ -597,6 +618,14 @@ public class PacketFrame extends javax.swing.JFrame {
             if (wordSwapCheckbox.isSelected())
             {
                 values = ModbusMechanic.wordSwap(values);
+            }
+        }
+        if (coilsFlag)
+        {
+            values = new byte[] { 0x00 };
+            if (onButton.isSelected())
+            {
+                values = new byte[] { 0x01 };
             }
         }
         if (rtuMsgButton.isSelected())
@@ -1166,7 +1195,25 @@ public class PacketFrame extends javax.swing.JFrame {
     {
         valueLabel.setText("Response value:");
         valueField.setVisible(false);
-        if (functionSelector.getSelectedItem().equals("Read Coils (0x01)") || functionSelector.getSelectedItem().equals("Read Discrete Inputs (0x02)"))
+        onButton.setVisible(false);
+        offButton.setVisible(false);
+        boolean readFlag = false;
+        boolean writeFlag = false;
+        boolean coilsFlag = false;
+        boolean wordsFlag = false;
+        if (functionSelector.getSelectedItem().equals("Read Coils (0x01)") || functionSelector.getSelectedItem().equals("Read Discrete Inputs (0x02)") || functionSelector.getSelectedItem().equals("Write Coils (0x15)"))
+        {
+            coilsFlag = true;
+        }
+        if (functionSelector.getSelectedItem().toString().startsWith("Write"))
+        {
+            writeFlag = true;
+        }
+        if (functionSelector.getSelectedItem().equals("Read Holding Registers (0x03)") || functionSelector.getSelectedItem().equals("Read Input Registers (0x04)") || functionSelector.getSelectedItem().equals("Write Holding Registers (0x16)"))
+        {
+            wordsFlag = true;
+        }
+        if (coilsFlag)
         {
             customMessageButton.setEnabled(false);
             readFloatButton.setEnabled(false);
@@ -1180,16 +1227,19 @@ public class PacketFrame extends javax.swing.JFrame {
             byteSwapCheckbox.setEnabled(false);
             quantityField.setText("1");
         }
-        if (functionSelector.getSelectedItem().equals("Write Holding Registers (0x16)"))
+        if (writeFlag)
         {
-            if (customMessageButton.isSelected())
-            {
-                u16ReadButton.setSelected(true);
-            }
             valueLabel.setText("Write value:");
             valueField.setVisible(true);
         }
-        if (functionSelector.getSelectedItem().equals("Read Holding Registers (0x03)") || functionSelector.getSelectedItem().equals("Read Input Registers (0x04)") || functionSelector.getSelectedItem().equals("Write Holding Registers (0x16)"))
+        if (coilsFlag && writeFlag)
+        {
+            valueField.setVisible(false);
+            onButton.setVisible(true);
+            offButton.setVisible(true);
+        }
+        
+        if (wordsFlag)
         {
             customMessageButton.setEnabled(true);
             readFloatButton.setEnabled(true);
@@ -1239,7 +1289,6 @@ public class PacketFrame extends javax.swing.JFrame {
             wordSwapCheckbox.setEnabled(true);
             byteSwapCheckbox.setEnabled(true);
         }
-        
     }
     
     private void byteSwapCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_byteSwapCheckboxActionPerformed
@@ -1390,6 +1439,7 @@ public class PacketFrame extends javax.swing.JFrame {
     private javax.swing.JMenu bookmarksMenu;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
+    private javax.swing.ButtonGroup buttonGroup3;
     private javax.swing.JCheckBox byteSwapCheckbox;
     private javax.swing.JComboBox<String> comPortSelector;
     private javax.swing.JRadioButton customMessageButton;
@@ -1433,6 +1483,8 @@ public class PacketFrame extends javax.swing.JFrame {
     private javax.swing.JPanel messagePanel2;
     private javax.swing.JPanel modbusPanel;
     private javax.swing.JPanel modbusPanel2;
+    private javax.swing.JRadioButton offButton;
+    private javax.swing.JRadioButton onButton;
     private javax.swing.JPanel packetPanel;
     private javax.swing.JComboBox<String> paritySelector;
     private javax.swing.JTextField protoIdField;

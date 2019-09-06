@@ -51,7 +51,7 @@ public class SlaveSimulatorFrame extends javax.swing.JFrame {
         inputPane = new javax.swing.JPanel();
         coilPane = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
-        jRadioButton1 = new javax.swing.JRadioButton();
+        offButton = new javax.swing.JRadioButton();
         onButton = new javax.swing.JRadioButton();
         hrPane = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -100,10 +100,10 @@ public class SlaveSimulatorFrame extends javax.swing.JFrame {
         jLabel6.setText("Input status");
         coilPane.add(jLabel6);
 
-        buttonGroup1.add(jRadioButton1);
-        jRadioButton1.setSelected(true);
-        jRadioButton1.setText("Off");
-        coilPane.add(jRadioButton1);
+        buttonGroup1.add(offButton);
+        offButton.setSelected(true);
+        offButton.setText("Off");
+        coilPane.add(offButton);
 
         buttonGroup1.add(onButton);
         onButton.setText("On");
@@ -175,6 +175,11 @@ public class SlaveSimulatorFrame extends javax.swing.JFrame {
             javax.swing.JLabel typeLabel = null;
             javax.swing.JLabel valueLabel = new javax.swing.JLabel("Value: ");
             javax.swing.JTextField valueField = new javax.swing.JTextField(registerValueField.getText());
+            javax.swing.JRadioButton registerOnButton = new javax.swing.JRadioButton("On");
+            javax.swing.JRadioButton registerOffButton = new javax.swing.JRadioButton("Off");
+            javax.swing.ButtonGroup coilGroup = new javax.swing.ButtonGroup();
+            coilGroup.add(registerOnButton);
+            coilGroup.add(registerOffButton);
             valueField.setColumns(5);
             byte[] buf = null;
             
@@ -207,7 +212,8 @@ public class SlaveSimulatorFrame extends javax.swing.JFrame {
                 {
                     boolValue = "true";
                 }
-                valueLabel = new javax.swing.JLabel("Value: " + boolValue);
+                valueLabel = new javax.swing.JLabel("Value: ");
+                
                 ModbusMechanic.setSimulatorCoilValue(functionCode, registerNumber, onButton.isSelected());
             }
             if (functionCode == ModbusMechanic.READ_HOLDING_REGISTER_CODE || functionCode == ModbusMechanic.READ_INPUT_REGISTER_CODE)
@@ -298,10 +304,30 @@ public class SlaveSimulatorFrame extends javax.swing.JFrame {
                             ModbusMechanic.setSimulatorRegisterValue(aFunctionCode, aRegisterNumber, buf);
                         }
                     });
+                    registerList.add(new SimulatorRegisterHolder(functionCode, registerNumber, valueField, wordSwapCheckbox.isSelected(), byteSwapCheckbox.isSelected(), dataType));
+                }
+                //coils
+                else
+                {
+                    registerOnButton.addActionListener(new java.awt.event.ActionListener(){
+                        public void actionPerformed(java.awt.event.ActionEvent e)
+                        {
+                            ModbusMechanic.setSimulatorCoilValue(aFunctionCode, aRegisterNumber, registerOnButton.isSelected());
+                        }
+                    });
+                    registerOffButton.addActionListener(new java.awt.event.ActionListener(){
+                        public void actionPerformed(java.awt.event.ActionEvent e)
+                        {
+                            ModbusMechanic.setSimulatorCoilValue(aFunctionCode, aRegisterNumber, registerOnButton.isSelected());
+                        }
+                    });
+                    registerPanel.add(registerOffButton);
+                    registerPanel.add(registerOnButton);
+                    registerOnButton.setSelected(onButton.isSelected());
+                    registerOffButton.setSelected(offButton.isSelected());
+                    registerList.add(new SimulatorRegisterHolder(functionCode, registerNumber, registerOnButton, registerOffButton));
                 }
                 javax.swing.JButton deleteButton = new javax.swing.JButton("Delete");
-                SimulatorRegisterHolder rh = new SimulatorRegisterHolder(functionCode, registerNumber, valueField, wordSwapCheckbox.isSelected(), byteSwapCheckbox.isSelected(), dataType);
-                registerList.add(rh);
                 javax.swing.JSeparator seperator = new javax.swing.JSeparator();
                 deleteButton.addActionListener(new java.awt.event.ActionListener(){
                     public void actionPerformed(java.awt.event.ActionEvent e)
@@ -378,8 +404,8 @@ public class SlaveSimulatorFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JLabel nodeIdLabel;
+    private javax.swing.JRadioButton offButton;
     private javax.swing.JRadioButton onButton;
     private javax.swing.JTextField registerNumberField;
     private javax.swing.JComboBox<String> registerTypeSelector;
