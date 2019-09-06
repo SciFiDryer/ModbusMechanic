@@ -153,9 +153,13 @@ public class PacketFrame extends javax.swing.JFrame {
         jSeparator5 = new javax.swing.JSeparator();
         responsePanel = new javax.swing.JPanel();
         valueLabel = new javax.swing.JLabel();
+        writeParentPane = new javax.swing.JPanel();
+        writeValuePane = new javax.swing.JPanel();
         valueField = new javax.swing.JTextField();
+        boolPane = new javax.swing.JPanel();
         offButton = new javax.swing.JRadioButton();
         onButton = new javax.swing.JRadioButton();
+        blankPane = new javax.swing.JPanel();
         jSeparator6 = new javax.swing.JSeparator();
         packetPanel = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
@@ -422,6 +426,10 @@ public class PacketFrame extends javax.swing.JFrame {
         valueLabel.setText("Response value: ");
         responsePanel.add(valueLabel);
 
+        writeParentPane.setLayout(new java.awt.CardLayout());
+
+        writeValuePane.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+
         valueField.setColumns(5);
         valueField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -431,19 +439,26 @@ public class PacketFrame extends javax.swing.JFrame {
                 valueFieldKeyTyped(evt);
             }
         });
-        responsePanel.add(valueField);
-        valueField.setVisible(false);
+        writeValuePane.add(valueField);
+
+        writeParentPane.add(writeValuePane, "writeValuePane");
+
+        boolPane.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         buttonGroup3.add(offButton);
         offButton.setText("Off");
-        responsePanel.add(offButton);
-        offButton.setVisible(false);
+        boolPane.add(offButton);
 
         buttonGroup3.add(onButton);
         onButton.setSelected(true);
         onButton.setText("On");
-        responsePanel.add(onButton);
-        onButton.setVisible(false);
+        boolPane.add(onButton);
+
+        writeParentPane.add(boolPane, "boolPane");
+        writeParentPane.add(blankPane, "blankPane");
+
+        responsePanel.add(writeParentPane);
+        ((java.awt.CardLayout)(writeParentPane.getLayout())).show(writeParentPane, "blankPane");
 
         getContentPane().add(responsePanel);
         getContentPane().add(jSeparator6);
@@ -981,11 +996,13 @@ public class PacketFrame extends javax.swing.JFrame {
         functionCodeField.setText(parseFieldToText(currentBookmark[9]));
         if (currentBookmark[9].equals("3"))
         {
-            functionSelector.setSelectedIndex(0);
+            functionSelector.setSelectedIndex(2);
+            fireSelectionEvent();
         }
         if (currentBookmark[9].equals("4"))
         {
-            functionSelector.setSelectedIndex(1);
+            functionSelector.setSelectedIndex(3);
+            fireSelectionEvent();
         }
         registerField.setText(parseFieldToText(currentBookmark[10]));
         transactionField.setText(parseFieldToText(currentBookmark[11]));
@@ -1107,11 +1124,11 @@ public class PacketFrame extends javax.swing.JFrame {
         }
         else
         {
-            if (functionSelector.getSelectedIndex() == 0)
+            if (functionSelector.getSelectedIndex() == 2)
             {
                 currentBookmark[9] = "3";
             }
-            if (functionSelector.getSelectedIndex() == 4)
+            if (functionSelector.getSelectedIndex() == 3)
             {
                 currentBookmark[9] = "4";
             }
@@ -1194,9 +1211,7 @@ public class PacketFrame extends javax.swing.JFrame {
     public void fireSelectionEvent()
     {
         valueLabel.setText("Response value:");
-        valueField.setVisible(false);
-        onButton.setVisible(false);
-        offButton.setVisible(false);
+        ((java.awt.CardLayout)(writeParentPane.getLayout())).show(writeParentPane, "blankPane");
         boolean readFlag = false;
         boolean writeFlag = false;
         boolean coilsFlag = false;
@@ -1229,14 +1244,16 @@ public class PacketFrame extends javax.swing.JFrame {
         }
         if (writeFlag)
         {
+            if (customMessageButton.isSelected())
+            {
+                u16ReadButton.setSelected(true);
+            }
             valueLabel.setText("Write value:");
-            valueField.setVisible(true);
+            ((java.awt.CardLayout)(writeParentPane.getLayout())).show(writeParentPane, "writeValuePane");
         }
         if (coilsFlag && writeFlag)
         {
-            valueField.setVisible(false);
-            onButton.setVisible(true);
-            offButton.setVisible(true);
+            ((java.awt.CardLayout)(writeParentPane.getLayout())).show(writeParentPane, "boolPane");
         }
         
         if (wordsFlag)
@@ -1436,7 +1453,9 @@ public class PacketFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem addBookmarkItem;
     private javax.swing.JRadioButton asciiReadButton;
     private javax.swing.JComboBox<String> baudRateSelector;
+    private javax.swing.JPanel blankPane;
     private javax.swing.JMenu bookmarksMenu;
+    private javax.swing.JPanel boolPane;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.ButtonGroup buttonGroup3;
@@ -1508,5 +1527,7 @@ public class PacketFrame extends javax.swing.JFrame {
     private javax.swing.JTextField valueField;
     private javax.swing.JLabel valueLabel;
     private javax.swing.JCheckBox wordSwapCheckbox;
+    private javax.swing.JPanel writeParentPane;
+    private javax.swing.JPanel writeValuePane;
     // End of variables declaration//GEN-END:variables
 }
