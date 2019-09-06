@@ -590,6 +590,14 @@ public class PacketFrame extends javax.swing.JFrame {
                     values = Arrays.copyOf(values, values.length+1);
                 }
             }
+            if (byteSwapCheckbox.isSelected())
+            {
+                values = ModbusMechanic.byteSwap(values);
+            }
+            if (wordSwapCheckbox.isSelected())
+            {
+                values = ModbusMechanic.wordSwap(values);
+            }
         }
         if (rtuMsgButton.isSelected())
         {
@@ -760,8 +768,7 @@ public class PacketFrame extends javax.swing.JFrame {
             }
             if (lastResponseType == ModbusMechanic.RESPONSE_TYPE_UINT32)
             {
-                 int[] regs = DataUtils.BeToIntArray(result);
-                 valueLabel.setText("Response value: " + (((long)regs[0]*65536) + (long)regs[1]));
+                 valueLabel.setText("Response value: " + ModbusMechanic.bytesToInt32(result));
             }
             if (lastResponseType == ModbusMechanic.RESPONSE_TYPE_BOOLEAN)
             {
@@ -783,20 +790,24 @@ public class PacketFrame extends javax.swing.JFrame {
             sb.append("Protocol ID: " + lastResponse.getProtocolId() + "\n");
         }
         sb.append("Function code: " + lastFunctionCode + "\n");
-        sb.append("Words:\n");
-        byte[] responseBytes = getLastResponseBytes();
-        if (responseBytes.length == 1)
+        
+        if (getLastResponseBytes() != null)
         {
-            sb.append(ModbusMechanic.byteToHex(new byte[] {responseBytes[0]}));
-        }
-        else
-        {
-            for (int i = 0; i < responseBytes.length; i = i + 2)
+            sb.append("Words:\n");
+            byte[] responseBytes = getLastResponseBytes();
+            if (responseBytes.length == 1)
             {
-                sb.append(ModbusMechanic.byteToHex(new byte[] {responseBytes[i], responseBytes[i+1]}) + " ");
-                if ((i+2) % 4 == 0)
+                sb.append(ModbusMechanic.byteToHex(new byte[] {responseBytes[0]}));
+            }
+            else
+            {
+                for (int i = 0; i < responseBytes.length; i = i + 2)
                 {
-                    sb.append("\n");
+                    sb.append(ModbusMechanic.byteToHex(new byte[] {responseBytes[i], responseBytes[i+1]}) + " ");
+                    if ((i+2) % 4 == 0)
+                    {
+                        sb.append("\n");
+                    }
                 }
             }
         }
@@ -1326,16 +1337,18 @@ public class PacketFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_bookmarksMenuStateChanged
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        if (JOptionPane.showOptionDialog(this, "What type of simulator?", "Simulator type", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] {"TCP", "RTU" }, null) == 0)
+        int simulatorType = JOptionPane.showOptionDialog(this, "What type of simulator?", "Simulator type", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] {"TCP", "RTU" }, null);
+        int slaveId = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter the Slave ID", "1"));
+        SlaveSimulatorFrame theFrame = new SlaveSimulatorFrame(slaveId);
+        if (simulatorType == 0)
         {
-            ModbusMechanic.startSlaveSimulator(502);
+            ModbusMechanic.startSlaveSimulatorTCP(502, theFrame.getRegisterList());
         }
         else
         {
-            int slaveId = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter the Slave ID", "1"));
             ModbusMechanic.startSlaveSimulatorRTU(slaveId, comPortSelector.getItemAt(comPortSelector.getSelectedIndex()), Integer.parseInt(baudRateSelector.getItemAt(baudRateSelector.getSelectedIndex())), Integer.parseInt(dataBitsField.getText()), Integer.parseInt(stopBitsField.getText()), paritySelector.getSelectedIndex());
         }
-        new SlaveSimulatorFrame(1).setVisible(true);
+        theFrame.setVisible(true);
         
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 

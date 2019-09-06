@@ -16,6 +16,7 @@
 package modbusmechanic;
 
 import javax.swing.JOptionPane;
+import java.util.*;
 
 /**
  *
@@ -23,9 +24,7 @@ import javax.swing.JOptionPane;
  */
 public class SlaveSimulatorFrame extends javax.swing.JFrame {
 
-    /**
-     * Creates new form SlaveSimulatorFrame
-     */
+    public ArrayList<SimulatorRegisterHolder> registerList = new ArrayList();
     public SlaveSimulatorFrame(int nodeId) {
         initComponents();
         nodeIdLabel.setText("Slave simulator running at address " + nodeId);
@@ -174,7 +173,9 @@ public class SlaveSimulatorFrame extends javax.swing.JFrame {
             boolean error = false;
             javax.swing.JLabel functionLabel = null;
             javax.swing.JLabel typeLabel = null;
-            javax.swing.JLabel valueLabel = new javax.swing.JLabel("Value: " + registerValueField.getText());
+            javax.swing.JLabel valueLabel = new javax.swing.JLabel("Value: ");
+            javax.swing.JTextField valueField = new javax.swing.JTextField(registerValueField.getText());
+            valueField.setColumns(5);
             byte[] buf = null;
             
             if (registerTypeSelector.getSelectedItem().equals("Coils"))
@@ -198,7 +199,7 @@ public class SlaveSimulatorFrame extends javax.swing.JFrame {
                 functionLabel = new javax.swing.JLabel("Input Register " + registerNumber);
                 functionCode = 4;
             }
-            if (functionCode == 1 || functionCode == 2)
+            if (functionCode == ModbusMechanic.READ_COILS_CODE || functionCode == ModbusMechanic.READ_DI_CODE)
             {
                 typeLabel = new javax.swing.JLabel("Type: Bit");
                 String boolValue = "false";
@@ -209,29 +210,29 @@ public class SlaveSimulatorFrame extends javax.swing.JFrame {
                 valueLabel = new javax.swing.JLabel("Value: " + boolValue);
                 ModbusMechanic.setSimulatorCoilValue(functionCode, registerNumber, onButton.isSelected());
             }
-            if (functionCode == 3 || functionCode == 4)
+            if (functionCode == ModbusMechanic.READ_HOLDING_REGISTER_CODE || functionCode == ModbusMechanic.READ_INPUT_REGISTER_CODE)
             {
                 if (dataTypeSelector.getSelectedItem().equals("Float"))
                 {
+                    dataType = ModbusMechanic.DATA_TYPE_FLOAT;
                     typeLabel = new javax.swing.JLabel("Type: Float");
-                    float floatValue = Float.parseFloat(registerValueField.getText());
-                    buf = java.nio.ByteBuffer.allocate(4).putFloat(floatValue).array();
-                    buf = ModbusMechanic.wordSwap(buf);
+                    buf = ModbusMechanic.floatToBytes(registerValueField.getText());
                 }
                 if (dataTypeSelector.getSelectedItem().equals("U Int 16"))
                 {
+                    dataType = ModbusMechanic.DATA_TYPE_INT_16;
                     typeLabel = new javax.swing.JLabel("Type: U Int 16");
                     int intValue = Integer.parseInt(registerValueField.getText());
-                    buf = java.nio.ByteBuffer.allocate(4).putInt(intValue).array();
-                    buf = java.util.Arrays.copyOfRange(buf, 2, 4);
                     if (intValue < 0 || intValue > 65535)
                     {
                         JOptionPane.showMessageDialog(this, "Please enter a value between 0 and 65535", "Value out of range", JOptionPane.ERROR_MESSAGE, null);
                         error = true;
                     }
+                    buf = ModbusMechanic.int16ToBytes(registerValueField.getText());
                 }
                 if (dataTypeSelector.getSelectedItem().equals("U Int 32"))
                 {
+                    dataType = ModbusMechanic.DATA_TYPE_INT_32;
                     typeLabel = new javax.swing.JLabel("Type: U Int 32");
                     long intValue = Long.parseLong(registerValueField.getText());
                     if (intValue < 0L || intValue > 4294967295L)
@@ -239,8 +240,7 @@ public class SlaveSimulatorFrame extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(this, "Please enter a value between 0 and 4294967295", "Value out of range", JOptionPane.ERROR_MESSAGE, null);
                         error = true;
                     }
-                    buf = java.nio.ByteBuffer.allocate(8).putLong(intValue).array();
-                    buf = java.util.Arrays.copyOfRange(buf, 4, 8);
+                    buf = ModbusMechanic.int32ToBytes(registerValueField.getText());
                 }
                 if (wordSwapCheckbox.isSelected() && buf.length == 4)
                 {
@@ -257,15 +257,51 @@ public class SlaveSimulatorFrame extends javax.swing.JFrame {
             }
             if (!error)
             {
+                final int aDataType = dataType;
+                final int aFunctionCode = functionCode;
+                final int aRegisterNumber = registerNumber;
+                final boolean wordSwap = wordSwapCheckbox.isSelected();
+                final boolean byteSwap = byteSwapCheckbox.isSelected();
                 javax.swing.JPanel registerPanel = new javax.swing.JPanel();
                 registerPanel.setLayout(new java.awt.FlowLayout());;
                 registerPanel.add(functionLabel);
                 registerPanel.add(typeLabel);
                 registerPanel.add(valueLabel);
+                if (dataType > 0)
+                {
+                    registerPanel.add(valueField);
+                    valueField.addKeyListener(new java.awt.event.KeyAdapter(){
+                        @Override
+                        public void keyReleased(java.awt.event.KeyEvent e)
+                        {
+                            byte[] buf = null;
+                            if (aDataType == ModbusMechanic.DATA_TYPE_FLOAT)
+                            {
+                                buf = ModbusMechanic.floatToBytes(valueField.getText());
+                            }
+                            if (aDataType == ModbusMechanic.DATA_TYPE_INT_32)
+                            {
+                                buf = ModbusMechanic.int32ToBytes(valueField.getText());
+                            }
+                            if (aDataType == ModbusMechanic.DATA_TYPE_INT_16)
+                            {
+                                buf = ModbusMechanic.int16ToBytes(valueField.getText());
+                            }
+                            if (wordSwap)
+                            {
+                                buf = ModbusMechanic.wordSwap(buf);
+                            }
+                            if (byteSwap)
+                            {
+                                buf = ModbusMechanic.byteSwap(buf);
+                            }
+                            ModbusMechanic.setSimulatorRegisterValue(aFunctionCode, aRegisterNumber, buf);
+                        }
+                    });
+                }
                 javax.swing.JButton deleteButton = new javax.swing.JButton("Delete");
-                final int aFunctionCode = functionCode;
-                final int aRegisterNumber = registerNumber;
-                
+                SimulatorRegisterHolder rh = new SimulatorRegisterHolder(functionCode, registerNumber, valueField, wordSwapCheckbox.isSelected(), byteSwapCheckbox.isSelected(), dataType);
+                registerList.add(rh);
                 javax.swing.JSeparator seperator = new javax.swing.JSeparator();
                 deleteButton.addActionListener(new java.awt.event.ActionListener(){
                     public void actionPerformed(java.awt.event.ActionEvent e)
@@ -286,6 +322,7 @@ public class SlaveSimulatorFrame extends javax.swing.JFrame {
                                 getContentPane().remove(components[i]);
                             }
                         }
+                        registerList.remove(ModbusMechanic.findRegisterHolderByRegister(registerList, aFunctionCode, aRegisterNumber));
                         pack();
                     }
                 });
@@ -318,6 +355,10 @@ public class SlaveSimulatorFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_registerTypeSelectorActionPerformed
 
+    public ArrayList getRegisterList()
+    {
+        return registerList;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;

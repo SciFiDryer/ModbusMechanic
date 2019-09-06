@@ -60,6 +60,7 @@ public class ModbusMechanic {
     public static int SLAVE_SIMULATOR_RTU = 2;
     public static int DATA_TYPE_FLOAT = 1;
     public static int DATA_TYPE_INT_16 = 2;
+    public static int DATA_TYPE_INT_32 = 3;
     public static ModbusSlave slave = null;
     public static ByteBuffer hrBuf = null;
     public static ByteBuffer irBuf = null;
@@ -365,8 +366,9 @@ public class ModbusMechanic {
         }
         return sb.toString();
     }
-    public static void startSlaveSimulator(int port)
+    public static void startSlaveSimulatorTCP(int port, java.util.ArrayList registerList)
     {
+         
         try
         {
             TcpParameters parameters = new TcpParameters();
@@ -375,6 +377,7 @@ public class ModbusMechanic {
             slave = ModbusSlaveFactory.createModbusSlaveTCP(parameters);
             slave.setServerAddress(1);
             slave.setReadTimeout(30000);
+            slave.setDataHolder(new SimulatorDataHolder(registerList));
             slave.listen();
         }
         catch(Exception e)
@@ -476,5 +479,120 @@ public class ModbusMechanic {
         {
             e.printStackTrace();
         }
+    }
+    public static class SimulatorDataHolder extends DataHolder {
+        
+        java.util.ArrayList<SimulatorRegisterHolder> registerList = null;
+        public SimulatorDataHolder(java.util.ArrayList aRegisterList) {
+            registerList = aRegisterList;
+        }
+        
+        @Override
+        public void writeHoldingRegister(int offset, int value) throws IllegalDataAddressException, IllegalDataValueException {
+            super.writeHoldingRegister(offset, value);
+
+        }
+
+        @Override
+        public void writeHoldingRegisterRange(int offset, int[] range) throws IllegalDataAddressException, IllegalDataValueException {
+            
+            super.writeHoldingRegisterRange(offset, range);
+            SimulatorRegisterHolder holder = ModbusMechanic.findRegisterHolderByRegister(registerList, 3, offset);
+            ModbusMechanic.refreshRegisterHolder(holder);
+        }
+
+        @Override
+        public void writeCoil(int offset, boolean value) throws IllegalDataAddressException, IllegalDataValueException {
+            super.writeCoil(offset, value);
+        }
+
+        @Override
+        public void writeCoilRange(int offset, boolean[] range) throws IllegalDataAddressException, IllegalDataValueException {
+            super.writeCoilRange(offset, range);
+        }
+    }
+    public static SimulatorRegisterHolder findRegisterHolderByRegister(java.util.ArrayList<SimulatorRegisterHolder> registerList, int functionCode,  int registerNumber)
+    {
+        for (int i = 0; i < registerList.size(); i++)
+        {
+            SimulatorRegisterHolder currentHolder = registerList.get(i);
+            if (currentHolder.getRegisterNumber() == registerNumber && currentHolder.getFunctionCode() == functionCode)
+            {
+                return currentHolder;
+            }
+        }
+        return null;
+    }
+    public static void refreshRegisterHolder(SimulatorRegisterHolder holder)
+    {
+        int functionCode = holder.getFunctionCode();
+        if (functionCode == ModbusMechanic.READ_HOLDING_REGISTER_CODE)
+        {
+            int dataType = holder.getDataType();
+            if (dataType == ModbusMechanic.DATA_TYPE_FLOAT)
+            {
+                int registerNumber = holder.getRegisterNumber();
+                byte[] registers = Arrays.copyOfRange(slave.getDataHolder().getHoldingRegisters().getBytes(), registerNumber*2, (registerNumber*2)+4);
+                if (holder.getByteSwap())
+                {
+                    registers = ModbusMechanic.byteSwap(registers);
+                }
+                if (holder.getWordSwap())
+                {
+                    registers = ModbusMechanic.wordSwap(registers);
+                }
+                holder.getValueField().setText(DataUtils.toFloat(registers) + "");
+            }
+            if (dataType == ModbusMechanic.DATA_TYPE_INT_16)
+            {
+                int registerNumber = holder.getRegisterNumber();
+                byte[] registers = Arrays.copyOfRange(slave.getDataHolder().getHoldingRegisters().getBytes(), registerNumber*2, (registerNumber*2)+2);
+                if (holder.getByteSwap())
+                {
+                    registers = ModbusMechanic.byteSwap(registers);
+                }
+                holder.getValueField().setText(DataUtils.BeToIntArray(registers)[0] + "");
+            }
+            if (dataType == ModbusMechanic.DATA_TYPE_INT_32)
+            {
+                int registerNumber = holder.getRegisterNumber();
+                byte[] registers = Arrays.copyOfRange(slave.getDataHolder().getHoldingRegisters().getBytes(), registerNumber*2, (registerNumber*2)+4);
+                if (holder.getByteSwap())
+                {
+                    registers = ModbusMechanic.byteSwap(registers);
+                }
+                if (holder.getWordSwap())
+                {
+                    registers = ModbusMechanic.wordSwap(registers);
+                }
+                holder.getValueField().setText(ModbusMechanic.bytesToInt32(registers) + "");
+            }
+        }
+    }
+    public static byte[] floatToBytes(String floatValue)     
+    {
+        float theFloat = Float.parseFloat(floatValue);
+        byte[] buf = java.nio.ByteBuffer.allocate(4).putFloat(theFloat).array();
+        buf = ModbusMechanic.wordSwap(buf);
+        return buf;
+    }
+    public static byte[] int32ToBytes(String int32Value)
+    {
+        long intValue = Long.parseLong(int32Value);
+        byte[] buf = java.nio.ByteBuffer.allocate(8).putLong(intValue).array();
+        buf = java.util.Arrays.copyOfRange(buf, 4, 8);
+        return buf;
+    }
+    public static byte[] int16ToBytes(String int16Value)
+    {
+        int intValue = Integer.parseInt(int16Value);
+        byte[] buf = java.nio.ByteBuffer.allocate(4).putInt(intValue).array();
+        buf = java.util.Arrays.copyOfRange(buf, 2, 4);
+        return buf;
+    }
+    public static long bytesToInt32(byte[] buf)
+    {
+        int[] regs = DataUtils.BeToIntArray(buf);
+        return ((long)regs[0]*65536) + (long)regs[1];
     }
 }
