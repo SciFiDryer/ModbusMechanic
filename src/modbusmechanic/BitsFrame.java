@@ -38,7 +38,25 @@ public class BitsFrame extends javax.swing.JFrame {
     {
         responseBytes = aResponseBytes;
         initComponents();
+        constructBits(responseBytes.length*8);
+        pack();
         setAllBitsEnabled(false);
+    }
+    public void calculateBytes()
+    {
+        uncheckAllBits();
+        int bitNum = 0;
+        for (int byteNum = responseBytes.length-1; byteNum >= 0; byteNum = byteNum - 1)
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                if ((responseBytes[byteNum] >> i & 1) == 1)
+                {
+                    bitCheckbox[bitNum].setSelected(true);
+                }
+                bitNum++;
+            }
+        }
     }
     public void uncheckAllBits()
     {

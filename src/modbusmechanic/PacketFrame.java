@@ -834,6 +834,7 @@ public class PacketFrame extends javax.swing.JFrame {
                 }
                 valueLabel.setText("Response value: " + boolValue);
             }
+            bitsButton.setVisible(true);
         }
     }
     public void displayRaw()
@@ -1262,7 +1263,10 @@ public class PacketFrame extends javax.swing.JFrame {
             }
             valueLabel.setText("Write value:");
             ((java.awt.CardLayout)(writeParentPane.getLayout())).show(writeParentPane, "writeValuePane");
-            bitsButton.setVisible(true);
+            if (u16ReadButton.isSelected() || u32ReadButton.isSelected())
+            {
+                bitsButton.setVisible(true);
+            }
         }
         if (coilsFlag && writeFlag)
         {
@@ -1447,7 +1451,7 @@ public class PacketFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_valueFieldKeyReleased
 
     private void bitsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bitsButtonActionPerformed
-        if (valueField.isVisible())
+        if (functionSelector.getSelectedItem().equals("Write Holding Registers (0x16)"))
         {
             if (u16ReadButton.isSelected())
             {
@@ -1477,6 +1481,11 @@ public class PacketFrame extends javax.swing.JFrame {
                 }
                 bitsFrame.displayInt32(int32Value);
             }
+        }
+        else
+        {
+            bitsFrame = new BitsFrame(getLastResponseBytes());
+            bitsFrame.calculateBytes();
         }
         bitsFrame.setVisible(true);
     }//GEN-LAST:event_bitsButtonActionPerformed
