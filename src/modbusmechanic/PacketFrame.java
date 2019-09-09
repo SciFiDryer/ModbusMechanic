@@ -37,6 +37,7 @@ public class PacketFrame extends javax.swing.JFrame {
     public int lastFunctionCode = 0;
     public int mediumType = 0;
     public ArrayList<String[]> bookmarkList = new ArrayList<String[]>();
+    BitsFrame bitsFrame = null;
     public PacketFrame()
     {
         try
@@ -160,6 +161,7 @@ public class PacketFrame extends javax.swing.JFrame {
         offButton = new javax.swing.JRadioButton();
         onButton = new javax.swing.JRadioButton();
         blankPane = new javax.swing.JPanel();
+        bitsButton = new javax.swing.JButton();
         jSeparator6 = new javax.swing.JSeparator();
         packetPanel = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
@@ -430,7 +432,7 @@ public class PacketFrame extends javax.swing.JFrame {
 
         writeValuePane.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        valueField.setColumns(5);
+        valueField.setColumns(8);
         valueField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 valueFieldKeyReleased(evt);
@@ -459,6 +461,15 @@ public class PacketFrame extends javax.swing.JFrame {
 
         responsePanel.add(writeParentPane);
         ((java.awt.CardLayout)(writeParentPane.getLayout())).show(writeParentPane, "blankPane");
+
+        bitsButton.setText("Individual Bits...");
+        bitsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bitsButtonActionPerformed(evt);
+            }
+        });
+        responsePanel.add(bitsButton);
+        bitsButton.setVisible(false);
 
         getContentPane().add(responsePanel);
         getContentPane().add(jSeparator6);
@@ -1216,6 +1227,7 @@ public class PacketFrame extends javax.swing.JFrame {
         boolean writeFlag = false;
         boolean coilsFlag = false;
         boolean wordsFlag = false;
+        bitsButton.setVisible(false);
         if (functionSelector.getSelectedItem().equals("Read Coils (0x01)") || functionSelector.getSelectedItem().equals("Read Discrete Inputs (0x02)") || functionSelector.getSelectedItem().equals("Write Coils (0x15)"))
         {
             coilsFlag = true;
@@ -1242,7 +1254,7 @@ public class PacketFrame extends javax.swing.JFrame {
             byteSwapCheckbox.setEnabled(false);
             quantityField.setText("1");
         }
-        if (writeFlag)
+        if (writeFlag && !coilsFlag)
         {
             if (customMessageButton.isSelected())
             {
@@ -1250,6 +1262,7 @@ public class PacketFrame extends javax.swing.JFrame {
             }
             valueLabel.setText("Write value:");
             ((java.awt.CardLayout)(writeParentPane.getLayout())).show(writeParentPane, "writeValuePane");
+            bitsButton.setVisible(true);
         }
         if (coilsFlag && writeFlag)
         {
@@ -1433,6 +1446,41 @@ public class PacketFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_valueFieldKeyReleased
 
+    private void bitsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bitsButtonActionPerformed
+        if (valueField.isVisible())
+        {
+            if (u16ReadButton.isSelected())
+            {
+                bitsFrame = new BitsFrame(valueField, 16);
+                int int16Value = 0;
+                try
+                {
+                    int16Value = Integer.parseInt(valueField.getText());
+                }
+                catch(NumberFormatException e)
+                {
+                    e.printStackTrace();
+                }
+                bitsFrame.displayInt16(int16Value);
+            }
+            if (u32ReadButton.isSelected())
+            {
+                bitsFrame = new BitsFrame(valueField, 32);
+                long int32Value = 0;
+                try
+                {
+                    int32Value = Long.parseLong(valueField.getText());
+                }
+                catch(NumberFormatException e)
+                {
+                    e.printStackTrace();
+                }
+                bitsFrame.displayInt32(int32Value);
+            }
+        }
+        bitsFrame.setVisible(true);
+    }//GEN-LAST:event_bitsButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1453,6 +1501,7 @@ public class PacketFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem addBookmarkItem;
     private javax.swing.JRadioButton asciiReadButton;
     private javax.swing.JComboBox<String> baudRateSelector;
+    private javax.swing.JButton bitsButton;
     private javax.swing.JPanel blankPane;
     private javax.swing.JMenu bookmarksMenu;
     private javax.swing.JPanel boolPane;
