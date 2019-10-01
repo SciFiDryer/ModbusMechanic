@@ -36,7 +36,7 @@ WIP
 
 ## Latest release
 
-[ModbusMechanic.v0.5.zip](https://github.com/SciFiDryer/ModbusMechanic/releases/download/v0.5/ModbusMechanic.v0.5.zip)
+[ModbusMechanic.v0.6.zip](https://github.com/SciFiDryer/ModbusMechanic/releases/download/v0.5/ModbusMechanic.v0.6.zip)
 
 ## Completed features and planned features in GUI
 
