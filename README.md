@@ -32,7 +32,7 @@ This is a NetBeans project. It can be built by pulling it in the NetBeans IDE or
 
 ## Guide
 
-WIP
+https://scifidryer.github.io/ModbusMechanic/
 
 ## Latest release
 
