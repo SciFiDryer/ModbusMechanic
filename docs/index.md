@@ -16,7 +16,7 @@ After the OpenJDK is installed, you should be able to launch Modbus Mechanic by 
 ## Using Modbus
 
 ### Reading and writing device data
-In order to read data from devices, you need to know a few things.
+In order to read or write data from devices, you need to know a few things.
 - IP address of device (for TCP devices)
 - Node id of device (often 1 for TCP devices)
 - Function code
@@ -31,5 +31,5 @@ Data registers are organized into different groups. The groups of registers are:
 - Inputs - 16 bit values that are read only.
 - Holding - 16 bit values that are read/write.
 
-### Quantity
+#### Quantity
 Each 16 bit register is called a word. Some data types are longer than 16 bits, such as a float value. Modbus supports this by combining multiple registers. The length field is used to specify how many registers the read should be in 16 bit words.
