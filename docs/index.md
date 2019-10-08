@@ -43,3 +43,6 @@ Some devices swap the words and/or bytes before converting the data type to Floa
 
 ### Writing values
 Values can be written to devices by entering them into the text area. Select the appropriate radio buttons in order to convert the data.
+
+## Using a simulator to test Modbus
+If you do not have a Modbus device but want to test Modbus Mechanic, go to Tools>Start slave simulator and enter some register values. Then read them back using your local address (127.0.0.1). Writes will update values in the slave simulator window. Starting the slave simulator makes your PC Modbus accesible on any other network interfaces.
