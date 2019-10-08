@@ -30,6 +30,10 @@ Data registers are organized into different groups. The groups of registers are:
 - Coils - Single bit values that can be changed with a write. Also similar to boolean values.
 - Inputs - 16 bit values that are read only.
 - Holding - 16 bit values that are read/write.
+Some devices use an offset in their register numbering. Offset devices start labeling their registers at address 1. The actual register used in the register field of the packet is 1 lower. For devices that use an offset, subtract 1 from the register address, as Modbus Mechanic uses addressing starting from 0.
 
 #### Quantity
 Each 16 bit register is called a word. Some data types are longer than 16 bits, such as a float value. Modbus supports this by combining multiple registers. The length field is used to specify how many registers the read should be in 16 bit words.
+
+#### Data interpretation
+To read a Float, 16 Bit Integer, or 32 Bit Integer, use the appropriate radio buttons. The custom radio button is for reading raw words of data in hexidecimal format. The ASCII radio button interprets the recieved data as ASCII characters. You must specify length when reading ASCII.
