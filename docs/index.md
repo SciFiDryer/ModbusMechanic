@@ -37,3 +37,9 @@ Each 16 bit register is called a word. Some data types are longer than 16 bits, 
 
 #### Data interpretation
 To read a Float, 16 Bit Integer, or 32 Bit Integer, use the appropriate radio buttons. The custom radio button is for reading raw words of data in hexidecimal format. The ASCII radio button interprets the recieved data as ASCII characters. You must specify length when reading ASCII.
+
+#### Word and byte swapping
+Some devices swap the words and/or bytes before converting the data type to Float, Int or ASCII. The checkboxes are to quickly determine what operation is needed in order to get good data.
+
+### Writing values
+Values can be written to devices by entering them into the text area. Select the appropriate radio buttons in order to convert the data.
