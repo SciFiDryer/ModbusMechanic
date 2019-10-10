@@ -30,6 +30,7 @@ Data registers are organized into different groups. The groups of registers are:
 - Coils - Single bit values that can be changed with a write. Also similar to boolean values.
 - Inputs - 16 bit values that are read only.
 - Holding - 16 bit values that are read/write.
+
 Some devices use an offset in their register numbering. Offset devices start labeling their registers at address 1. The actual register used in the register field of the packet is 1 lower. For devices that use an offset, subtract 1 from the register address, as Modbus Mechanic uses addressing starting from 0.
 
 #### Quantity
@@ -46,3 +47,6 @@ Values can be written to devices by entering them into the text area. Select the
 
 ## Using a simulator to test Modbus
 If you do not have a Modbus device but want to test Modbus Mechanic, go to Tools>Start slave simulator and enter some register values. Then read them back using your local address (127.0.0.1). Writes will update values in the slave simulator window. Starting the slave simulator makes your PC Modbus accesible on any other network interfaces.
+
+## Modbus RTU troubleshooting
+Modbus Mechanic has an RTU bus monitor. Go to Tools>Start RTU Serial Monitor to see RTU traffic. Due to the way some serial device drivers work, you may only see one side of the message. This is normal.
