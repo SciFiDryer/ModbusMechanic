@@ -120,6 +120,8 @@ public class PacketFrame extends javax.swing.JFrame {
         modbusPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         destHostField = new javax.swing.JTextField();
+        jLabel18 = new javax.swing.JLabel();
+        portField = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         slaveNodeField = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
@@ -269,6 +271,14 @@ public class PacketFrame extends javax.swing.JFrame {
             }
         });
         modbusPanel.add(destHostField);
+
+        jLabel18.setText("Port");
+        modbusPanel.add(jLabel18);
+
+        portField.setColumns(3);
+        portField.setText("502");
+        portField.setToolTipText("");
+        modbusPanel.add(portField);
 
         jLabel2.setText("Slave Node");
         modbusPanel.add(jLabel2);
@@ -571,6 +581,15 @@ public class PacketFrame extends javax.swing.JFrame {
         int quantity = 0;
         int transactionId = 1;
         int protocolId = 0;
+        int tcpPort = 502;
+        try
+        {
+            tcpPort = Integer.parseInt(portField.getText());
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         boolean writingFlag = false;
         boolean coilsFlag = false;
         byte[] values = null;
@@ -670,7 +689,7 @@ public class PacketFrame extends javax.swing.JFrame {
         {
             try
             {
-                lastResponse = ModbusMechanic.generateModbusTCPRequest(destHostField.getText(), 502, protocolId, transactionId, slaveNode, functionCode, register, quantity, values);
+                lastResponse = ModbusMechanic.generateModbusTCPRequest(destHostField.getText(), tcpPort, protocolId, transactionId, slaveNode, functionCode, register, quantity, values);
             }
             catch (Exception e)
             {
@@ -1347,6 +1366,7 @@ public class PacketFrame extends javax.swing.JFrame {
             destHostField.setEnabled(false);
             protoIdField.setEnabled(false);
             transactionField.setEnabled(false);
+            portField.setEnabled(false);
         }
     }//GEN-LAST:event_rtuMsgButtonActionPerformed
 
@@ -1356,6 +1376,7 @@ public class PacketFrame extends javax.swing.JFrame {
             protoIdField.setEnabled(true);
             transactionField.setEnabled(true);
             destHostField.setEnabled(true);
+            portField.setEnabled(true);
         }
     }//GEN-LAST:event_tcpMsgButtonActionPerformed
 
@@ -1535,6 +1556,7 @@ public class PacketFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1564,6 +1586,7 @@ public class PacketFrame extends javax.swing.JFrame {
     private javax.swing.JRadioButton onButton;
     private javax.swing.JPanel packetPanel;
     private javax.swing.JComboBox<String> paritySelector;
+    private javax.swing.JTextField portField;
     private javax.swing.JTextField protoIdField;
     private javax.swing.JTextField quantityField;
     private javax.swing.JTextArea rawTextBox;
