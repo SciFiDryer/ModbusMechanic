@@ -67,6 +67,7 @@ public class ModbusMechanic {
     public static ByteBuffer irBuf = null;
     public static ModbusCoils mc = new ModbusCoils(65535);
     public static ModbusCoils di = new ModbusCoils(65535);
+    public static SlaveWatchWindow watchWindow = null;
     public static void main(String[] args)
     {
         new PacketFrame().setVisible(true);
@@ -496,13 +497,43 @@ public class ModbusMechanic {
             super.writeHoldingRegister(offset, value);
 
         }
-
+        @Override
+        public int readHoldingRegister(int offset) throws IllegalDataAddressException
+        {
+            printToWatchWindow("Holding register read request at offset " + offset + " single");
+            return super.readHoldingRegister(offset);
+        }
+        @Override
+        public int[] readHoldingRegisterRange(int offset, int quantity) throws IllegalDataAddressException
+        {
+            printToWatchWindow("Holding register read request at offset " + offset + " length " + quantity);
+            return super.readHoldingRegisterRange(offset, quantity);
+        }
+        @Override
+        public int[] readInputRegisterRange(int offset, int quantity) throws IllegalDataAddressException
+        {
+            printToWatchWindow("Input register read request at offset " + offset + " length " + quantity);
+            return super.readInputRegisterRange(offset, quantity);
+        }
+        @Override
+        public boolean[] readDiscreteInputRange(int offset, int quantity) throws IllegalDataAddressException, IllegalDataValueException
+        {
+            printToWatchWindow("Discrete input read request at offset " + offset + " length " + quantity);
+            return super.readDiscreteInputRange(offset, quantity);
+        }
+        @Override
+        public boolean[] readCoilRange(int offset, int quantity) throws IllegalDataAddressException, IllegalDataValueException
+        {
+            printToWatchWindow("Coil read request at offset " + offset + " length " + quantity);
+            return super.readCoilRange(offset, quantity);
+        }
         @Override
         public void writeHoldingRegisterRange(int offset, int[] range) throws IllegalDataAddressException, IllegalDataValueException {
             
             super.writeHoldingRegisterRange(offset, range);
             SimulatorRegisterHolder holder = ModbusMechanic.findRegisterHolderByRegister(registerList, 3, offset);
             ModbusMechanic.refreshRegisterHolder(holder);
+            printToWatchWindow("Holding register write request at offset " + offset + " length " + range.length);
         }
 
         @Override
@@ -515,6 +546,7 @@ public class ModbusMechanic {
             super.writeCoilRange(offset, range);
             SimulatorRegisterHolder holder = ModbusMechanic.findRegisterHolderByRegister(registerList, 1, offset);
             ModbusMechanic.refreshRegisterHolder(holder);
+            printToWatchWindow("Coil write request at offset " + offset + " length " + range.length);
         }
     }
     public static SimulatorRegisterHolder findRegisterHolderByRegister(java.util.ArrayList<SimulatorRegisterHolder> registerList, int functionCode,  int registerNumber)
@@ -586,6 +618,17 @@ public class ModbusMechanic {
             catch (Exception e)
             {
                 e.printStackTrace();
+            }
+        }
+    }
+    public static void printToWatchWindow(String msg)
+    {
+        if (watchWindow != null)
+        {
+            watchWindow.msgTextArea.setText(watchWindow.msgTextArea.getText() + msg + "\n");
+            if (watchWindow.autoScrollCheckbox.isSelected())
+            {
+                watchWindow.msgTextArea.setCaretPosition(watchWindow.msgTextArea.getText().length());
             }
         }
     }

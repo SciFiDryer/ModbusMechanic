@@ -64,6 +64,9 @@ public class SlaveSimulatorFrame extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -156,6 +159,20 @@ public class SlaveSimulatorFrame extends javax.swing.JFrame {
         jPanel3.add(jLabel5);
 
         getContentPane().add(jPanel3);
+
+        jMenu1.setText("Tools");
+
+        jMenuItem1.setText("Show watch window");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
+
+        jMenuBar1.add(jMenu1);
+
+        setJMenuBar(jMenuBar1);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -381,6 +398,12 @@ public class SlaveSimulatorFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_registerTypeSelectorActionPerformed
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        SlaveWatchWindow watchWindow = new SlaveWatchWindow();
+        watchWindow.setVisible(true);
+        ModbusMechanic.watchWindow = watchWindow;
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     public ArrayList getRegisterList()
     {
         return registerList;
@@ -400,6 +423,9 @@ public class SlaveSimulatorFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
