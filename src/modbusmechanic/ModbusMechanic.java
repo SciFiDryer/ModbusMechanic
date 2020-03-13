@@ -138,7 +138,7 @@ public class ModbusMechanic {
             TcpParameters tcpParameters = new TcpParameters();
             tcpParameters.setHost(InetAddress.getByName(host));
             tcpParameters.setKeepAlive(true);
-            tcpParameters.setPort(Modbus.TCP_PORT);
+            tcpParameters.setPort(port);
             //this should work but somehow doesn't
             //tcpParameters.setConnectionTimeout(3000);
             
