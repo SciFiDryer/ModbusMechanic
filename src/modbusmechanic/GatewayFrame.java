@@ -248,6 +248,7 @@ public class GatewayFrame extends javax.swing.JFrame {
     public void saveProperties(java.io.File f)
     {
         Properties prop = new Properties();
+        prop.put("tcpport", tcpPortField.getText());
         prop.put("comport", comPortSelector.getSelectedItem().toString());
         prop.put("baud", baudRateSelector.getSelectedItem().toString());
         prop.put("databits", dataBitsField.getText());

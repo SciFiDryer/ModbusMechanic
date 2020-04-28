@@ -34,11 +34,10 @@ public class ModbusSlaveGatewayTCP implements Runnable {
     boolean isRunning = true;
     GatewayManager manager = null;
     SerialPort port = null;
-    public ModbusSlaveGatewayTCP(int port, GatewayManager aManager) throws IOException
+    public ModbusSlaveGatewayTCP(GatewayManager aManager) throws IOException
     {
         manager = aManager;
-        ss = new ServerSocket(port);
-        
+        ss = new ServerSocket(manager.tcpPort);
         threadPool = Executors.newFixedThreadPool(threadPoolSize);
         new Thread(this).start();
     }

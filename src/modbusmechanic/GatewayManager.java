@@ -32,6 +32,7 @@ public class GatewayManager {
     int dataBits = 0;
     int stopBits = 0;
     int parity = 0;
+    int tcpPort = 0;
     public GatewayManager(File propFile) throws Exception
     {
         Properties prop = new Properties();
@@ -39,6 +40,7 @@ public class GatewayManager {
         prop.load(fis);
         isCommandLine = true;
         comPort = prop.getProperty("comport", "");
+        tcpPort = Integer.parseInt(prop.getProperty("tcpport", "502"));
         baud = Integer.parseInt(prop.getProperty("baud", "9600"));
         dataBits = Integer.parseInt(prop.getProperty("databits", "8"));
         stopBits = Integer.parseInt(prop.getProperty("stopbits", "1"));
@@ -81,13 +83,14 @@ public class GatewayManager {
                     parentFrame.startStopButton.setText("Starting Gateway");
                     parentFrame.statusLabel.setForeground(Color.black);
                     parentFrame.statusLabel.setText("Gateway is starting");
+                    tcpPort = Integer.parseInt(parentFrame.tcpPortField.getText());
                     comPort = parentFrame.comPortSelector.getSelectedItem().toString();
                     baud = Integer.parseInt(parentFrame.baudRateSelector.getSelectedItem().toString());
                     dataBits = Integer.parseInt(parentFrame.dataBitsField.getText());
                     stopBits = Integer.parseInt(parentFrame.stopBitsField.getText());
                     parity = parentFrame.paritySelector.getSelectedIndex();
                 }
-                slave = new ModbusSlaveGatewayTCP(502, this);
+                slave = new ModbusSlaveGatewayTCP(this);
             }
             catch (Exception e)
             {
