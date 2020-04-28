@@ -68,10 +68,46 @@ public class ModbusMechanic {
     public static ModbusCoils mc = new ModbusCoils(65535);
     public static ModbusCoils di = new ModbusCoils(65535);
     public static SlaveWatchWindow watchWindow = null;
+    public static boolean debug = false;
+    public static boolean startGui = true;
     public static void main(String[] args)
     {
-        new PacketFrame().setVisible(true);
-        //Modbus.setLogLevel(Modbus.LogLevel.LEVEL_DEBUG);
+        if (args.length > 0)
+        {
+            for (int i = 0; i < args.length; i++)
+            {
+                if (args[i].equals("-debug"))
+                {
+                    debug = true;
+                }
+                if (args[i].equals("-gateway"))
+                {
+                    startGui = false;
+                    try
+                    {
+                        File f = new File(args[i+1]);
+                        new GatewayManager(f).handleStartStop();
+                    }
+                    catch (Exception e)
+                    {
+                        if (debug)
+                        {
+                            e.printStackTrace();
+                        }
+                        System.out.println("Error starting gateway");
+                        System.exit(0);
+                    }
+                }
+            }
+        }
+        if (startGui)
+        {
+            new PacketFrame().setVisible(true);
+        }
+        if (debug)
+        {
+            Modbus.setLogLevel(Modbus.LogLevel.LEVEL_DEBUG);
+        }
         
     }
     public static String[] getPortNames()
@@ -92,7 +128,10 @@ public class ModbusMechanic {
         }
         catch (SerialPortException e)
         {
-            e.printStackTrace();
+            if (debug)
+            {
+                e.printStackTrace();
+            }
         }
         
         return portStrings;
@@ -105,7 +144,10 @@ public class ModbusMechanic {
         }
         catch (ClassNotFoundException e)
         {
-            e.printStackTrace();
+            if (debug)
+            {
+                e.printStackTrace();
+            }
             return false;
         }
         return true;
@@ -143,7 +185,7 @@ public class ModbusMechanic {
             //tcpParameters.setConnectionTimeout(3000);
             
             ModbusMaster master = ModbusMasterFactory.createModbusMasterTCP(tcpParameters);
-            master.setResponseTimeout(3000);
+            master.setResponseTimeout(5000);
             if (transactionId == -1)
             {
                 

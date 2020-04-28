@@ -1,0 +1,123 @@
+/*
+ * Copyright 2020 Matt Jamesson <scifidryer@gmail.com>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package modbusmechanic;
+
+import java.awt.Color;
+import javax.swing.*;
+import java.io.*;
+import java.util.*;
+/**
+ *
+ * @author Matt Jamesson <scifidryer@gmail.com>
+ */
+public class GatewayManager {
+    GatewayFrame parentFrame = null;
+    boolean isCommandLine = false;
+    ModbusSlaveGatewayTCP slave = null;
+    String comPort = null;
+    int baud = 0;
+    int dataBits = 0;
+    int stopBits = 0;
+    int parity = 0;
+    public GatewayManager(File propFile) throws Exception
+    {
+        Properties prop = new Properties();
+        FileInputStream fis = new FileInputStream(propFile);
+        prop.load(fis);
+        isCommandLine = true;
+        comPort = prop.getProperty("comport", "");
+        baud = Integer.parseInt(prop.getProperty("baud", "9600"));
+        dataBits = Integer.parseInt(prop.getProperty("databits", "8"));
+        stopBits = Integer.parseInt(prop.getProperty("stopbits", "1"));
+        parity = Integer.parseInt(prop.getProperty("parity", "0"));
+    }
+    public GatewayManager(GatewayFrame aParentFrame)
+    {
+        parentFrame = aParentFrame;
+    }
+    public void handleException(Exception e)
+    {
+        if (isCommandLine || ModbusMechanic.debug)
+        {
+            e.printStackTrace();
+        }
+        if (!isCommandLine)
+        {
+            JOptionPane.showMessageDialog(parentFrame, e.getMessage(), "Gateway Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    public void handleGatewayReady()
+    {
+        if (!isCommandLine)
+        {
+            parentFrame.statusLabel.setForeground(new Color(66, 189, 0));
+            parentFrame.statusLabel.setText("Gateway is running");
+            parentFrame.startStopButton.setText("Stop Gateway");
+            parentFrame.startStopButton.setEnabled(true);
+        }
+    }
+    public void handleStartStop()
+    {
+        if (slave == null)
+        {
+            try
+            {
+                if (!isCommandLine)
+                {
+                    parentFrame.startStopButton.setEnabled(false);
+                    parentFrame.startStopButton.setText("Starting Gateway");
+                    parentFrame.statusLabel.setForeground(Color.black);
+                    parentFrame.statusLabel.setText("Gateway is starting");
+                    comPort = parentFrame.comPortSelector.getSelectedItem().toString();
+                    baud = Integer.parseInt(parentFrame.baudRateSelector.getSelectedItem().toString());
+                    dataBits = Integer.parseInt(parentFrame.dataBitsField.getText());
+                    stopBits = Integer.parseInt(parentFrame.stopBitsField.getText());
+                    parity = parentFrame.paritySelector.getSelectedIndex();
+                }
+                slave = new ModbusSlaveGatewayTCP(502, this);
+            }
+            catch (Exception e)
+            {
+                handleException(e);
+            }
+        }
+        else
+        {
+            stopGateway();
+        }
+    }
+    public void stopGateway()
+    {
+        if (slave != null)
+        {
+            try
+            {
+                slave.stop();
+                slave = null;
+                if (!isCommandLine)
+                {
+                    parentFrame.startStopButton.setText("Start Gateway");
+                    parentFrame.statusLabel.setForeground(Color.red);
+                    parentFrame.statusLabel.setText("Gateway is stopped");
+                }
+            }
+            catch(java.io.IOException e)
+            {
+                handleException(e);
+            }
+        }
+    }
+}

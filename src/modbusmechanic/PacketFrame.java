@@ -173,6 +173,7 @@ public class PacketFrame extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         rtuSerialMonitorItem = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
         addBookmarkItem = new javax.swing.JMenuItem();
         updateBookmarkItem = new javax.swing.JMenuItem();
@@ -514,6 +515,15 @@ public class PacketFrame extends javax.swing.JFrame {
             }
         });
         jMenu2.add(rtuSerialMonitorItem);
+
+        jMenuItem2.setText("Start TCP Slave->RTU Master gateway...");
+        jMenuItem2.setToolTipText("");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem2);
 
         jMenuBar1.add(jMenu2);
 
@@ -1511,6 +1521,10 @@ public class PacketFrame extends javax.swing.JFrame {
         bitsFrame.setVisible(true);
     }//GEN-LAST:event_bitsButtonActionPerformed
 
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        (new GatewayFrame()).setVisible(true);
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1570,6 +1584,7 @@ public class PacketFrame extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
