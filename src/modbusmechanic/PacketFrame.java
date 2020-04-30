@@ -15,6 +15,7 @@
  */
 package modbusmechanic;
 
+import modbusmechanic.gateway.GatewayFrame;
 import com.intelligt.modbus.jlibmodbus.exception.*;
 import com.intelligt.modbus.jlibmodbus.utils.DataUtils;
 import com.intelligt.modbus.jlibmodbus.msg.base.*;
@@ -917,7 +918,7 @@ public class PacketFrame extends javax.swing.JFrame {
             {
                 JOptionPane.showMessageDialog(this, e.getMessage(), "IO Error", JOptionPane.ERROR_MESSAGE);
             }
-            if (e instanceof Exception)
+            if (ModbusMechanic.debug)
             {
                 e.printStackTrace();
             }

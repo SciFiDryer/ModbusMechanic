@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 package modbusmechanic;
+import modbusmechanic.gateway.GatewayManager;
 import java.net.*;
 import java.io.*;
 import java.nio.*;

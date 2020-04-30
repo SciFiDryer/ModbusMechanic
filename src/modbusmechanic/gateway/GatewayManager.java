@@ -13,12 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package modbusmechanic;
+package modbusmechanic.gateway;
 
+import modbusmechanic.gateway.GatewayFrame;
 import java.awt.Color;
 import javax.swing.*;
 import java.io.*;
+import java.net.Socket;
 import java.util.*;
+import modbusmechanic.ModbusMechanic;
+import purejavacomm.*;
+import java.util.concurrent.*;
 /**
  *
  * @author Matt Jamesson <scifidryer@gmail.com>
@@ -33,6 +38,9 @@ public class GatewayManager {
     int stopBits = 0;
     int parity = 0;
     int tcpPort = 0;
+    SerialPort port = null;
+    RTUQueueManager queueManager = null;
+
     public GatewayManager(File propFile) throws Exception
     {
         Properties prop = new Properties();
@@ -63,6 +71,9 @@ public class GatewayManager {
     }
     public void handleGatewayReady()
     {
+        queueManager.start();
+        RTUPacketListener rtuListener = new RTUPacketListener(this);
+        rtuListener.start();
         if (!isCommandLine)
         {
             parentFrame.statusLabel.setForeground(new Color(66, 189, 0));
@@ -90,6 +101,7 @@ public class GatewayManager {
                     stopBits = Integer.parseInt(parentFrame.stopBitsField.getText());
                     parity = parentFrame.paritySelector.getSelectedIndex();
                 }
+                queueManager = new RTUQueueManager(this);
                 slave = new ModbusSlaveGatewayTCP(this);
             }
             catch (Exception e)
@@ -109,6 +121,7 @@ public class GatewayManager {
             try
             {
                 slave.stop();
+                queueManager.interrupt();
                 slave = null;
                 if (!isCommandLine)
                 {

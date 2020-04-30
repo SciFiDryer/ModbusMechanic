@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package modbusmechanic;
+package modbusmechanic.gateway;
 import javax.swing.*;
 import javax.swing.filechooser.*;
 import java.awt.event.*;
 import java.util.*;
 import java.io.*;
+import modbusmechanic.ModbusMechanic;
 /**
  *
  * @author Matt Jamesson <scifidryer@gmail.com>

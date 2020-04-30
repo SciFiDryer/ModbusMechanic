@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package modbusmechanic;
+package modbusmechanic.gateway;
 
 import java.io.IOException;
 import java.net.*;
@@ -56,11 +56,12 @@ public class ModbusSlaveGatewayTCP implements Runnable {
                 port = (SerialPort)portId.open(this.getClass().getName(), 1000);
                 port.setSerialPortParams(manager.baud, manager.dataBits, manager.stopBits, manager.parity);
                 port.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
+                manager.port = port;
                 manager.handleGatewayReady();
                 while (isRunning)
                 {
                     Socket s = ss.accept();
-                    threadPool.execute(new GatewayThreadTCP(s, port));
+                    threadPool.execute(new GatewayThreadTCP(manager, s, port));
                 }
             }
         }
