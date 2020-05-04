@@ -16,8 +16,6 @@ Download & extract the [latest release](#latest-release) and double click Modbus
 
 ## Known Bugs
 - Modbus ASCII bus monitoring is not supported yet
-- USB serial adapters untested on MacOS
-- Untested on Linux
 
 ## Dependencies
 
