@@ -34,7 +34,7 @@ https://scifidryer.github.io/ModbusMechanic/
 
 ## Latest release
 
-[ModbusMechanic.v0.8.zip](https://github.com/SciFiDryer/ModbusMechanic/releases/download/v0.8/ModbusMechanic.v0.8.zip)
+[ModbusMechanic.v0.9.zip](https://github.com/SciFiDryer/ModbusMechanic/releases/download/v0.9/ModbusMechanic.v0.9.zip)
 
 ## Completed features and planned features in GUI
 
@@ -48,6 +48,7 @@ https://scifidryer.github.io/ModbusMechanic/
 - [x] Data interpreter
 - [x] Word and byte swapper
 - [x] RTU bus monitor
+- [x] Gateway
 - [x] Bookmarks
 - [x] Master simulator
 - [x] Slave simulator
