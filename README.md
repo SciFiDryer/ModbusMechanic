@@ -44,7 +44,7 @@ baud | Baud rate for the serial port. | 9600
 parity | Parity for the serial port. 0=None 1=Odd 2=Even 3=Mark 4=Space | 0
 databits | Data bits for serial port. 5-8 are acceptible. | 8
 stopbits | Stop bits for serial port. 1=1 2=2 3=1.5 | 1
-3. Launch ModbusMechanic with the following arguments -gateway <cfg file location>. Example on Linux for config file named "gateway.cfg".
+3. Launch ModbusMechanic with the -gateway argument followed by the path to the config file. Example on Linux for config file named "gateway.cfg".
   ```
   $ java -jar ModbusMechanic.jar -gateway gateway.cfg
   ```
