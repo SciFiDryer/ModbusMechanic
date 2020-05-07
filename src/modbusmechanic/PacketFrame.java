@@ -39,6 +39,7 @@ public class PacketFrame extends javax.swing.JFrame {
     public int mediumType = 0;
     public ArrayList<String[]> bookmarkList = new ArrayList<String[]>();
     BitsFrame bitsFrame = null;
+    boolean hasTtyPorts = false;
     public PacketFrame()
     {
         try
@@ -104,6 +105,7 @@ public class PacketFrame extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         tcpMsgButton = new javax.swing.JRadioButton();
         rtuMsgButton = new javax.swing.JRadioButton();
+        displayTtySerial = new javax.swing.JCheckBox();
         jSeparator1 = new javax.swing.JSeparator();
         serialPanel = new javax.swing.JPanel();
         jLabel14 = new javax.swing.JLabel();
@@ -210,6 +212,15 @@ public class PacketFrame extends javax.swing.JFrame {
         });
         typePanel.add(rtuMsgButton);
 
+        displayTtySerial.setText("Display tty serial ports");
+        displayTtySerial.setEnabled(false);
+        displayTtySerial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                displayTtySerialActionPerformed(evt);
+            }
+        });
+        typePanel.add(displayTtySerial);
+
         getContentPane().add(typePanel);
         getContentPane().add(jSeparator1);
 
@@ -219,7 +230,7 @@ public class PacketFrame extends javax.swing.JFrame {
         jLabel12.setText("Port");
         serialPanel.add(jLabel12);
 
-        comPortSelector.setModel(new DefaultComboBoxModel(ModbusMechanic.getPortNames()));
+        comPortSelector.setModel(getPortNames());
         comPortSelector.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comPortSelectorActionPerformed(evt);
@@ -1252,6 +1263,22 @@ public class PacketFrame extends javax.swing.JFrame {
     }
     public void fireSelectionEvent()
     {
+        if(tcpMsgButton.isSelected())
+        {
+            protoIdField.setEnabled(true);
+            transactionField.setEnabled(true);
+            destHostField.setEnabled(true);
+            portField.setEnabled(true);
+            displayTtySerial.setEnabled(false);
+        }
+        if(rtuMsgButton.isSelected())
+        {
+            destHostField.setEnabled(false);
+            protoIdField.setEnabled(false);
+            transactionField.setEnabled(false);
+            portField.setEnabled(false);
+            displayTtySerial.setEnabled(true);
+        }
         valueLabel.setText("Response value:");
         ((java.awt.CardLayout)(writeParentPane.getLayout())).show(writeParentPane, "blankPane");
         boolean readFlag = false;
@@ -1372,23 +1399,11 @@ public class PacketFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_u32ReadButtonActionPerformed
 
     private void rtuMsgButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rtuMsgButtonActionPerformed
-        if(rtuMsgButton.isSelected())
-        {
-            destHostField.setEnabled(false);
-            protoIdField.setEnabled(false);
-            transactionField.setEnabled(false);
-            portField.setEnabled(false);
-        }
+        fireSelectionEvent();
     }//GEN-LAST:event_rtuMsgButtonActionPerformed
 
     private void tcpMsgButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tcpMsgButtonActionPerformed
-        if(tcpMsgButton.isSelected())
-        {
-            protoIdField.setEnabled(true);
-            transactionField.setEnabled(true);
-            destHostField.setEnabled(true);
-            portField.setEnabled(true);
-        }
+        fireSelectionEvent();
     }//GEN-LAST:event_tcpMsgButtonActionPerformed
 
     private void paritySelectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_paritySelectorActionPerformed
@@ -1526,6 +1541,36 @@ public class PacketFrame extends javax.swing.JFrame {
         (new GatewayFrame()).setVisible(true);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
+    private void displayTtySerialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_displayTtySerialActionPerformed
+        fireSelectionEvent();
+        comPortSelector.setModel(getPortNames());
+    }//GEN-LAST:event_displayTtySerialActionPerformed
+
+    private DefaultComboBoxModel getPortNames()
+    {
+        String[] portNames =  ModbusMechanic.getPortNames();
+        for (int i = 0; !hasTtyPorts && i < portNames.length; i++)
+        {
+            if (portNames[i].toLowerCase().startsWith("ttys"))
+            {
+                hasTtyPorts = true;
+            }
+        }
+        displayTtySerial.setVisible(hasTtyPorts);
+        if (hasTtyPorts && !displayTtySerial.isSelected())
+        {
+            ArrayList<String> filteredPorts = new ArrayList();
+            for (int i = 0; i < portNames.length; i++)
+            {
+                if (!portNames[i].toLowerCase().startsWith("ttys"))
+                {
+                    filteredPorts.add(portNames[i]);
+                }
+            }
+            return new DefaultComboBoxModel(filteredPorts.toArray());
+        }
+        return new DefaultComboBoxModel(portNames);
+    }
     /**
      * @param args the command line arguments
      */
@@ -1559,6 +1604,7 @@ public class PacketFrame extends javax.swing.JFrame {
     private javax.swing.JTextField dataBitsField;
     private javax.swing.JMenuItem deleteBookmarkItem;
     private javax.swing.JTextField destHostField;
+    private javax.swing.JCheckBox displayTtySerial;
     private javax.swing.JTextField functionCodeField;
     private javax.swing.JComboBox<String> functionSelector;
     private javax.swing.JPanel interpPanel;
