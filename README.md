@@ -14,10 +14,43 @@ JlibModbus is a seperate, independant project that this application depends on.
 
 Download & extract the [latest release](#latest-release) and double click ModbusMechanic.jar.
 
+## Gateway
+
+The gateway function allows exposing an RTU network to a TCP network. TCP master devices can send Modbus transactions to the machine running ModbusMechanic, and ModbusMechanic will obtain a response from the RTU network if possible.
+
+## Running Gateway in GUI
+
+The gateway function is available from the GUI in the tools menu.
+
+## Running the Gateway on a headless box
+
+The gateway can be run on a headless machine by specifying a config file. A config file may be generated one of two ways.
+
+1. Using the GUI - Go to the tools menu and select Gateway. Specify the settings and click Save Settings. The cfg file will be generated.
+2. Manually - Create a file in the following format. comport must be specified. Other parameters may be omited if defaults are acceptable.
+```
+comport=COM1
+tcpport=502
+baud=19200
+parity=0
+databits=8
+stopbits=1
+```
+Attribute | Descrtiption | Default
+--------- | ------------ | -------
+comport | The name of the com port. On Linux this is the name of the serial port in the /dev directory, not the full path. | Nothing
+tcpport | Port on which the TCP slave of the Gateway will be accessible. | 502
+baud | Baud rate for the serial port. | 9600
+parity | Parity for the serial port. 0=None 1=Odd 2=Even 3=Mark 4=Space | 0
+databits | Data bits for serial port. 5-8 are acceptible. | 8
+stopbits | Stop bits for serial port. 1=1 2=2 3=1.5 | 1
+3. Launch ModbusMechanic with the -gateway argument followed by the path to the config file. Example on Linux for config file named "gateway.cfg".
+  ```
+  $ java -jar ModbusMechanic.jar -gateway gateway.cfg
+  ```
+
 ## Known Bugs
 - Modbus ASCII bus monitoring is not supported yet
-- USB serial adapters untested on MacOS
-- Untested on Linux
 
 ## Dependencies
 
@@ -36,7 +69,7 @@ https://scifidryer.github.io/ModbusMechanic/
 
 ## Latest release
 
-[ModbusMechanic.v0.8.zip](https://github.com/SciFiDryer/ModbusMechanic/releases/download/v0.8/ModbusMechanic.v0.8.zip)
+[ModbusMechanic.v0.9.zip](https://github.com/SciFiDryer/ModbusMechanic/releases/download/v0.9/ModbusMechanic.v0.9.zip)
 
 ## Completed features and planned features in GUI
 
@@ -50,6 +83,7 @@ https://scifidryer.github.io/ModbusMechanic/
 - [x] Data interpreter
 - [x] Word and byte swapper
 - [x] RTU bus monitor
+- [x] Gateway
 - [x] Bookmarks
 - [x] Master simulator
 - [x] Slave simulator
