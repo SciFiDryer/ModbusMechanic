@@ -60,6 +60,7 @@ public class RTUQueueManager extends Thread
             }
             while (isRunning)
             {
+                manager.updateTrafficMonitor("TCP Slave <<: ", buf);
                 byte[] transactionId = Arrays.copyOfRange(buf, 0, 2);
                 int slaveNode = buf[6];
                 int functionCode = buf[7];
@@ -71,6 +72,7 @@ public class RTUQueueManager extends Thread
                 bb.put(GatewayThreadTCP.getCRC(resp));
                 resp = bb.array();
                 responseBytes = 0;
+                manager.updateTrafficMonitor("RTU Master >>: ", resp);
                 outStream.write(resp);
                 outStream.flush();
                 
@@ -82,17 +84,21 @@ public class RTUQueueManager extends Thread
                 {
                     e.printStackTrace();
                 }
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 if (responseBytes == 0)
                 {
-                    out.write(transactionId);
+                    baos.write(transactionId);
                     //protocol id
-                    out.write(ModbusMechanic.toU16(0));
+                    baos.write(ModbusMechanic.toU16(0));
                     //length
-                    out.write(ModbusMechanic.toU16(3));
-                    out.write(slaveNode);
+                    baos.write(ModbusMechanic.toU16(3));
+                    baos.write(slaveNode);
                     functionCode = 10000000 | functionCode;
-                    out.write(functionCode);
-                    out.write(11);
+                    baos.write(functionCode);
+                    baos.write(11);
+                    baos.flush();
+                    manager.updateTrafficMonitor("TCP Slave >>: ", baos.toByteArray());
+                    out.write(baos.toByteArray());
                     out.flush();
                 }
                 if (responseBytes > 0)
@@ -102,6 +108,7 @@ public class RTUQueueManager extends Thread
                     {
                         int recvSlave = resp[0];
                         int recvFunctionCode = resp[1];
+                        
                         if (recvSlave == slaveNode)
                         {
                             //We need to see if the MSB is set. For some reason java seems to always pad an 8 bit number to a 32 bit number
@@ -111,22 +118,30 @@ public class RTUQueueManager extends Thread
                                 {
                                     System.out.println("got RTU exception");
                                 }
-                                out.write(transactionId);
+                                
+                                baos.write(transactionId);
                                 //protocol id
-                                out.write(ModbusMechanic.toU16(0));
+                                baos.write(ModbusMechanic.toU16(0));
                                 //length
-                                out.write(ModbusMechanic.toU16(resp.length-2));
-                                out.write(resp,0, resp.length-2);
+                                baos.write(ModbusMechanic.toU16(resp.length-2));
+                                baos.write(resp,0, resp.length-2);
+                                baos.flush();
+                                manager.updateTrafficMonitor("TCP Slave >>: ", baos.toByteArray());
+                                out.write(baos.toByteArray());
+                                out.flush();
                             }
                             if (recvFunctionCode == functionCode)
                             {
-                                out.write(transactionId);
+                                baos.write(transactionId);
                                 //protocol id
-                                out.write(ModbusMechanic.toU16(0));
+                                baos.write(ModbusMechanic.toU16(0));
                                 //length
-                                out.write(ModbusMechanic.toU16(resp.length-2));
+                                baos.write(ModbusMechanic.toU16(resp.length-2));
                                 //rtu response
-                                out.write(resp,0, resp.length-2);
+                                baos.write(resp,0, resp.length-2);
+                                baos.flush();
+                                manager.updateTrafficMonitor("TCP Slave >>: ", baos.toByteArray());
+                                out.write(baos.toByteArray());
                                 out.flush();
                             }
                         }
@@ -140,7 +155,10 @@ public class RTUQueueManager extends Thread
                 }
                 catch (InterruptedException e)
                 {
-                    e.printStackTrace();
+                    if (ModbusMechanic.debug)
+                    {
+                        e.printStackTrace();
+                    }
                     isRunning = false;
                 }
             }

@@ -38,15 +38,7 @@ public class RTUPacketListener extends Thread{
             while (isRunning)
             {
                 bytesRead = in.read(buf);
-                if (ModbusMechanic.debug)
-                {
-                    System.out.print("Got RTU Frame ");
-                    for (int i = 0; i<bytesRead; i++)
-                    {
-                        System.out.print(String.format("%02X", buf[i]));
-                    }
-                    System.out.println("");
-                }
+                manager.updateTrafficMonitor("RTU Master <<: ", buf, bytesRead);
                 manager.queueManager.putMessage(bytesRead, buf);
             }
         }

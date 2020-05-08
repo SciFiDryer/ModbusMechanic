@@ -66,10 +66,6 @@ public class GatewayThreadTCP implements Runnable {
                 {
                     
                     //good packet length wise
-                    if (ModbusMechanic.debug)
-                    {
-                        System.out.println("TCP frame recieved");
-                    }
                     manager.queueManager.addToQueue(new QueuedRequest(Arrays.copyOfRange(buf, 0, bytesRead), out));
                 }
                 bytesRead = in.read(buf);

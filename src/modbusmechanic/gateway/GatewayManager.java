@@ -136,4 +136,33 @@ public class GatewayManager {
             }
         }
     }
+    public void updateTrafficMonitor(String msg, byte[] buf)
+    {
+        updateTrafficMonitor(msg, buf, -1);
+    }
+    public void updateTrafficMonitor(String msg, byte[] buf, int length)
+    {
+        if (ModbusMechanic.debug || (!isCommandLine && parentFrame.gatewayMonitorCheckbox.isSelected()))
+        {
+            String hexMsg = "";
+            int endIndex = buf.length;
+            if (length != -1)
+            {
+                endIndex = length;
+            }
+            for (int i = 0; i<endIndex; i++)
+            {
+                hexMsg = hexMsg + String.format("%02X", buf[i]);
+            }
+            if ((!isCommandLine && parentFrame.gatewayMonitorCheckbox.isSelected()))
+            {
+                parentFrame.gatewayMonitorTextArea.setText(parentFrame.gatewayMonitorTextArea.getText() + msg + hexMsg + "\n");
+                parentFrame.gatewayMonitorTextArea.setCaretPosition(parentFrame.gatewayMonitorTextArea.getText().length());
+            }
+            if (ModbusMechanic.debug)
+            {
+                System.out.println(msg + hexMsg);
+            }
+        }
+    }
 }

@@ -66,6 +66,16 @@ public class GatewayFrame extends javax.swing.JFrame {
         jLabel17 = new javax.swing.JLabel();
         paritySelector = new javax.swing.JComboBox<>();
         jSeparator2 = new javax.swing.JSeparator();
+        jPanel9 = new javax.swing.JPanel();
+        gatewayMonitorCheckbox = new javax.swing.JCheckBox();
+        monitorPane = new javax.swing.JPanel();
+        monitorPane.setVisible(false);
+        jPanel8 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        gatewayMonitorTextArea = new javax.swing.JTextArea();
+        jPanel10 = new javax.swing.JPanel();
+        clearHistoryButton = new javax.swing.JButton();
+        jSeparator3 = new javax.swing.JSeparator();
         jPanel1 = new javax.swing.JPanel();
         statusLabel = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
@@ -150,6 +160,40 @@ public class GatewayFrame extends javax.swing.JFrame {
         getContentPane().add(jPanel5);
         getContentPane().add(jSeparator2);
 
+        gatewayMonitorCheckbox.setText("Show gateway monitor");
+        gatewayMonitorCheckbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                gatewayMonitorCheckboxActionPerformed(evt);
+            }
+        });
+        jPanel9.add(gatewayMonitorCheckbox);
+
+        getContentPane().add(jPanel9);
+
+        monitorPane.setLayout(new javax.swing.BoxLayout(monitorPane, javax.swing.BoxLayout.Y_AXIS));
+
+        gatewayMonitorTextArea.setEditable(false);
+        gatewayMonitorTextArea.setColumns(50);
+        gatewayMonitorTextArea.setRows(5);
+        jScrollPane1.setViewportView(gatewayMonitorTextArea);
+
+        jPanel8.add(jScrollPane1);
+
+        monitorPane.add(jPanel8);
+
+        clearHistoryButton.setText("Clear History");
+        clearHistoryButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearHistoryButtonActionPerformed(evt);
+            }
+        });
+        jPanel10.add(clearHistoryButton);
+
+        monitorPane.add(jPanel10);
+
+        getContentPane().add(monitorPane);
+        getContentPane().add(jSeparator3);
+
         statusLabel.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         statusLabel.setForeground(new java.awt.Color(255, 0, 0));
         statusLabel.setText("Gateway is stopped");
@@ -212,6 +256,15 @@ public class GatewayFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_saveButtonActionPerformed
 
+    private void gatewayMonitorCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gatewayMonitorCheckboxActionPerformed
+        monitorPane.setVisible(gatewayMonitorCheckbox.isSelected());
+        pack();
+    }//GEN-LAST:event_gatewayMonitorCheckboxActionPerformed
+
+    private void clearHistoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearHistoryButtonActionPerformed
+        gatewayMonitorTextArea.setText("");
+    }//GEN-LAST:event_clearHistoryButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -273,8 +326,11 @@ public class GatewayFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JComboBox<String> baudRateSelector;
+    private javax.swing.JButton clearHistoryButton;
     public javax.swing.JComboBox<String> comPortSelector;
     public javax.swing.JTextField dataBitsField;
+    public javax.swing.JCheckBox gatewayMonitorCheckbox;
+    public javax.swing.JTextArea gatewayMonitorTextArea;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
@@ -284,14 +340,20 @@ public class GatewayFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JPanel monitorPane;
     public javax.swing.JComboBox<String> paritySelector;
     private javax.swing.JButton saveButton;
     public javax.swing.JButton startStopButton;
