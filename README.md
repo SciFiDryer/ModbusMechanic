@@ -48,9 +48,9 @@ stopbits | Stop bits for serial port. 1=1 2=2 3=1.5 | 1
   ```
   $ java -jar ModbusMechanic.jar -gateway gateway.cfg
   ```
+## Bridge
 
-## Known Bugs
-- Modbus ASCII bus monitoring is not supported yet
+The bridge functionality allows registers from a slave to be written to a different slave. This feature is in beta and the only supported direction is slave read->slave write.
 
 ## Dependencies
 
@@ -69,7 +69,7 @@ https://scifidryer.github.io/ModbusMechanic/
 
 ## Latest release
 
-[ModbusMechanic.v0.9.zip](https://github.com/SciFiDryer/ModbusMechanic/releases/download/v0.9/ModbusMechanic.v0.9.zip)
+[ModbusMechanic.v1.0.zip](https://github.com/SciFiDryer/ModbusMechanic/releases/download/v1.0/ModbusMechanic.v1.0.zip)
 
 ## Completed features and planned features in GUI
 
