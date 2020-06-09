@@ -51,7 +51,6 @@ public class BridgeManager {
         {
             if (mappingRecords.get(i).incomingRecord instanceof ModbusProtocolRecord)
             {
-                System.out.println("found modbus record");
                 ModbusProtocolRecord currentRecord = (ModbusProtocolRecord)mappingRecords.get(i).incomingRecord;
                 addToModbusList(incomingSlaveList, currentRecord);
             }
@@ -122,12 +121,7 @@ public class BridgeManager {
                 buf = ((ReadHoldingRegistersResponse)(response)).getBytes();
                 for (int k = 0; k < quantity; k++)
                 {
-                    System.out.println("quantity " + quantity);
                     byte[] value = Arrays.copyOfRange(buf, k*2, k*2+2);
-                    if (value != null)
-                    {
-                        System.out.println("inserted non null value offset " + k+startingRegister);
-                    }
                     currentSlave.insertRegisterValue(3, k+startingRegister, value);
                 }
             }
@@ -178,7 +172,6 @@ public class BridgeManager {
                  
                 try 
                 {
-                    System.out.println("modbus message array length " + values.length + " starting register " + startingRegister + " quantity " + quantity);
                     response = generateModbusMessage(master, 0, 1, 1, 16, startingRegister, quantity, values);
                 }
                 catch(Exception e)
@@ -199,7 +192,6 @@ public class BridgeManager {
                 if (rr.functionCode == functionCode && rr.register == register+i)
                 {
                     
-                    System.out.println("checking register " + rr.register);
                     if (rr.value != null)
                     {
                         try
@@ -211,7 +203,6 @@ public class BridgeManager {
                         {
                             e.printStackTrace();
                         }
-                        System.out.println("getmodbusvalues got non null value at offset " + rr.register + " length " + rr.value.length);
                     }
                 }
             }
@@ -227,10 +218,6 @@ public class BridgeManager {
                 ModbusProtocolRecord incomingRecord = (ModbusProtocolRecord)mappingRecords.get(i).incomingRecord;
                 ModbusProtocolRecord outgoingRecord = (ModbusProtocolRecord)mappingRecords.get(i).outgoingRecord;
                 outgoingRecord.rawValue = getModbusValue(incomingRecord.slaveHost, incomingRecord.slavePort, incomingRecord.functionCode, incomingRecord.startingRegister, incomingRecord.quantity);
-                if (outgoingRecord.rawValue != null)
-                {
-                    System.out.println("non null rawvalue inserted" + outgoingRecord.rawValue.length);
-                }
             }
         }
     }
@@ -246,12 +233,10 @@ public class BridgeManager {
                 for (int j = 0; j < currentSlave.registerRecords.size(); j++)
                 {
                     RegisterRecord rr = currentSlave.registerRecords.get(j);
-                    System.out.println("getmodbusvalue checking register " + rr.register);
                     if (rr.register >= startingRegister && rr.register < startingRegister + quantity)
                     {
                         try
                         {
-                            System.out.println("getmodbusvalue value length " + rr.value.length + "inserted");
                             baos.write(rr.value);
                             baos.flush();
                         }
@@ -294,9 +279,7 @@ public class BridgeManager {
                     
                     if (currentRecord.rawValue != null)
                     {
-                        System.out.println("addtomodbuslist rawvalue length " + currentRecord.rawValue.length);
                         rr.value = Arrays.copyOfRange(currentRecord.rawValue, j*2, (j*2)+2);
-                        System.out.println("addtomodbuslist non null value mapped at offset " + (j*2) + " length " + rr.value.length);
                     }
                     currentList.get(i).registerRecords.add(rr);
                 }
@@ -311,7 +294,6 @@ public class BridgeManager {
                 if (currentRecord.rawValue != null)
                 {
                     rr.value = Arrays.copyOfRange(currentRecord.rawValue, j*2, j*2+2);
-                    System.out.println("non null value mapped at offset " + (j*2));
                 }
                 mhr.registerRecords.add(rr);
             }
