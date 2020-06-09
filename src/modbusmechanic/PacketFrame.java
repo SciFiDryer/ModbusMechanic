@@ -177,6 +177,7 @@ public class PacketFrame extends javax.swing.JFrame {
         jMenuItem1 = new javax.swing.JMenuItem();
         rtuSerialMonitorItem = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
+        startModbusBridge = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
         addBookmarkItem = new javax.swing.JMenuItem();
         updateBookmarkItem = new javax.swing.JMenuItem();
@@ -536,6 +537,15 @@ public class PacketFrame extends javax.swing.JFrame {
             }
         });
         jMenu2.add(jMenuItem2);
+
+        startModbusBridge.setText("Start Modbus Bridge [Experimental]...");
+        startModbusBridge.setToolTipText("");
+        startModbusBridge.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                startModbusBridgeActionPerformed(evt);
+            }
+        });
+        jMenu2.add(startModbusBridge);
 
         jMenuBar1.add(jMenu2);
 
@@ -1546,6 +1556,10 @@ public class PacketFrame extends javax.swing.JFrame {
         comPortSelector.setModel(getPortNames());
     }//GEN-LAST:event_displayTtySerialActionPerformed
 
+    private void startModbusBridgeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startModbusBridgeActionPerformed
+        new modbusmechanic.bridge.BridgeManager();
+    }//GEN-LAST:event_startModbusBridgeActionPerformed
+
     private DefaultComboBoxModel getPortNames()
     {
         String[] portNames =  ModbusMechanic.getPortNames();
@@ -1659,6 +1673,7 @@ public class PacketFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem rtuSerialMonitorItem;
     private javax.swing.JPanel serialPanel;
     private javax.swing.JTextField slaveNodeField;
+    private javax.swing.JMenuItem startModbusBridge;
     private javax.swing.JTextField stopBitsField;
     private javax.swing.JRadioButton tcpMsgButton;
     private javax.swing.JTextField transactionField;
