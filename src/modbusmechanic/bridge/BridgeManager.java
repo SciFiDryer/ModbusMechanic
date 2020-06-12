@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 package modbusmechanic.bridge;
+import modbusmechanic.bridge.drivers.ProtocolRecord;
+import modbusmechanic.bridge.drivers.ModbusProtocolRecord;
+import modbusmechanic.bridge.drivers.ModbusProtocolHandler;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusIOException;
 import com.intelligt.modbus.jlibmodbus.master.*;
 import com.intelligt.modbus.jlibmodbus.msg.base.*;
@@ -28,7 +31,7 @@ import static modbusmechanic.ModbusMechanic.generateModbusMessage;
  * @author Matt Jamesson <scifidryer@gmail.com>
  */
 public class BridgeManager {
-    ArrayList<BridgeActionListener> bridgeMapList = new ArrayList();
+    ArrayList<BridgeEntryContainer> bridgeMapList = new ArrayList();
     ArrayList<BridgeMappingRecord> mappingRecords = new ArrayList();
     ArrayList<ModbusHostRecord> incomingSlaveList = new ArrayList();
     ArrayList<ModbusHostRecord> outgoingSlaveList = new ArrayList();
@@ -305,79 +308,13 @@ public class BridgeManager {
         mappingRecords.clear();
         for (int i = 0; i < bridgeMapList.size(); i++)
         {
-            BridgeActionListener currentRecord = bridgeMapList.get(i);
-            ProtocolRecord incomingProtocolRecord = getIncomingProtocolRecord(currentRecord);
-            ProtocolRecord outgoingProtocolRecord = getOutgoingProtocolRecord(incomingProtocolRecord, currentRecord);
-            BridgeMappingRecord bmr = new BridgeMappingRecord(incomingProtocolRecord, outgoingProtocolRecord);
-            bmr.modbusBlockRemap = true;
+            //to do call to protocol specific driver
+            modbusmechanic.bridge.ProtocolHandler currentRecord = bridgeMapList.get(i).incomingHandler;
+            BridgeMappingRecord bmr = currentRecord.getBridgeMappingRecord();
             mappingRecords.add(bmr);
         }
         startBridge();
     }
-    public ProtocolRecord getIncomingProtocolRecord(BridgeActionListener currentRecord)
-    {
-        ProtocolRecord incomingProtocolRecord = null;
-        //first container
-        ArrayList currentLevel = currentRecord.incomingSettings.get(0);
-        JComboBox typeSelector = (JComboBox)(currentLevel.get(0));
-        int type = 0;
-        if (typeSelector.getSelectedIndex() == 1)
-        {
-            type = ModbusProtocolRecord.PROTOCOL_TYPE_MASTER;
-            currentLevel = currentRecord.incomingSettings.get(1);
-            String slaveHost = ((JTextField)(currentLevel.get(0))).getText();
-            int slavePort = Integer.parseInt(((JTextField)(currentLevel.get(1))).getText());
-            //block read
-            int format = 0;
-            if (((JComboBox)(currentLevel.get(2))).getSelectedIndex() == 1)
-            {
-                format = ModbusProtocolRecord.FORMAT_TYPE_RAW;
-                currentLevel = currentRecord.incomingSettings.get(2);
-                //holding register
-                int functionCode = 0;
-                if (((JComboBox)(currentLevel.get(0))).getSelectedIndex() == 1)
-                {
-                    functionCode = 3;
-                    currentLevel = currentRecord.incomingSettings.get(3);
-                    int register = Integer.parseInt(((JTextField)(currentLevel.get(0))).getText());
-                    int quantity = Integer.parseInt(((JTextField)(currentLevel.get(1))).getText());
-                    incomingProtocolRecord = new ModbusProtocolRecord(type, slaveHost, slavePort, format, functionCode, register, quantity);
-                }
-            }
-        }
-        return incomingProtocolRecord;
-    }
-    public ProtocolRecord getOutgoingProtocolRecord(ProtocolRecord incomingProtocolRecord, BridgeActionListener currentRecord)
-    {
-        ProtocolRecord outgoingProtocolRecord = null;
-        //first container
-        ArrayList currentLevel = currentRecord.incomingSettings.get(0);
-        JComboBox typeSelector = (JComboBox)(currentLevel.get(0));
-        int type = 0;
-        if (typeSelector.getSelectedIndex() == 1)
-        {
-            type = ModbusProtocolRecord.PROTOCOL_TYPE_MASTER;
-            currentLevel = currentRecord.incomingSettings.get(1);
-            String slaveHost = ((JTextField)(currentLevel.get(0))).getText();
-            int slavePort = Integer.parseInt(((JTextField)(currentLevel.get(1))).getText());
-            
-            int format = 0;
-            if (((ModbusProtocolRecord)(incomingProtocolRecord)).formatType == ModbusProtocolRecord.FORMAT_TYPE_RAW)
-            {
-                format = ModbusProtocolRecord.FORMAT_TYPE_RAW;
-                currentLevel = currentRecord.outgoingSettings.get(1);
-                //holding register
-                int functionCode = 0;
-                if (((JComboBox)(currentLevel.get(2))).getSelectedIndex() == 1)
-                {
-                    currentLevel = currentRecord.outgoingSettings.get(2);
-                    functionCode = 3;
-                    int register = Integer.parseInt(((JTextField)(currentLevel.get(0))).getText());
-                    int quantity = ((ModbusProtocolRecord)(incomingProtocolRecord)).quantity;
-                    outgoingProtocolRecord = new ModbusProtocolRecord(type, slaveHost, slavePort, format, functionCode, register, quantity);
-                }
-            }
-        }
-        return outgoingProtocolRecord;
-    }
+    
+    
 }

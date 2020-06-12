@@ -14,60 +14,57 @@
  * limitations under the License.
  */
 
-package modbusmechanic.bridge;
+package modbusmechanic.bridge.drivers;
+import modbusmechanic.bridge.ProtocolHandler;
 import java.awt.event.*;
 import javax.swing.*;
 import java.util.*;
+import modbusmechanic.bridge.BridgeEntryContainer;
+import modbusmechanic.bridge.BridgeMappingRecord;
 /**
  *
  * @author Matt Jamesson <scifidryer@gmail.com>
  */
 
-public class BridgeActionListener implements ActionListener{
-    JFrame parentFrame = null;
-    JPanel incomingPanel = null;
-    JPanel outgoingPanel = null;
+public class ModbusProtocolHandler implements ProtocolHandler{
+    modbusmechanic.bridge.BridgeFrame parentFrame = null;
     JComboBox incomingDataSelector = null;
     JComboBox outgoingDataSelector = null;
     boolean incomingPanelReady = false;
     JComboBox readTypeSelector = null;
     JPanel incomingDataSettings = null;
-    //index 0 for first level 1 for second and so on
-    ArrayList<ArrayList> incomingSettings = new ArrayList();
-    ArrayList<ArrayList> outgoingSettings = new ArrayList();
-    public BridgeActionListener(JFrame aParentFrame, JPanel aIncomingPanel, JPanel aOutgoingPanel)
+    JPanel outgoingPanel = null;
+    DriverMenuHandler dmh = null;
+    BridgeEntryContainer parentEntryContainer = null;
+    String[] incomingMenuNames = new String[] {"From Modbus Slave"};
+    String[] outgoingMenuNames = new String[] {"To Modbus Slave"};
+    public String[] getIncomingMenuNames()
+    {
+        return incomingMenuNames;
+    }
+    public String[] getOutgoingMenuNames()
+    {
+        return outgoingMenuNames;
+    }
+    public ModbusProtocolHandler(DriverMenuHandler aDmh, modbusmechanic.bridge.BridgeFrame aParentFrame, BridgeEntryContainer aParentEntryContainer, JPanel aIncomingDataSettings, JPanel aOutgoingPanel)
     {
         parentFrame = aParentFrame;
-        incomingPanel = aIncomingPanel;
+        parentEntryContainer = aParentEntryContainer;
         outgoingPanel = aOutgoingPanel;
-        incomingDataSelector = new JComboBox();
-        outgoingDataSelector = new JComboBox();
-        DefaultComboBoxModel model = new DefaultComboBoxModel(new String[] {"Select", "From Modbus Slave"});
-        incomingDataSelector.setModel(model);
-        incomingDataSelector.addActionListener(this);
-        JPanel incomingDataSource = new JPanel();
-        incomingDataSettings = new JPanel();
-        incomingDataSettings.setLayout(new BoxLayout(incomingDataSettings, BoxLayout.Y_AXIS));
-        incomingSettings.add(new ArrayList());
-        incomingSettings.get(0).add(incomingDataSelector);
-        JLabel incomingDataLabel = new JLabel("Incoming Data Source");
-        incomingDataSource.add(incomingDataLabel);
-        incomingDataSource.add(incomingDataSelector);
-        incomingPanel.add(incomingDataSource);
-        incomingPanel.add(incomingDataSettings);
+        incomingDataSettings = aIncomingDataSettings;
+        dmh = aDmh;
         
-        outgoingPanel.setLayout(new BoxLayout(outgoingPanel, BoxLayout.Y_AXIS));
     }
-    public void actionPerformed(ActionEvent e)
+    public void buildProtocolPane(int paneType, String selectedItem)
     {
-        if (e.getSource() == incomingDataSelector)
+        if (paneType == PANE_TYPE_INCOMING)
         {
-            incomingDataSettings.removeAll();
-            constructDataSettings(incomingDataSettings, incomingDataSelector.getSelectedIndex());
+            
+            constructDataSettings(incomingDataSettings, selectedItem);
         }
-        if (e.getSource() == outgoingDataSelector)
+        if (paneType == PANE_TYPE_OUTGOING)
         {
-            constructOutgoingDataSettings(outgoingPanel, outgoingDataSelector.getSelectedIndex());
+            constructOutgoingDataSettings(outgoingPanel, selectedItem);
         }
         if (!incomingPanelReady)
         {
@@ -79,38 +76,21 @@ public class BridgeActionListener implements ActionListener{
         outgoingDataSelector = new JComboBox();
         outgoingPanel.removeAll();
     }
-    public void constructOutgoingDataMenu()
+    public boolean getIncomingPanelReady()
     {
-        if (outgoingSettings.size() < 1)
-        {
-            outgoingSettings.add(new ArrayList());
-        }
-        ArrayList settings = outgoingSettings.get(0);
-        settings.clear();
-        JPanel outgoingDataDest = new JPanel();
-        outgoingDataDest.add(new JLabel("Outgoing Data Destination"));
-        DefaultComboBoxModel model = new DefaultComboBoxModel(new String[] {"Select", "To Modbus Slave"});
-        outgoingDataSelector.setModel(model);
-        JPanel outgoingDataSettings = new JPanel();
-        outgoingDataSettings.setLayout(new BoxLayout(outgoingDataSettings, BoxLayout.Y_AXIS));
-        outgoingDataSelector.addActionListener(this);
-        settings.add(outgoingDataSelector);
-        outgoingDataDest.add(outgoingDataSelector);
-        outgoingPanel.add(outgoingDataDest);
-        outgoingPanel.add(outgoingDataSettings);
-        parentFrame.pack();
+        return incomingPanelReady;
     }
-    public void constructDataSettings(JPanel mainPanel, int selectedIndex)
+    public void constructDataSettings(JPanel mainPanel, String selectedItem)
     {
         incomingPanelReady = false;
         resetOutgoingPanel();
-        if (incomingSettings.size() < 2)
+        if (parentEntryContainer.incomingSettings.size() < 2)
         {
-            incomingSettings.add(new ArrayList());
+            parentEntryContainer.incomingSettings.add(new ArrayList());
         }
-        incomingSettings.get(1).clear();
+        parentEntryContainer.incomingSettings.get(1).clear();
         //from modbus slave
-        if (selectedIndex == 1)
+        if (selectedItem.equals(incomingMenuNames[0]))
         {
             JPanel settingsPanel = new JPanel();
             settingsPanel.add(new JLabel("Slave address"));
@@ -134,23 +114,23 @@ public class BridgeActionListener implements ActionListener{
             settingsPanel.add(registerTypeSelector);
             mainPanel.add(settingsPanel);
             mainPanel.add(slaveSettingsPanel);
-            ArrayList settings = incomingSettings.get(1);
+            ArrayList settings = parentEntryContainer.incomingSettings.get(1);
             settings.add(slaveHostField);
             settings.add(slavePortField);
             settings.add(registerTypeSelector);
         }
         parentFrame.pack();
     }
-    public void constructOutgoingDataSettings(JPanel mainPanel, int selectedIndex)
+    public void constructOutgoingDataSettings(JPanel mainPanel, String selectedItem)
     {
         //to modbus slave
-        if (selectedIndex == 1)
+        if (selectedItem.equals(outgoingMenuNames[0]))
         {
-            if (outgoingSettings.size() < 2)
+            if (parentEntryContainer.outgoingSettings.size() < 2)
             {
-                outgoingSettings.add(new ArrayList());
+                parentEntryContainer.outgoingSettings.add(new ArrayList());
             }
-            ArrayList settings = outgoingSettings.get(1);
+            ArrayList settings = parentEntryContainer.outgoingSettings.get(1);
             settings.clear();
             JPanel settingsPanel = new JPanel();
             settingsPanel.add(new JLabel("Slave address"));
@@ -185,11 +165,11 @@ public class BridgeActionListener implements ActionListener{
         mainPanel.removeAll();
         if (selectedIndex == 1)
         {
-            if (outgoingSettings.size() < 3)
+            if (parentEntryContainer.outgoingSettings.size() < 3)
             {
-                outgoingSettings.add(new ArrayList());
+                parentEntryContainer.outgoingSettings.add(new ArrayList());
             }
-            ArrayList settings = outgoingSettings.get(2);
+            ArrayList settings = parentEntryContainer.outgoingSettings.get(2);
             settings.clear();
             JComboBox writeTypeSelector = new JComboBox();
             DefaultComboBoxModel model = new DefaultComboBoxModel(new String[] {"Select write type", "Single value U16", "Single value U32", "Single value Float"});
@@ -216,11 +196,11 @@ public class BridgeActionListener implements ActionListener{
     }
     public void constructSlaveSettings(JPanel mainPanel, int selectedIndex)
     {
-        if (incomingSettings.size() < 3)
+        if (parentEntryContainer.incomingSettings.size() < 3)
         {
-            incomingSettings.add(new ArrayList());
+            parentEntryContainer.incomingSettings.add(new ArrayList());
         }
-        ArrayList settings = incomingSettings.get(2);
+        ArrayList settings = parentEntryContainer.incomingSettings.get(2);
         settings.clear();
         resetOutgoingPanel();
         incomingPanelReady = false;
@@ -246,11 +226,11 @@ public class BridgeActionListener implements ActionListener{
     }
     public void constructRegisterSettings(JPanel mainPanel, int selectedIndex)
     {
-        if (incomingSettings.size() < 4)
+        if (parentEntryContainer.incomingSettings.size() < 4)
         {
-            incomingSettings.add(new ArrayList());
+            parentEntryContainer.incomingSettings.add(new ArrayList());
         }
-        ArrayList settings = incomingSettings.get(3);
+        ArrayList settings = parentEntryContainer.incomingSettings.get(3);
         settings.clear();
         mainPanel.removeAll();
         resetOutgoingPanel();
@@ -272,6 +252,80 @@ public class BridgeActionListener implements ActionListener{
         }
         parentFrame.pack();
         incomingPanelReady = true;
-        constructOutgoingDataMenu();
+        dmh.constructOutgoingDataMenu();
+    }
+    public ProtocolRecord getIncomingProtocolRecord()
+    {
+        ProtocolRecord incomingProtocolRecord = null;
+        //first container
+        ArrayList currentLevel = parentEntryContainer.incomingSettings.get(0);
+        JComboBox typeSelector = (JComboBox)(currentLevel.get(0));
+        int type = 0;
+        if (typeSelector.getSelectedIndex() == 1)
+        {
+            type = ModbusProtocolRecord.PROTOCOL_TYPE_MASTER;
+            currentLevel = parentEntryContainer.incomingSettings.get(1);
+            String slaveHost = ((JTextField)(currentLevel.get(0))).getText();
+            int slavePort = Integer.parseInt(((JTextField)(currentLevel.get(1))).getText());
+            //block read
+            int format = 0;
+            if (((JComboBox)(currentLevel.get(2))).getSelectedIndex() == 1)
+            {
+                format = ModbusProtocolRecord.FORMAT_TYPE_RAW;
+                currentLevel = parentEntryContainer.incomingSettings.get(2);
+                //holding register
+                int functionCode = 0;
+                if (((JComboBox)(currentLevel.get(0))).getSelectedIndex() == 1)
+                {
+                    functionCode = 3;
+                    currentLevel = parentEntryContainer.incomingSettings.get(3);
+                    int register = Integer.parseInt(((JTextField)(currentLevel.get(0))).getText());
+                    int quantity = Integer.parseInt(((JTextField)(currentLevel.get(1))).getText());
+                    incomingProtocolRecord = new ModbusProtocolRecord(type, slaveHost, slavePort, format, functionCode, register, quantity);
+                }
+            }
+        }
+        return incomingProtocolRecord;
+    }
+    public ProtocolRecord getOutgoingProtocolRecord(ProtocolRecord incomingProtocolRecord)
+    {
+        ProtocolRecord outgoingProtocolRecord = null;
+        //first container
+        ArrayList currentLevel = parentEntryContainer.incomingSettings.get(0);
+        JComboBox typeSelector = (JComboBox)(currentLevel.get(0));
+        int type = 0;
+        if (typeSelector.getSelectedIndex() == 1)
+        {
+            type = ModbusProtocolRecord.PROTOCOL_TYPE_MASTER;
+            currentLevel = parentEntryContainer.incomingSettings.get(1);
+            String slaveHost = ((JTextField)(currentLevel.get(0))).getText();
+            int slavePort = Integer.parseInt(((JTextField)(currentLevel.get(1))).getText());
+            
+            int format = 0;
+            if (((ModbusProtocolRecord)(incomingProtocolRecord)).formatType == ModbusProtocolRecord.FORMAT_TYPE_RAW)
+            {
+                format = ModbusProtocolRecord.FORMAT_TYPE_RAW;
+                currentLevel = parentEntryContainer.outgoingSettings.get(1);
+                //holding register
+                int functionCode = 0;
+                if (((JComboBox)(currentLevel.get(2))).getSelectedIndex() == 1)
+                {
+                    currentLevel = parentEntryContainer.outgoingSettings.get(2);
+                    functionCode = 3;
+                    int register = Integer.parseInt(((JTextField)(currentLevel.get(0))).getText());
+                    int quantity = ((ModbusProtocolRecord)(incomingProtocolRecord)).quantity;
+                    outgoingProtocolRecord = new ModbusProtocolRecord(type, slaveHost, slavePort, format, functionCode, register, quantity);
+                }
+            }
+        }
+        return outgoingProtocolRecord;
+    }
+    public BridgeMappingRecord getBridgeMappingRecord()
+    {
+        ProtocolRecord incomingProtocolRecord = getIncomingProtocolRecord();
+        ProtocolRecord outgoingProtocolRecord = getOutgoingProtocolRecord(incomingProtocolRecord);
+        BridgeMappingRecord bmr = new BridgeMappingRecord(incomingProtocolRecord, outgoingProtocolRecord);
+        bmr.modbusBlockRemap = true;
+        return bmr;
     }
 }

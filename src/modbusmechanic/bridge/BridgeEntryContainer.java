@@ -14,20 +14,16 @@
  * limitations under the License.
  */
 package modbusmechanic.bridge;
-
-import modbusmechanic.bridge.drivers.ProtocolRecord;
-
+import java.awt.event.*;
+import java.util.*;
 /**
  *
  * @author Matt Jamesson <scifidryer@gmail.com>
  */
-public class BridgeMappingRecord {
-    public boolean modbusBlockRemap = false;
-    ProtocolRecord incomingRecord;
-    ProtocolRecord outgoingRecord;
-    public BridgeMappingRecord(ProtocolRecord aIncomingRecord, ProtocolRecord aOutgoingRecord)
-    {
-        incomingRecord = aIncomingRecord;
-        outgoingRecord = aOutgoingRecord;
-    }
+public class BridgeEntryContainer {
+    public ProtocolHandler incomingHandler = null;
+    public ProtocolHandler outgoingHandler = null;
+    public ArrayList<ArrayList> incomingSettings = new ArrayList();
+    public ArrayList<ArrayList> outgoingSettings = new ArrayList();
+    
 }

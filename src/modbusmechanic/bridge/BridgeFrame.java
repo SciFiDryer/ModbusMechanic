@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 package modbusmechanic.bridge;
+import modbusmechanic.bridge.drivers.ModbusProtocolHandler;
 import javax.swing.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 /**
  *
@@ -27,6 +29,7 @@ public class BridgeFrame extends javax.swing.JFrame {
      * Creates new form BridgeFrame
      */
     BridgeManager manager = null;
+    
     public BridgeFrame(BridgeManager aManager) {
         manager = aManager;
         initComponents();
@@ -83,14 +86,33 @@ public class BridgeFrame extends javax.swing.JFrame {
 
     private void addMappingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMappingButtonActionPerformed
         JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
         JPanel incomingPanel = new JPanel();
+        JPanel incomingDataSettings = new JPanel();
         JPanel outgoingPanel = new JPanel();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
+        
         incomingPanel.setLayout(new BoxLayout(incomingPanel, BoxLayout.Y_AXIS));
+        JComboBox incomingDataSelector = new JComboBox();
+        JComboBox outgoingDataSelector = new JComboBox();
         
         
-        BridgeActionListener bal = new BridgeActionListener(this, incomingPanel, outgoingPanel);
-        manager.bridgeMapList.add(bal);
+        JPanel incomingDataSource = new JPanel();
+        
+        incomingDataSettings.setLayout(new BoxLayout(incomingDataSettings, BoxLayout.Y_AXIS));
+        
+        JLabel incomingDataLabel = new JLabel("Incoming Data Source");
+        incomingDataSource.add(incomingDataLabel);
+        incomingDataSource.add(incomingDataSelector);
+        incomingPanel.add(incomingDataSource);
+        incomingPanel.add(incomingDataSettings);
+        
+        outgoingPanel.setLayout(new BoxLayout(outgoingPanel, BoxLayout.Y_AXIS));
+        BridgeEntryContainer entryContainer = new BridgeEntryContainer();
+        entryContainer.incomingSettings.add(new ArrayList());
+        entryContainer.incomingSettings.get(0).add(incomingDataSelector);
+        modbusmechanic.bridge.drivers.DriverMenuHandler dmh = new modbusmechanic.bridge.drivers.DriverMenuHandler(incomingDataSelector, outgoingDataSelector, this, entryContainer, incomingDataSettings, outgoingPanel);
+        incomingDataSelector.addActionListener(dmh);
+        manager.bridgeMapList.add(entryContainer);
         
         
         
@@ -104,7 +126,7 @@ public class BridgeFrame extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent e)
             {
                 jPanel2.remove(mainPanel);
-                manager.bridgeMapList.remove(bal);
+                manager.bridgeMapList.remove(entryContainer);
                 pack();
             }
         });

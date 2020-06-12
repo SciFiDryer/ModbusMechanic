@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package modbusmechanic.bridge;
+package modbusmechanic.bridge.drivers;
 
 /**
  *
@@ -22,13 +22,13 @@ package modbusmechanic.bridge;
 public class ModbusProtocolRecord implements ProtocolRecord {
     int formatType = 0;
     int protocolType = 0;
-    byte[] rawValue = null;
+    public byte[] rawValue = null;
     double numericValue = 0;
-    int startingRegister = 0;
-    int quantity = 0;
-    int functionCode = 0;
-    String slaveHost = null;
-    int slavePort = 502;
+    public int startingRegister = 0;
+    public int quantity = 0;
+    public int functionCode = 0;
+    public String slaveHost = null;
+    public int slavePort = 502;
     static int PROTOCOL_TYPE_SLAVE = 1;
     static int PROTOCOL_TYPE_MASTER = 2;
     static int FORMAT_TYPE_RAW = 1;

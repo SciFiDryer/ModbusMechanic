@@ -13,21 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package modbusmechanic.bridge;
-
-import modbusmechanic.bridge.drivers.ProtocolRecord;
+package modbusmechanic.bridge.drivers;
 
 /**
  *
  * @author Matt Jamesson <scifidryer@gmail.com>
  */
-public class BridgeMappingRecord {
-    public boolean modbusBlockRemap = false;
-    ProtocolRecord incomingRecord;
-    ProtocolRecord outgoingRecord;
-    public BridgeMappingRecord(ProtocolRecord aIncomingRecord, ProtocolRecord aOutgoingRecord)
-    {
-        incomingRecord = aIncomingRecord;
-        outgoingRecord = aOutgoingRecord;
-    }
+public interface ProtocolRecord {
+    
 }
