@@ -13,18 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package modbusmechanic.bridge;
+package modbusmechanic.bridge.drivers;
 
 /**
  *
  * @author Matt Jamesson <scifidryer@gmail.com>
  */
-public interface ProtocolHandler {
-    static int PANE_TYPE_INCOMING = 1;
-    static int PANE_TYPE_OUTGOING = 2;
-    public void buildProtocolPane(int paneType, String selectedItem);
-    public BridgeMappingRecord getBridgeMappingRecord();
-    public String[] getIncomingMenuNames();
-    public String[] getOutgoingMenuNames();
-    public boolean getIncomingPanelReady();
+public interface ProtocolDriver {
+    public boolean getEnabled();
+    public void setEnabled(boolean enabled);
+    public void driverInit();
+    public void getIncomingRecords();
+    public void sendOutgoingRecords();
+    public void mapIncomingValues();
 }

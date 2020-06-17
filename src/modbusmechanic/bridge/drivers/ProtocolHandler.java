@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package modbusmechanic.bridge;
+package modbusmechanic.bridge.drivers;
 
-import modbusmechanic.bridge.drivers.ProtocolRecord;
+import modbusmechanic.bridge.BridgeMappingRecord;
 
 /**
  *
  * @author Matt Jamesson <scifidryer@gmail.com>
  */
-public class BridgeMappingRecord {
-    public boolean modbusBlockRemap = false;
-    public ProtocolRecord incomingRecord;
-    public ProtocolRecord outgoingRecord;
-    public BridgeMappingRecord(ProtocolRecord aIncomingRecord, ProtocolRecord aOutgoingRecord)
-    {
-        incomingRecord = aIncomingRecord;
-        outgoingRecord = aOutgoingRecord;
-    }
+public interface ProtocolHandler {
+    static int PANE_TYPE_INCOMING = 1;
+    static int PANE_TYPE_OUTGOING = 2;
+    public void buildProtocolPane(int paneType, String selectedItem);
+    public BridgeMappingRecord getBridgeMappingRecord();
+    public String[] getIncomingMenuNames();
+    public String[] getOutgoingMenuNames();
+    public boolean getIncomingPanelReady();
 }

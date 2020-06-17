@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 package modbusmechanic.bridge;
+import modbusmechanic.bridge.drivers.ProtocolHandler;
 import java.awt.event.*;
 import java.util.*;
 /**
