@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 package modbusmechanic.bridge.drivers;
-
+import com.intelligt.modbus.jlibmodbus.utils.DataUtils;
+import modbusmechanic.ModbusMechanic;
 /**
  *
  * @author Matt Jamesson <scifidryer@gmail.com>
@@ -32,8 +33,12 @@ public class ModbusProtocolRecord implements ProtocolRecord {
     static int PROTOCOL_TYPE_SLAVE = 1;
     static int PROTOCOL_TYPE_MASTER = 2;
     static int FORMAT_TYPE_RAW = 1;
+    static int FORMAT_TYPE_FLOAT = 2;
+    static int FORMAT_TYPE_UINT_16;
     static int HOLDING_REGISTER_FUNCTION = 3;
-    public ModbusProtocolRecord(int protocol, String host, int port, int format, int aFunctionCode, int aStartingRegister, int aQuantity)
+    public boolean wordSwap = false;
+    public boolean byteSwap = false;
+    public ModbusProtocolRecord(int protocol, String host, int port, int format, int aFunctionCode, int aStartingRegister, int aQuantity, boolean aWordSwap, boolean aByteSwap)
     {
         protocolType = protocol;
         slaveHost = host;
@@ -42,5 +47,51 @@ public class ModbusProtocolRecord implements ProtocolRecord {
         startingRegister = aStartingRegister;
         quantity = aQuantity;
         functionCode = aFunctionCode;
+        byteSwap = aByteSwap;
+        wordSwap = aWordSwap;
+    }
+    public double getValue()
+    {
+        byte[] workingValue = rawValue;
+        if (wordSwap)
+        {
+            workingValue = ModbusMechanic.wordSwap(rawValue);
+        }
+        if (byteSwap)
+        {
+            workingValue = ModbusMechanic.byteSwap(rawValue);
+        }
+        if (formatType == FORMAT_TYPE_FLOAT)
+        {
+            return DataUtils.toFloat(workingValue);
+        }
+        if (formatType == FORMAT_TYPE_UINT_16)
+        {
+            return DataUtils.BeToIntArray(workingValue)[0];
+        }
+        return 0;
+    }
+    public void setValue(double value)
+    {
+        if (formatType == FORMAT_TYPE_FLOAT)
+        {
+            float floatValue = (float)value;
+            rawValue = java.nio.ByteBuffer.allocate(4).putFloat(floatValue).array();
+            rawValue = ModbusMechanic.wordSwap(rawValue);
+        }
+        if (formatType == FORMAT_TYPE_UINT_16)
+        {
+            rawValue = java.nio.ByteBuffer.allocate(4).putInt((int)value).array();
+            rawValue = java.util.Arrays.copyOfRange(rawValue, 2, 4);
+            
+        }
+        if (wordSwap)
+        {
+            rawValue = ModbusMechanic.wordSwap(rawValue);
+        }
+        if (byteSwap)
+        {
+            rawValue = ModbusMechanic.byteSwap(rawValue);
+        }
     }
 }

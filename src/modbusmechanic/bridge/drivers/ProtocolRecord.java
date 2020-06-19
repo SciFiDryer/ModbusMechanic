@@ -20,5 +20,6 @@ package modbusmechanic.bridge.drivers;
  * @author Matt Jamesson <scifidryer@gmail.com>
  */
 public interface ProtocolRecord {
-    
+    public double getValue();
+    public void setValue(double value);
 }

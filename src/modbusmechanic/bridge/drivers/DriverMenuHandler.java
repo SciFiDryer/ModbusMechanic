@@ -39,6 +39,7 @@ public class DriverMenuHandler implements ActionListener{
         outgoingPanel = aOutgoingPanel;
         incomingDataSettings = aIncomingDataSettings;
         parentEntryContainer = aParentEntryContainer;
+        outgoingDataSelector.addActionListener(this);
         loadDrivers();
     }
     public void loadDrivers()
@@ -123,11 +124,35 @@ public class DriverMenuHandler implements ActionListener{
         settings.clear();
         JPanel outgoingDataDest = new JPanel();
         outgoingDataDest.add(new JLabel("Outgoing Data Destination"));
-        DefaultComboBoxModel model = new DefaultComboBoxModel(new String[] {"Select", "To Modbus Slave"});
+        ArrayList incomingSettings = parentEntryContainer.incomingSettings.get(2);
+        boolean runDriverList = true;
+        ArrayList<String> driverNames = new ArrayList();
+        driverNames.add("Select");
+        if (incomingSettings.get(0) != null && incomingSettings.get(0) instanceof JComboBox)
+        {
+            JComboBox incomingSelector = (JComboBox)incomingSettings.get(0);
+            if (incomingSelector.getSelectedItem().equals("Block Read"));
+            {
+                runDriverList = false;
+                driverNames.add("To Modbus Slave");
+            }
+        }
+        if (runDriverList)
+        {
+            for (int i = 0; i < driverList.size(); i++)
+            {
+                String[] menuNames = driverList.get(i).getOutgoingMenuNames();
+                for (int j = 0; j < menuNames.length; j++)
+                {
+                    driverNames.add(menuNames[j]);
+                }
+            }
+        }
+        DefaultComboBoxModel model = new DefaultComboBoxModel(driverNames.toArray());
         outgoingDataSelector.setModel(model);
         JPanel outgoingDataSettings = new JPanel();
         outgoingDataSettings.setLayout(new BoxLayout(outgoingDataSettings, BoxLayout.Y_AXIS));
-        outgoingDataSelector.addActionListener(this);
+        
         settings.add(outgoingDataSelector);
         outgoingDataDest.add(outgoingDataSelector);
         outgoingPanel.add(outgoingDataDest);

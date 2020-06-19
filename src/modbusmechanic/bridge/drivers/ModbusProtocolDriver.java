@@ -181,11 +181,21 @@ public class ModbusProtocolDriver implements ProtocolDriver{
     {
         for (int i = 0; i < manager.bridgeMapList.size(); i++)
         {
-            if (manager.mappingRecords.get(i).modbusBlockRemap)
+            if (manager.mappingRecords.get(i).incomingRecord instanceof ModbusProtocolRecord)
             {
                 ModbusProtocolRecord incomingRecord = (ModbusProtocolRecord)manager.mappingRecords.get(i).incomingRecord;
+                incomingRecord.rawValue = getModbusValue(incomingRecord.slaveHost, incomingRecord.slavePort, incomingRecord.functionCode, incomingRecord.startingRegister, incomingRecord.quantity);
+            }
+            
+            if (manager.mappingRecords.get(i).modbusBlockRemap)
+            {
                 ModbusProtocolRecord outgoingRecord = (ModbusProtocolRecord)manager.mappingRecords.get(i).outgoingRecord;
-                outgoingRecord.rawValue = getModbusValue(incomingRecord.slaveHost, incomingRecord.slavePort, incomingRecord.functionCode, incomingRecord.startingRegister, incomingRecord.quantity);
+                outgoingRecord.rawValue = ((ModbusProtocolRecord)manager.mappingRecords.get(i).incomingRecord).rawValue;
+            }
+            else
+            {
+                BridgeMappingRecord currentRecord = manager.mappingRecords.get(i);
+                currentRecord.outgoingRecord.setValue(currentRecord.incomingRecord.getValue());
             }
         }
     }
