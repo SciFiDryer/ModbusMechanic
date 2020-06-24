@@ -34,7 +34,8 @@ public class ModbusProtocolRecord implements ProtocolRecord {
     static int PROTOCOL_TYPE_MASTER = 2;
     static int FORMAT_TYPE_RAW = 1;
     static int FORMAT_TYPE_FLOAT = 2;
-    static int FORMAT_TYPE_UINT_16;
+    static int FORMAT_TYPE_UINT_16 = 3;
+    static int FORMAT_TYPE_UINT_32 = 4;
     static int HOLDING_REGISTER_FUNCTION = 3;
     public boolean wordSwap = false;
     public boolean byteSwap = false;
@@ -69,6 +70,10 @@ public class ModbusProtocolRecord implements ProtocolRecord {
         {
             return DataUtils.BeToIntArray(workingValue)[0];
         }
+        if (formatType == FORMAT_TYPE_UINT_32)
+        {
+            return ModbusMechanic.bytesToInt32(workingValue);
+        }
         return 0;
     }
     public void setValue(double value)
@@ -82,8 +87,12 @@ public class ModbusProtocolRecord implements ProtocolRecord {
         if (formatType == FORMAT_TYPE_UINT_16)
         {
             rawValue = java.nio.ByteBuffer.allocate(4).putInt((int)value).array();
-            rawValue = java.util.Arrays.copyOfRange(rawValue, 2, 4);
-            
+            rawValue = java.util.Arrays.copyOfRange(rawValue, 2, 4);  
+        }
+        if (formatType == FORMAT_TYPE_UINT_32)
+        {
+            byte[] buf = java.nio.ByteBuffer.allocate(8).putLong((long)value).array();
+            rawValue = java.util.Arrays.copyOfRange(buf, 4, 8);
         }
         if (wordSwap)
         {

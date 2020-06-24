@@ -58,7 +58,6 @@ public class ModbusProtocolHandler implements ProtocolHandler{
     {
         if (paneType == PANE_TYPE_INCOMING)
         {
-            
             constructDataSettings(incomingDataSettings, selectedItem);
         }
         if (paneType == PANE_TYPE_OUTGOING)
@@ -99,6 +98,7 @@ public class ModbusProtocolHandler implements ProtocolHandler{
             settingsPanel.add(new JLabel("Slave port"));
             JTextField slavePortField = new JTextField();
             slavePortField.setColumns(4);
+            slavePortField.setText("502");
             settingsPanel.add(slavePortField);
             JComboBox registerTypeSelector = new JComboBox();
             DefaultComboBoxModel model = new DefaultComboBoxModel(new String[] {"Select register type", "Holding registers"});
@@ -141,6 +141,7 @@ public class ModbusProtocolHandler implements ProtocolHandler{
             JTextField slavePortField = new JTextField();
             settings.add(slavePortField);
             slavePortField.setColumns(4);
+            slavePortField.setText("502");
             settingsPanel.add(slavePortField);
             JComboBox registerTypeSelector = new JComboBox();
             DefaultComboBoxModel model = new DefaultComboBoxModel(new String[] {"Select register type", "Holding registers"});
@@ -171,7 +172,7 @@ public class ModbusProtocolHandler implements ProtocolHandler{
             ArrayList settings = parentEntryContainer.outgoingSettings.get(2);
             settings.clear();
             JComboBox writeTypeSelector = new JComboBox();
-            DefaultComboBoxModel model = new DefaultComboBoxModel(new String[] {"Select write type", "Single value Float", "Single value unsigned Int16"});
+            DefaultComboBoxModel model = new DefaultComboBoxModel(new String[] {"Select write type", "Single value Float", "Single value unsigned Int16", "Single value unsigned Int32"});
             writeTypeSelector.setModel(model);
             JPanel registerSettingsPanel = new JPanel();
             writeTypeSelector.addActionListener(new ActionListener(){
@@ -220,8 +221,8 @@ public class ModbusProtocolHandler implements ProtocolHandler{
                 JCheckBox wordSwap = new JCheckBox();
                 settings.add(wordSwap);
                 mainPanel.add(wordSwap);
+                mainPanel.add(new JLabel("Word swap"));
             }
-            mainPanel.add(new JLabel("Word swap"));
             JCheckBox byteSwap = new JCheckBox();
             settings.add(byteSwap);
             mainPanel.add(byteSwap);
@@ -243,7 +244,7 @@ public class ModbusProtocolHandler implements ProtocolHandler{
         if (selectedIndex == 1)
         {
             
-            DefaultComboBoxModel model = new DefaultComboBoxModel(new String[] {"Select read type", "Block read", "Read Float", "Read Unsigned Int16"});
+            DefaultComboBoxModel model = new DefaultComboBoxModel(new String[] {"Select read type", "Block read", "Read Float", "Read Unsigned Int16", "Read Unsigned Int32"});
             readTypeSelector = new JComboBox();
             readTypeSelector.setModel(model);
             JPanel registerSettingsPanel = new JPanel();
@@ -285,7 +286,7 @@ public class ModbusProtocolHandler implements ProtocolHandler{
             quantityField.setColumns(5);
             mainPanel.add(quantityField);
         }
-        if (selectedIndex == 2)
+        if (selectedIndex == 2 || selectedIndex == 4)
         {
             JCheckBox wordSwap = new JCheckBox();
             settings.add(wordSwap);
@@ -352,6 +353,15 @@ public class ModbusProtocolHandler implements ProtocolHandler{
             boolean byteSwap = ((JCheckBox)(currentLevel.get(1))).isSelected();
             incomingProtocolRecord = new ModbusProtocolRecord(type, slaveHost, slavePort, format, functionCode, register, 1, false, byteSwap);
         }
+        else if (((JComboBox)(currentLevel.get(0))).getSelectedIndex() == 4)
+        {
+            format = ModbusProtocolRecord.FORMAT_TYPE_UINT_32;
+            currentLevel = parentEntryContainer.incomingSettings.get(3);
+            int register = Integer.parseInt(((JTextField)(currentLevel.get(0))).getText());
+            boolean wordSwap = ((JCheckBox)(currentLevel.get(1))).isSelected();
+            boolean byteSwap = ((JCheckBox)(currentLevel.get(2))).isSelected();
+            incomingProtocolRecord = new ModbusProtocolRecord(type, slaveHost, slavePort, format, functionCode, register, 2, false, byteSwap);
+        }
         return incomingProtocolRecord;
     }
     public ProtocolRecord getOutgoingProtocolRecord(ProtocolRecord incomingProtocolRecord)
@@ -388,6 +398,10 @@ public class ModbusProtocolHandler implements ProtocolHandler{
         else if (((JComboBox)(currentLevel.get(0))).getSelectedIndex() == 2)
         {
             format = ModbusProtocolRecord.FORMAT_TYPE_UINT_16;
+        }
+        else if (((JComboBox)(currentLevel.get(0))).getSelectedIndex() == 3)
+        {
+            format = ModbusProtocolRecord.FORMAT_TYPE_UINT_32;
         }
         if (format == ModbusProtocolRecord.FORMAT_TYPE_RAW)
         {
