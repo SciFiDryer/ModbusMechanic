@@ -15,6 +15,7 @@
  */
 package modbusmechanic.bridge.drivers;
 import java.util.*;
+import com.intelligt.modbus.jlibmodbus.slave.*;
 /**
  *
  * @author Matt Jamesson <scifidryer@gmail.com>
@@ -23,8 +24,13 @@ public class ModbusHostRecord {
     String hostname = null;
     int port = 0;
     ArrayList<RegisterRecord> registerRecords = new ArrayList();
-    public ModbusHostRecord(String aHostname, int aPort)
+    int hostType = 0;
+    static int HOST_TYPE_REMOTE_SLAVE = 1;
+    static int HOST_TYPE_LOCAL_SLAVE = 2;
+    ModbusSlave localSlave = null;
+    public ModbusHostRecord(int aHostType, String aHostname, int aPort)
     {
+        hostType = aHostType;
         hostname = aHostname;
         port = aPort;
     }

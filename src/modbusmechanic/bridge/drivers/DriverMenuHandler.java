@@ -131,7 +131,7 @@ public class DriverMenuHandler implements ActionListener{
         if (incomingSettings.get(0) != null && incomingSettings.get(0) instanceof JComboBox)
         {
             JComboBox incomingSelector = (JComboBox)incomingSettings.get(0);
-            if (incomingSelector.getSelectedItem().equals("Block Read"));
+            if (incomingSelector.getSelectedItem().equals("Block Read"))
             {
                 runDriverList = false;
                 driverNames.add("To Modbus Slave");

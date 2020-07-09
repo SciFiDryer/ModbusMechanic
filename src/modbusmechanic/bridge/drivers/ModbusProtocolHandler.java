@@ -35,8 +35,8 @@ public class ModbusProtocolHandler implements ProtocolHandler{
     JPanel outgoingPanel = null;
     DriverMenuHandler dmh = null;
     BridgeEntryContainer parentEntryContainer = null;
-    String[] incomingMenuNames = new String[] {"From Modbus Slave"};
-    String[] outgoingMenuNames = new String[] {"To Modbus Slave"};
+    String[] incomingMenuNames = new String[] {"From Modbus Slave (act as master)", "From Modbus Master (act as slave)"};
+    String[] outgoingMenuNames = new String[] {"To Modbus Slave (act as master)", "To Modbus Master (act as slave)"};
     public String[] getIncomingMenuNames()
     {
         return incomingMenuNames;
@@ -87,14 +87,20 @@ public class ModbusProtocolHandler implements ProtocolHandler{
             parentEntryContainer.incomingSettings.add(new ArrayList());
         }
         parentEntryContainer.incomingSettings.get(1).clear();
+        mainPanel.removeAll();
         //from modbus slave
-        if (selectedItem.equals(incomingMenuNames[0]))
+        if (selectedItem.equals(incomingMenuNames[0]) || selectedItem.equals(incomingMenuNames[1]))
         {
             JPanel settingsPanel = new JPanel();
-            settingsPanel.add(new JLabel("Slave address"));
-            JTextField slaveHostField = new JTextField();
-            slaveHostField.setColumns(15);
-            settingsPanel.add(slaveHostField);
+            ArrayList settings = parentEntryContainer.incomingSettings.get(1);
+            if (selectedItem.equals(incomingMenuNames[0]))
+            {
+                settingsPanel.add(new JLabel("Slave address"));
+                JTextField slaveHostField = new JTextField();
+                slaveHostField.setColumns(15);
+                settingsPanel.add(slaveHostField);
+                settings.add(slaveHostField);
+            }
             settingsPanel.add(new JLabel("Slave port"));
             JTextField slavePortField = new JTextField();
             slavePortField.setColumns(4);
@@ -113,8 +119,8 @@ public class ModbusProtocolHandler implements ProtocolHandler{
             settingsPanel.add(registerTypeSelector);
             mainPanel.add(settingsPanel);
             mainPanel.add(slaveSettingsPanel);
-            ArrayList settings = parentEntryContainer.incomingSettings.get(1);
-            settings.add(slaveHostField);
+            
+            
             settings.add(slavePortField);
             settings.add(registerTypeSelector);
         }
@@ -123,20 +129,23 @@ public class ModbusProtocolHandler implements ProtocolHandler{
     public void constructOutgoingDataSettings(JPanel mainPanel, String selectedItem)
     {
         //to modbus slave
-        if (selectedItem.equals(outgoingMenuNames[0]))
+        if (parentEntryContainer.outgoingSettings.size() < 2)
         {
-            if (parentEntryContainer.outgoingSettings.size() < 2)
-            {
-                parentEntryContainer.outgoingSettings.add(new ArrayList());
-            }
+            parentEntryContainer.outgoingSettings.add(new ArrayList());
+        }
+        if (selectedItem.equals(outgoingMenuNames[0]) || selectedItem.equals(outgoingMenuNames[1]))
+        {
             ArrayList settings = parentEntryContainer.outgoingSettings.get(1);
             settings.clear();
             JPanel settingsPanel = new JPanel();
-            settingsPanel.add(new JLabel("Slave address"));
-            JTextField slaveHostField = new JTextField();
-            settings.add(slaveHostField);
-            slaveHostField.setColumns(15);
-            settingsPanel.add(slaveHostField);
+            if (selectedItem.equals(outgoingMenuNames[0]))
+            {
+                settingsPanel.add(new JLabel("Slave address"));
+                JTextField slaveHostField = new JTextField();
+                settings.add(slaveHostField);
+                slaveHostField.setColumns(15);
+                settingsPanel.add(slaveHostField);
+            }
             settingsPanel.add(new JLabel("Slave port"));
             JTextField slavePortField = new JTextField();
             settings.add(slavePortField);
@@ -314,18 +323,30 @@ public class ModbusProtocolHandler implements ProtocolHandler{
         int format = 0;
         String slaveHost = null;
         int slavePort = 0;
-        if (typeSelector.getSelectedIndex() == 1)
+        int functionCode = 0;
+        if (typeSelector.getSelectedItem().equals(incomingMenuNames[0]))
         {
             type = ModbusProtocolRecord.PROTOCOL_TYPE_MASTER;
             currentLevel = parentEntryContainer.incomingSettings.get(1);
             slaveHost = ((JTextField)(currentLevel.get(0))).getText();
             slavePort = Integer.parseInt(((JTextField)(currentLevel.get(1))).getText());
+            if (((JComboBox)(currentLevel.get(2))).getSelectedIndex() == 1)
+            {
+                functionCode = 3;
+            }
         }
-        int functionCode = 0;
-        if (((JComboBox)(currentLevel.get(2))).getSelectedIndex() == 1)
+        if (typeSelector.getSelectedItem().equals(incomingMenuNames[1]))
         {
-            functionCode = 3;
+            type = ModbusProtocolRecord.PROTOCOL_TYPE_SLAVE;
+            currentLevel = parentEntryContainer.incomingSettings.get(1);
+            slavePort = Integer.parseInt(((JTextField)(currentLevel.get(0))).getText());
+            if (((JComboBox)(currentLevel.get(1))).getSelectedIndex() == 1)
+            {
+                functionCode = 3;
+            }
         }
+        
+        
         currentLevel = parentEntryContainer.incomingSettings.get(2);
         if (((JComboBox)(currentLevel.get(0))).getSelectedIndex() == 1)
         {
@@ -373,18 +394,29 @@ public class ModbusProtocolHandler implements ProtocolHandler{
         int type = 0;
         String slaveHost = null;
         int slavePort = 0;
-        if (typeSelector.getSelectedIndex() == 1)
+        int functionCode = 0;
+        if (typeSelector.getSelectedItem().equals(outgoingMenuNames[0]))
         {
             type = ModbusProtocolRecord.PROTOCOL_TYPE_MASTER;
             currentLevel = parentEntryContainer.outgoingSettings.get(1);
             slaveHost = ((JTextField)(currentLevel.get(0))).getText();
             slavePort = Integer.parseInt(((JTextField)(currentLevel.get(1))).getText());
+            if (((JComboBox)(currentLevel.get(2))).getSelectedIndex() == 1)
+            {
+                functionCode = 3;
+            }
         }
-        int functionCode = 0;
-        if (((JComboBox)(currentLevel.get(2))).getSelectedIndex() == 1)
+        else if (typeSelector.getSelectedItem().equals(outgoingMenuNames[1]))
         {
-            functionCode = 3;
+            type = ModbusProtocolRecord.PROTOCOL_TYPE_SLAVE;
+            currentLevel = parentEntryContainer.outgoingSettings.get(1);
+            slavePort = Integer.parseInt(((JTextField)(currentLevel.get(0))).getText());
+            if (((JComboBox)(currentLevel.get(1))).getSelectedIndex() == 1)
+            {
+                functionCode = 3;
+            }
         }
+        
         currentLevel = parentEntryContainer.outgoingSettings.get(2);
         int format = 0;
         if (((ModbusProtocolRecord)(incomingProtocolRecord)).formatType == ModbusProtocolRecord.FORMAT_TYPE_RAW)

@@ -32,6 +32,7 @@ public class BridgeManager {
     public ArrayList<BridgeEntryContainer> bridgeMapList = new ArrayList();
     public ArrayList<BridgeMappingRecord> mappingRecords = new ArrayList();
     ArrayList<ProtocolDriver> driverList = new ArrayList();
+    boolean firstRun = true;
     public BridgeManager()
     {
         new BridgeFrame(this).setVisible(true);
@@ -39,17 +40,31 @@ public class BridgeManager {
     }
     public void startBridge()
     {
+        if (firstRun)
+        {
+            for (int i = 0; i < driverList.size(); i++)
+            {
+                ProtocolDriver currentDriver = driverList.get(i);
+                currentDriver.driverInit();
+            }
+        }
         //get incoming records
         for (int i = 0; i < driverList.size(); i++)
         {
             ProtocolDriver currentDriver = driverList.get(i);
             currentDriver.getIncomingRecords();
         }
-        //map records
+        //get incoming records
         for (int i = 0; i < driverList.size(); i++)
         {
             ProtocolDriver currentDriver = driverList.get(i);
             currentDriver.mapIncomingValues();
+        }
+        //set outgoing records
+        for (int i = 0; i < bridgeMapList.size(); i++)
+        {
+            BridgeMappingRecord currentRecord = mappingRecords.get(i);
+            currentRecord.outgoingRecord.setValue(currentRecord.incomingRecord.getValue());
         }
         //map records
         for (int i = 0; i < driverList.size(); i++)
@@ -57,6 +72,7 @@ public class BridgeManager {
             ProtocolDriver currentDriver = driverList.get(i);
             currentDriver.sendOutgoingRecords();
         }
+        firstRun = false;
     }
 
     public void constructSettingsFromGui()
@@ -71,6 +87,12 @@ public class BridgeManager {
         }
         startBridge();
     }
-    
+    public void shutdown()
+    {
+        for (int i = 0; i < driverList.size(); i++)
+        {
+            driverList.get(i).shutdown();
+        }
+    }
     
 }

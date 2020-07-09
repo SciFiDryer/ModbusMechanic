@@ -78,29 +78,32 @@ public class ModbusProtocolRecord implements ProtocolRecord {
     }
     public void setValue(double value)
     {
-        if (formatType == FORMAT_TYPE_FLOAT)
+        if (formatType != FORMAT_TYPE_RAW)
         {
-            float floatValue = (float)value;
-            rawValue = java.nio.ByteBuffer.allocate(4).putFloat(floatValue).array();
-            rawValue = ModbusMechanic.wordSwap(rawValue);
-        }
-        if (formatType == FORMAT_TYPE_UINT_16)
-        {
-            rawValue = java.nio.ByteBuffer.allocate(4).putInt((int)value).array();
-            rawValue = java.util.Arrays.copyOfRange(rawValue, 2, 4);  
-        }
-        if (formatType == FORMAT_TYPE_UINT_32)
-        {
-            byte[] buf = java.nio.ByteBuffer.allocate(8).putLong((long)value).array();
-            rawValue = java.util.Arrays.copyOfRange(buf, 4, 8);
-        }
-        if (wordSwap)
-        {
-            rawValue = ModbusMechanic.wordSwap(rawValue);
-        }
-        if (byteSwap)
-        {
-            rawValue = ModbusMechanic.byteSwap(rawValue);
+            if (formatType == FORMAT_TYPE_FLOAT)
+            {
+                float floatValue = (float)value;
+                rawValue = java.nio.ByteBuffer.allocate(4).putFloat(floatValue).array();
+                rawValue = ModbusMechanic.wordSwap(rawValue);
+            }
+            if (formatType == FORMAT_TYPE_UINT_16)
+            {
+                rawValue = java.nio.ByteBuffer.allocate(4).putInt((int)value).array();
+                rawValue = java.util.Arrays.copyOfRange(rawValue, 2, 4);  
+            }
+            if (formatType == FORMAT_TYPE_UINT_32)
+            {
+                byte[] buf = java.nio.ByteBuffer.allocate(8).putLong((long)value).array();
+                rawValue = java.util.Arrays.copyOfRange(buf, 4, 8);
+            }
+            if (wordSwap)
+            {
+                rawValue = ModbusMechanic.wordSwap(rawValue);
+            }
+            if (byteSwap)
+            {
+                rawValue = ModbusMechanic.byteSwap(rawValue);
+            }
         }
     }
 }

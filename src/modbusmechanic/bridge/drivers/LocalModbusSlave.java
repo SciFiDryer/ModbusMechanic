@@ -13,18 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package modbusmechanic.bridge.drivers;
 
+package modbusmechanic.bridge.drivers;
+import com.intelligt.modbus.jlibmodbus.slave.*;
 /**
  *
  * @author Matt Jamesson <scifidryer@gmail.com>
  */
-public interface ProtocolDriver {
-    public boolean getEnabled();
-    public void setEnabled(boolean enabled);
-    public void driverInit();
-    public void getIncomingRecords();
-    public void sendOutgoingRecords();
-    public void mapIncomingValues();
-    public void shutdown();
+public class LocalModbusSlave {
+    public ModbusSlave localSlave = null;
+    public int port = 0;
+    public LocalModbusSlave(ModbusSlave slave, int aPort)
+    {
+        localSlave = slave;
+        port = aPort;
+    }
 }
