@@ -69,7 +69,7 @@ https://scifidryer.github.io/ModbusMechanic/
 
 ## Latest release
 
-[ModbusMechanic.v1.0.zip](https://github.com/SciFiDryer/ModbusMechanic/releases/download/v1.0/ModbusMechanic.v1.0.zip)
+[ModbusMechanic.v1.1.zip](https://github.com/SciFiDryer/ModbusMechanic/releases/download/v1.1/ModbusMechanic.v1.1.zip)
 
 ## Completed features and planned features in GUI
 
