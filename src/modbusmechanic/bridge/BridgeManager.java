@@ -28,17 +28,20 @@ import static modbusmechanic.ModbusMechanic.generateModbusMessage;
  *
  * @author Matt Jamesson <scifidryer@gmail.com>
  */
-public class BridgeManager {
+public class BridgeManager{
     public ArrayList<BridgeEntryContainer> bridgeMapList = new ArrayList();
     public ArrayList<BridgeMappingRecord> mappingRecords = new ArrayList();
     ArrayList<ProtocolDriver> driverList = new ArrayList();
     boolean firstRun = true;
+    int restTime = 1000;
+    boolean isRunning = false;
+    BridgeThread bridgeThread = null;
     public BridgeManager()
     {
         new BridgeFrame(this).setVisible(true);
         driverList.add(new ModbusProtocolDriver(this));
     }
-    public void startBridge()
+    public void runBridge()
     {
         if (firstRun)
         {
@@ -80,19 +83,26 @@ public class BridgeManager {
         mappingRecords.clear();
         for (int i = 0; i < bridgeMapList.size(); i++)
         {
-            //to do call to protocol specific driver
             modbusmechanic.bridge.drivers.ProtocolHandler currentRecord = bridgeMapList.get(i).incomingHandler;
             BridgeMappingRecord bmr = currentRecord.getBridgeMappingRecord();
             mappingRecords.add(bmr);
         }
-        startBridge();
+    }
+    public void startBridge()
+    {
+        bridgeThread = new BridgeThread(this);
+        bridgeThread.start();
     }
     public void shutdown()
     {
+        isRunning = false;
+        firstRun = true;
+        bridgeThread.interrupt();
         for (int i = 0; i < driverList.size(); i++)
         {
             driverList.get(i).shutdown();
         }
     }
+    
     
 }

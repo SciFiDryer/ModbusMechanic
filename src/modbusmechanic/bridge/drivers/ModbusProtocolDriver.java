@@ -247,16 +247,23 @@ public class ModbusProtocolDriver implements ProtocolDriver{
             try 
             {
                 response = generateModbusMessage(master, 0, 1, 1, 3, startingRegister, quantity, null);
+                master.disconnect();
             }
             catch(Exception e)
             {
-                e.printStackTrace();
+                if (ModbusMechanic.debug)
+                {
+                    e.printStackTrace();
+                }
             }
-            buf = ((ReadHoldingRegistersResponse)(response)).getBytes();
-            for (int k = 0; k < quantity; k++)
+            if (response != null)
             {
-                byte[] value = Arrays.copyOfRange(buf, k*2, k*2+2);
-                currentSlave.insertRegisterValue(3, k+startingRegister, value);
+                buf = ((ReadHoldingRegistersResponse)(response)).getBytes();
+                for (int k = 0; k < quantity; k++)
+                {
+                    byte[] value = Arrays.copyOfRange(buf, k*2, k*2+2);
+                    currentSlave.insertRegisterValue(3, k+startingRegister, value);
+                }
             }
         }
     }

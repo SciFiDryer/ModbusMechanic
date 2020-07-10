@@ -47,7 +47,11 @@ public class BridgeFrame extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jSeparator1 = new javax.swing.JSeparator();
         addMappingButton = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        startBridgeButton = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        restIntervalField = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -68,15 +72,27 @@ public class BridgeFrame extends javax.swing.JFrame {
         });
         jPanel1.add(addMappingButton);
 
-        jButton1.setText("Test Bridge");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        startBridgeButton.setText("Start Bridge");
+        startBridgeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                startBridgeButtonActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1);
+        jPanel1.add(startBridgeButton);
 
         getContentPane().add(jPanel1);
+
+        jLabel2.setText("Rest interval");
+        jPanel3.add(jLabel2);
+
+        restIntervalField.setColumns(4);
+        restIntervalField.setText("1000");
+        jPanel3.add(restIntervalField);
+
+        jLabel1.setText("ms");
+        jPanel3.add(jLabel1);
+
+        getContentPane().add(jPanel3);
 
         jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.Y_AXIS));
         getContentPane().add(jPanel2);
@@ -134,13 +150,37 @@ public class BridgeFrame extends javax.swing.JFrame {
         pack();
     }//GEN-LAST:event_addMappingButtonActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        manager.constructSettingsFromGui();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void startBridgeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startBridgeButtonActionPerformed
+        if (!manager.isRunning)
+        {
+            try
+            {
+                manager.restTime = Integer.parseInt(restIntervalField.getText());
+            }
+            catch (Exception e)
+            {
+                if (modbusmechanic.ModbusMechanic.debug)
+                {
+                    e.printStackTrace();
+                }
+                manager.restTime = 1000;
+            }
+            manager.constructSettingsFromGui();
+            manager.startBridge();
+            startBridgeButton.setText("Stop bridge");
+        }
+        else
+        {
+            manager.shutdown();
+            startBridgeButton.setText("Start bridge");
+        }
+    }//GEN-LAST:event_startBridgeButtonActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        // TODO add your handling code here:
-        manager.shutdown();
+        if (manager.isRunning)
+        {
+            manager.shutdown();
+        }
     }//GEN-LAST:event_formWindowClosing
 
     /**
@@ -150,9 +190,13 @@ public class BridgeFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addMappingButton;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTextField restIntervalField;
+    private javax.swing.JButton startBridgeButton;
     // End of variables declaration//GEN-END:variables
 }
