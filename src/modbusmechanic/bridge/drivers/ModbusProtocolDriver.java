@@ -228,7 +228,27 @@ public class ModbusProtocolDriver implements ProtocolDriver{
         {
             e.printStackTrace();
         }
-        int[] registers = getSortedRegisters(3, currentSlave);
+        //holding registers
+        modbusBlockRead(3, master, currentSlave);
+        //input registers
+        modbusBlockRead(4, master, currentSlave);
+        try
+        {
+            System.out.println("disconnecting");
+            master.disconnect();
+        }
+        catch (Exception e)
+        {
+            if (ModbusMechanic.debug)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+    public void modbusBlockRead(int functionCode, ModbusMaster master, ModbusHostRecord currentSlave)
+    {
+        int[] registers = getSortedRegisters(functionCode, currentSlave);
+        ModbusResponse response = null;
         int startingRegister = 0;
         int quantity = 0;
         for (int j = 0; j < registers.length; j++)
@@ -246,8 +266,7 @@ public class ModbusProtocolDriver implements ProtocolDriver{
             }
             try 
             {
-                response = generateModbusMessage(master, 0, 1, 1, 3, startingRegister, quantity, null);
-                master.disconnect();
+                response = generateModbusMessage(master, 0, 1, 1, functionCode, startingRegister, quantity, null);
             }
             catch(Exception e)
             {
@@ -258,11 +277,11 @@ public class ModbusProtocolDriver implements ProtocolDriver{
             }
             if (response != null)
             {
-                buf = ((ReadHoldingRegistersResponse)(response)).getBytes();
+                byte[] buf = ((ReadHoldingRegistersResponse)(response)).getBytes();
                 for (int k = 0; k < quantity; k++)
                 {
                     byte[] value = Arrays.copyOfRange(buf, k*2, k*2+2);
-                    currentSlave.insertRegisterValue(3, k+startingRegister, value);
+                    currentSlave.insertRegisterValue(functionCode, k+startingRegister, value);
                 }
             }
         }
@@ -314,7 +333,6 @@ public class ModbusProtocolDriver implements ProtocolDriver{
     }
     public byte[] getModbusValue(String host, int port, int functionCode, int startingRegister, int quantity)
     {
-        
         for (int i = 0; i < incomingSlaveList.size(); i++)
         {
             java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
@@ -331,9 +349,12 @@ public class ModbusProtocolDriver implements ProtocolDriver{
                             baos.write(rr.value);
                             baos.flush();
                         }
-                        catch (java.io.IOException e)
+                        catch (Exception e)
                         {
-                            e.printStackTrace();
+                            if (ModbusMechanic.debug)
+                            {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }
@@ -434,6 +455,14 @@ public class ModbusProtocolDriver implements ProtocolDriver{
             try 
             {
                 response = generateModbusMessage(master, 0, 1, 1, 16, startingRegister, quantity, values);
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
+            try
+            {
+                master.disconnect();
             }
             catch(Exception e)
             {

@@ -107,7 +107,7 @@ public class ModbusProtocolHandler implements ProtocolHandler{
             slavePortField.setText("502");
             settingsPanel.add(slavePortField);
             JComboBox registerTypeSelector = new JComboBox();
-            DefaultComboBoxModel model = new DefaultComboBoxModel(new String[] {"Select register type", "Holding registers"});
+            DefaultComboBoxModel model = new DefaultComboBoxModel(new String[] {"Select register type", "Input registers", "Holding registers"});
             registerTypeSelector.setModel(model);
             JPanel slaveSettingsPanel = new JPanel();
             registerTypeSelector.addActionListener(new ActionListener(){
@@ -250,7 +250,7 @@ public class ModbusProtocolHandler implements ProtocolHandler{
         resetOutgoingPanel();
         incomingPanelReady = false;
         mainPanel.removeAll();
-        if (selectedIndex == 1)
+        if (selectedIndex == 2 || selectedIndex == 1)
         {
             
             DefaultComboBoxModel model = new DefaultComboBoxModel(new String[] {"Select read type", "Block read", "Read Float", "Read Unsigned Int16", "Read Unsigned Int32"});
@@ -331,6 +331,10 @@ public class ModbusProtocolHandler implements ProtocolHandler{
             slaveHost = ((JTextField)(currentLevel.get(0))).getText();
             slavePort = Integer.parseInt(((JTextField)(currentLevel.get(1))).getText());
             if (((JComboBox)(currentLevel.get(2))).getSelectedIndex() == 1)
+            {
+                functionCode = 4;
+            }
+            if (((JComboBox)(currentLevel.get(2))).getSelectedIndex() == 2)
             {
                 functionCode = 3;
             }
