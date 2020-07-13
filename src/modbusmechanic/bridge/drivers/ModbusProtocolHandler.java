@@ -153,7 +153,7 @@ public class ModbusProtocolHandler implements ProtocolHandler{
             slavePortField.setText("502");
             settingsPanel.add(slavePortField);
             JComboBox registerTypeSelector = new JComboBox();
-            DefaultComboBoxModel model = new DefaultComboBoxModel(new String[] {"Select register type", "Holding registers"});
+            DefaultComboBoxModel model = new DefaultComboBoxModel(new String[] {"Select register type", "Input registers", "Holding registers"});
             registerTypeSelector.setModel(model);
             JPanel slaveSettingsPanel = new JPanel();
             registerTypeSelector.addActionListener(new ActionListener(){
@@ -172,7 +172,7 @@ public class ModbusProtocolHandler implements ProtocolHandler{
     public void constructOutgoingSlaveSettings(JPanel mainPanel, int selectedIndex)
     {
         mainPanel.removeAll();
-        if (selectedIndex == 1)
+        if (selectedIndex == 1 || selectedIndex == 2)
         {
             if (parentEntryContainer.outgoingSettings.size() < 3)
             {
@@ -407,6 +407,10 @@ public class ModbusProtocolHandler implements ProtocolHandler{
             slavePort = Integer.parseInt(((JTextField)(currentLevel.get(1))).getText());
             if (((JComboBox)(currentLevel.get(2))).getSelectedIndex() == 1)
             {
+                functionCode = 4;
+            }
+            if (((JComboBox)(currentLevel.get(2))).getSelectedIndex() == 2)
+            {
                 functionCode = 3;
             }
         }
@@ -416,6 +420,10 @@ public class ModbusProtocolHandler implements ProtocolHandler{
             currentLevel = parentEntryContainer.outgoingSettings.get(1);
             slavePort = Integer.parseInt(((JTextField)(currentLevel.get(0))).getText());
             if (((JComboBox)(currentLevel.get(1))).getSelectedIndex() == 1)
+            {
+                functionCode = 4;
+            }
+            if (((JComboBox)(currentLevel.get(1))).getSelectedIndex() == 2)
             {
                 functionCode = 3;
             }

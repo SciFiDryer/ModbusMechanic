@@ -102,8 +102,11 @@ public class ModbusProtocolDriver implements ProtocolDriver{
             }
             DataHolder dh = new DataHolder();
             ModbusHoldingRegisters hr = new ModbusHoldingRegisters();
+            ModbusHoldingRegisters ir = new ModbusHoldingRegisters();
             hr.setBytesBe(buf);
+            ir.setBytesBe(buf);
             dh.setHoldingRegisters(hr);
+            dh.setInputRegisters(ir);
             slave.setDataHolder(dh);
             localRunningSlaves.add(new LocalModbusSlave(slave, slaveRecord.port));
             slaveRecord.localSlave = slave;
@@ -402,8 +405,20 @@ public class ModbusProtocolDriver implements ProtocolDriver{
             {
                 registerBuf = currentSlave.localSlave.getDataHolder().getHoldingRegisters().getBytes();
             }
+            if (currentSlave.registerRecords.get(i).functionCode == 4)
+            {
+                registerBuf = currentSlave.localSlave.getDataHolder().getInputRegisters().getBytes();
+            }
             setLocalSlaveRegister(currentSlave.registerRecords.get(i).register, currentSlave.registerRecords.get(i).value, registerBuf);
-            currentSlave.localSlave.getDataHolder().getHoldingRegisters().setBytesBe(registerBuf);
+            if (currentSlave.registerRecords.get(i).functionCode == 3)
+            {
+                currentSlave.localSlave.getDataHolder().getHoldingRegisters().setBytesBe(registerBuf);
+            }
+            if (currentSlave.registerRecords.get(i).functionCode == 4)
+            {
+                currentSlave.localSlave.getDataHolder().getInputRegisters().setBytesBe(registerBuf);
+            }
+            
         }
     }
     public void setLocalSlaveRegister(int register, byte[] value, byte[] buffer)
@@ -452,7 +467,7 @@ public class ModbusProtocolDriver implements ProtocolDriver{
             }
             byte[] values = getModbusValues(currentSlave, 3, startingRegister, quantity);
 
-            try 
+            try
             {
                 response = generateModbusMessage(master, 0, 1, 1, 16, startingRegister, quantity, values);
             }
