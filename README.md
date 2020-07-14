@@ -50,7 +50,11 @@ stopbits | Stop bits for serial port. 1=1 2=2 3=1.5 | 1
   ```
 ## Bridge
 
-The bridge functionality allows registers from a slave to be written to a different slave. This feature is in beta and the only supported direction is slave read->slave write.
+This feature is in beta. The bridge functionality allows data from modbus devices to "bridged" to a different type of data.
+
+For example, you can retrieve modbus slave registers from different network devices and make them available on a local slave with consectutive registers. Floats can be converted to Ints and vice versa. Word swapping is also supported. If you have a modbus device that doesn't support word swapping or floats, you can run the data through the bridge to format it correctly and pass it along to the device.
+
+The data is updated followed by a rest period specified in the bridge. If 1000ms is specified, the data update interval will be slightly longer than 1000ms due to the time it takes to retrieve the data.
 
 ## Dependencies
 
@@ -69,7 +73,7 @@ https://scifidryer.github.io/ModbusMechanic/
 
 ## Latest release
 
-[ModbusMechanic.v1.1.zip](https://github.com/SciFiDryer/ModbusMechanic/releases/download/v1.1/ModbusMechanic.v1.1.zip)
+[ModbusMechanic.v1.2.zip](https://github.com/SciFiDryer/ModbusMechanic/releases/download/v1.2/ModbusMechanic.v1.2.zip)
 
 ## Completed features and planned features in GUI
 
