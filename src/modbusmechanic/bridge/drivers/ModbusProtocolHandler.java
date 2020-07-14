@@ -128,7 +128,8 @@ public class ModbusProtocolHandler implements ProtocolHandler{
     }
     public void constructOutgoingDataSettings(JPanel mainPanel, String selectedItem)
     {
-        //to modbus slave
+        resetOutgoingPanel();
+        dmh.constructOutgoingDataMenu();
         if (parentEntryContainer.outgoingSettings.size() < 2)
         {
             parentEntryContainer.outgoingSettings.add(new ArrayList());
