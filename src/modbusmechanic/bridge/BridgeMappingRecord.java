@@ -30,4 +30,8 @@ public class BridgeMappingRecord {
         incomingRecord = aIncomingRecord;
         outgoingRecord = aOutgoingRecord;
     }
+    public BridgeMappingRecord()
+    {
+        
+    }
 }

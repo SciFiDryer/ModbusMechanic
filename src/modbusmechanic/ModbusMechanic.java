@@ -99,6 +99,11 @@ public class ModbusMechanic {
                         System.exit(0);
                     }
                 }
+                if (args[i].equals("-bridge"))
+                {
+                    startGui = false;
+                    new modbusmechanic.bridge.BridgeManager(true, args[i+1]);
+                }
             }
         }
         if (startGui)

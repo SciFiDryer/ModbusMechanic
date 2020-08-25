@@ -37,6 +37,10 @@ public class ModbusProtocolHandler implements ProtocolHandler{
     BridgeEntryContainer parentEntryContainer = null;
     String[] incomingMenuNames = new String[] {"From Modbus Slave (act as master)", "From Modbus Master (act as slave)"};
     String[] outgoingMenuNames = new String[] {"To Modbus Slave (act as master)", "To Modbus Master (act as slave)"};
+    public ModbusProtocolHandler()
+    {
+        
+    }
     public String[] getIncomingMenuNames()
     {
         return incomingMenuNames;
@@ -52,7 +56,155 @@ public class ModbusProtocolHandler implements ProtocolHandler{
         outgoingPanel = aOutgoingPanel;
         incomingDataSettings = aIncomingDataSettings;
         dmh = aDmh;
+        outgoingDataSelector = dmh.outgoingDataSelector;
         
+    }
+    public void setIncomingSettings(ProtocolRecord protocolRecord)
+    {
+        ModbusProtocolRecord modbusRecord = (ModbusProtocolRecord)protocolRecord;
+        ArrayList currentLevel = null;
+        JComboBox incomingMenu = (JComboBox)parentEntryContainer.incomingSettings.get(0).get(0);
+        boolean isMaster = false;
+        if (modbusRecord.protocolType == ModbusProtocolRecord.PROTOCOL_TYPE_MASTER)
+        {
+            isMaster = true;
+        }
+        for (int i = 0; i < incomingMenu.getItemCount(); i++)
+        {
+            if (isMaster && incomingMenu.getItemAt(i).equals(incomingMenuNames[0]))
+            {
+                incomingMenu.setSelectedIndex(i);
+            }
+            if (!isMaster && incomingMenu.getItemAt(i).equals(incomingMenuNames[1]))
+            {
+                incomingMenu.setSelectedIndex(i);
+            }
+        }
+        if (isMaster)
+        {
+             buildProtocolPane(PANE_TYPE_INCOMING, incomingMenuNames[0]);
+             currentLevel = parentEntryContainer.incomingSettings.get(1);
+             ((JTextField)(currentLevel.get(0))).setText(modbusRecord.slaveHost);
+             ((JTextField)(currentLevel.get(1))).setText(modbusRecord.slavePort + "");
+         }
+         if (modbusRecord.protocolType == ModbusProtocolRecord.PROTOCOL_TYPE_SLAVE)
+         {
+             buildProtocolPane(PANE_TYPE_INCOMING, incomingMenuNames[1]);
+             currentLevel = parentEntryContainer.incomingSettings.get(1);
+             JComboBox registerTypeSelector = (JComboBox)currentLevel.get(2);
+             registerTypeSelector.setSelectedIndex(1);
+         }
+         if (modbusRecord.functionCode == 4)
+         {
+             ((JComboBox)(currentLevel.get(2))).setSelectedIndex(1);
+         }
+         if (modbusRecord.functionCode == 3)
+         {
+             ((JComboBox)(currentLevel.get(2))).setSelectedIndex(2);
+         }
+         currentLevel = parentEntryContainer.incomingSettings.get(2);
+         if (modbusRecord.formatType == ModbusProtocolRecord.FORMAT_TYPE_RAW)
+         {
+             ((JComboBox)(currentLevel.get(0))).setSelectedIndex(1);
+             currentLevel = parentEntryContainer.incomingSettings.get(3);
+             ((JTextField)(currentLevel.get(0))).setText(modbusRecord.startingRegister + "");
+             ((JTextField)(currentLevel.get(1))).setText(modbusRecord.quantity + "");
+         }
+         else if (modbusRecord.formatType == ModbusProtocolRecord.FORMAT_TYPE_FLOAT)
+         {
+             ((JComboBox)(currentLevel.get(0))).setSelectedIndex(2);
+             currentLevel = parentEntryContainer.incomingSettings.get(3);
+             ((JTextField)(currentLevel.get(0))).setText(modbusRecord.startingRegister + "");
+             ((JCheckBox)(currentLevel.get(1))).setSelected(modbusRecord.wordSwap);
+             ((JCheckBox)(currentLevel.get(2))).setSelected(modbusRecord.byteSwap);
+         }
+         else if (modbusRecord.formatType == ModbusProtocolRecord.FORMAT_TYPE_UINT_16)
+         {
+             ((JComboBox)(currentLevel.get(0))).setSelectedIndex(3);
+             currentLevel = parentEntryContainer.incomingSettings.get(3);
+             ((JTextField)(currentLevel.get(0))).setText(modbusRecord.startingRegister + "");
+             //boolean wordSwap = ((JCheckBox)(currentLevel.get(1))).isSelected();
+             ((JCheckBox)(currentLevel.get(2))).setSelected(modbusRecord.byteSwap);
+         }
+         else if (modbusRecord.formatType == ModbusProtocolRecord.FORMAT_TYPE_UINT_32)
+         {
+             ((JComboBox)(currentLevel.get(0))).setSelectedIndex(4);
+             currentLevel = parentEntryContainer.incomingSettings.get(3);
+             ((JTextField)(currentLevel.get(0))).setText(modbusRecord.startingRegister + "");
+             ((JCheckBox)(currentLevel.get(1))).setSelected(modbusRecord.wordSwap);
+             ((JCheckBox)(currentLevel.get(2))).setSelected(modbusRecord.byteSwap);
+         }
+    }
+    public void setOutgoingSettings(ProtocolRecord protocolRecord)
+    {
+        ModbusProtocolRecord modbusRecord = (ModbusProtocolRecord)protocolRecord;
+        ArrayList currentLevel = null;
+        JComboBox outgoingMenu = (JComboBox)parentEntryContainer.outgoingSettings.get(0).get(0);
+        for (int i = 0; i < outgoingMenu.getItemCount(); i++)
+        {
+            if (modbusRecord.protocolType == ModbusProtocolRecord.PROTOCOL_TYPE_MASTER && outgoingMenu.getItemAt(i).equals(outgoingMenuNames[0]))
+            {
+                outgoingMenu.setSelectedIndex(i);
+            }
+            if (modbusRecord.protocolType == ModbusProtocolRecord.PROTOCOL_TYPE_SLAVE && outgoingMenu.getItemAt(i).equals(outgoingMenuNames[1]))
+            {
+                outgoingMenu.setSelectedIndex(i);
+            }
+        }
+        int functionSelectorIndex = 0;
+        if (modbusRecord.protocolType == ModbusProtocolRecord.PROTOCOL_TYPE_MASTER)
+        {
+             buildProtocolPane(PANE_TYPE_OUTGOING, outgoingMenuNames[0]);
+             currentLevel = parentEntryContainer.outgoingSettings.get(1);
+             ((JTextField)(currentLevel.get(0))).setText(modbusRecord.slaveHost);
+             ((JTextField)(currentLevel.get(1))).setText(modbusRecord.slavePort + "");
+             functionSelectorIndex = 2;
+         }
+         if (modbusRecord.protocolType == ModbusProtocolRecord.PROTOCOL_TYPE_SLAVE)
+         {
+             buildProtocolPane(PANE_TYPE_OUTGOING, outgoingMenuNames[1]);
+             currentLevel = parentEntryContainer.outgoingSettings.get(1);
+             ((JTextField)(currentLevel.get(0))).setText(modbusRecord.slavePort + "");
+             functionSelectorIndex = 1;
+         }
+         if (modbusRecord.functionCode == 4)
+         {
+             ((JComboBox)(currentLevel.get(functionSelectorIndex))).setSelectedIndex(1);
+         }
+         if (modbusRecord.functionCode == 3)
+         {
+             ((JComboBox)(currentLevel.get(functionSelectorIndex))).setSelectedIndex(2);
+         }
+         currentLevel = parentEntryContainer.outgoingSettings.get(2);
+         if (modbusRecord.formatType == ModbusProtocolRecord.FORMAT_TYPE_RAW)
+         {
+             //((JComboBox)(currentLevel.get(0))).setSelectedIndex(1);
+             //currentLevel = parentEntryContainer.outgoingSettings.get(3);
+             ((JTextField)(currentLevel.get(0))).setText(modbusRecord.startingRegister + "");
+         }
+         else if (modbusRecord.formatType == ModbusProtocolRecord.FORMAT_TYPE_FLOAT)
+         {
+             ((JComboBox)(currentLevel.get(0))).setSelectedIndex(1);
+             currentLevel = parentEntryContainer.outgoingSettings.get(3);
+             ((JTextField)(currentLevel.get(0))).setText(modbusRecord.startingRegister + "");
+             ((JCheckBox)(currentLevel.get(1))).setSelected(modbusRecord.wordSwap);
+             ((JCheckBox)(currentLevel.get(2))).setSelected(modbusRecord.byteSwap);
+         }
+         else if (modbusRecord.formatType == ModbusProtocolRecord.FORMAT_TYPE_UINT_16)
+         {
+             ((JComboBox)(currentLevel.get(0))).setSelectedIndex(2);
+             currentLevel = parentEntryContainer.outgoingSettings.get(3);
+             ((JTextField)(currentLevel.get(0))).setText(modbusRecord.startingRegister + "");
+             ((JCheckBox)(currentLevel.get(2))).setSelected(modbusRecord.byteSwap);
+         }
+         else if (modbusRecord.formatType == ModbusProtocolRecord.FORMAT_TYPE_UINT_32)
+         {
+             ((JComboBox)(currentLevel.get(0))).setSelectedIndex(3);
+             currentLevel = parentEntryContainer.outgoingSettings.get(3);
+             ((JTextField)(currentLevel.get(0))).setText(modbusRecord.startingRegister + "");
+             ((JCheckBox)(currentLevel.get(1))).setSelected(modbusRecord.wordSwap);
+             ((JCheckBox)(currentLevel.get(2))).setSelected(modbusRecord.byteSwap);
+         }
     }
     public void buildProtocolPane(int paneType, String selectedItem)
     {
@@ -71,7 +223,7 @@ public class ModbusProtocolHandler implements ProtocolHandler{
     }
     public void resetOutgoingPanel()
     {
-        outgoingDataSelector = new JComboBox();
+        //outgoingDataSelector = new JComboBox();
         outgoingPanel.removeAll();
     }
     public boolean getIncomingPanelReady()
@@ -129,7 +281,7 @@ public class ModbusProtocolHandler implements ProtocolHandler{
     public void constructOutgoingDataSettings(JPanel mainPanel, String selectedItem)
     {
         resetOutgoingPanel();
-        dmh.constructOutgoingDataMenu();
+        dmh.constructOutgoingDataMenu(true);
         if (parentEntryContainer.outgoingSettings.size() < 2)
         {
             parentEntryContainer.outgoingSettings.add(new ArrayList());
@@ -312,7 +464,7 @@ public class ModbusProtocolHandler implements ProtocolHandler{
         }
         parentFrame.pack();
         incomingPanelReady = true;
-        dmh.constructOutgoingDataMenu();
+        dmh.constructOutgoingDataMenu(false);
     }
     public ProtocolRecord getIncomingProtocolRecord()
     {

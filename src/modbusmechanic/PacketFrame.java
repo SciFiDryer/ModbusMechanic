@@ -1557,7 +1557,7 @@ public class PacketFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_displayTtySerialActionPerformed
 
     private void startModbusBridgeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startModbusBridgeActionPerformed
-        new modbusmechanic.bridge.BridgeManager();
+        new modbusmechanic.bridge.BridgeManager(false, "");
     }//GEN-LAST:event_startModbusBridgeActionPerformed
 
     private DefaultComboBoxModel getPortNames()

@@ -25,12 +25,21 @@ import modbusmechanic.bridge.*;
 
 public class DriverMenuHandler implements ActionListener{
     JComboBox incomingDataSelector = null;
-    JComboBox outgoingDataSelector = null;
+    public JComboBox outgoingDataSelector = null;
     BridgeFrame parentFrame = null;
     BridgeEntryContainer parentEntryContainer = null;
     ArrayList<ProtocolHandler> driverList = new ArrayList();
     JPanel outgoingPanel = null;
     JPanel incomingDataSettings = null;
+    boolean firstRun = true;
+    public DriverMenuHandler()
+    {
+        
+    }
+    public ArrayList<ProtocolHandler> getDriverList()
+    {
+        return driverList;
+    }
     public DriverMenuHandler(JComboBox aIncomingDataSelector, JComboBox aOutgoingDataSelector, BridgeFrame aParentFrame, BridgeEntryContainer aParentEntryContainer, JPanel aIncomingDataSettings, JPanel aOutgoingPanel)
     {
         incomingDataSelector = aIncomingDataSelector;
@@ -110,11 +119,11 @@ public class DriverMenuHandler implements ActionListener{
         if (!handlerFound && paneType == ProtocolHandler.PANE_TYPE_OUTGOING)
         {
             outgoingPanel.removeAll();
-            constructOutgoingDataMenu();
+            constructOutgoingDataMenu(false);
             parentFrame.pack();
         }
     }
-    public void constructOutgoingDataMenu()
+    public void constructOutgoingDataMenu(boolean preserve)
     {
         if (parentEntryContainer.outgoingSettings.size() < 1)
         {
@@ -148,8 +157,11 @@ public class DriverMenuHandler implements ActionListener{
                 }
             }
         }
-        DefaultComboBoxModel model = new DefaultComboBoxModel(driverNames.toArray());
-        outgoingDataSelector.setModel(model);
+        if (!preserve)
+        {
+            DefaultComboBoxModel model = new DefaultComboBoxModel(driverNames.toArray());
+            outgoingDataSelector.setModel(model);
+        }
         JPanel outgoingDataSettings = new JPanel();
         outgoingDataSettings.setLayout(new BoxLayout(outgoingDataSettings, BoxLayout.Y_AXIS));
         
@@ -158,5 +170,6 @@ public class DriverMenuHandler implements ActionListener{
         outgoingPanel.add(outgoingDataDest);
         outgoingPanel.add(outgoingDataSettings);
         parentFrame.pack();
+        firstRun = false;
     }
 }

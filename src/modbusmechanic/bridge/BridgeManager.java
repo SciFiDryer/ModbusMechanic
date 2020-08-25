@@ -20,6 +20,8 @@ import com.intelligt.modbus.jlibmodbus.master.*;
 import com.intelligt.modbus.jlibmodbus.msg.base.*;
 import com.intelligt.modbus.jlibmodbus.msg.response.*;
 import com.intelligt.modbus.jlibmodbus.tcp.TcpParameters;
+import java.beans.XMLDecoder;
+import java.io.FileInputStream;
 import java.net.InetAddress;
 import java.util.*;
 import javax.swing.*;
@@ -36,10 +38,61 @@ public class BridgeManager{
     int restTime = 1000;
     boolean isRunning = false;
     BridgeThread bridgeThread = null;
-    public BridgeManager()
+    public DriverMenuHandler dmh = null;
+    BridgeFrame bridgeFrame = null;
+    public BridgeManager(boolean headless, String fileName)
     {
-        new BridgeFrame(this).setVisible(true);
+        if (!headless)
+        {
+            bridgeFrame = new BridgeFrame(this);
+            bridgeFrame.setVisible(true);
+        }
         driverList.add(new ModbusProtocolDriver(this));
+        if (headless)
+        {
+            loadConfig(fileName);
+            startBridge();
+        }
+    }
+    public void loadConfig(String fileName)
+    {
+        try
+        {
+            XMLDecoder xmld = new XMLDecoder(new FileInputStream(fileName));
+            mappingRecords = (ArrayList<BridgeMappingRecord>)xmld.readObject();
+            xmld.close();
+        }
+        catch (Exception e)
+        {
+            if (modbusmechanic.ModbusMechanic.debug)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+    public void setBridgeMapList(ArrayList aBridgeMapList)
+    {
+        bridgeMapList = aBridgeMapList;
+    }
+    public ArrayList<BridgeMappingRecord> getMappingRecords()
+    {
+        return mappingRecords;
+    }
+    public void setMappingRecords(ArrayList aMappingRecords)
+    {
+        mappingRecords = aMappingRecords;
+    }
+    public ArrayList<BridgeEntryContainer> getBridgeMapList()
+    {
+        return bridgeMapList;
+    }
+    public void setDriverList(ArrayList aDriverList)
+    {
+        driverList = aDriverList;
+    }
+    public ArrayList<ProtocolDriver> getDriverList()
+    {
+        return driverList;
     }
     public void runBridge()
     {
@@ -77,7 +130,33 @@ public class BridgeManager{
         }
         firstRun = false;
     }
-
+    public void restoreGuiFromFile()
+    {
+        for (int i = 0; i < mappingRecords.size(); i++)
+        {
+            if (mappingRecords.get(i).incomingRecord instanceof ModbusProtocolRecord)
+            {
+                bridgeFrame.addMapping();
+                for (int j = 0; j < dmh.getDriverList().size(); j++)
+                {
+                    if (dmh.getDriverList().get(j) instanceof ModbusProtocolHandler)
+                    {
+                        ((ModbusProtocolHandler)(dmh.getDriverList().get(j))).setIncomingSettings((ModbusProtocolRecord)mappingRecords.get(i).incomingRecord);
+                    }
+                }
+            }
+            if (mappingRecords.get(i).outgoingRecord instanceof ModbusProtocolRecord)
+            {
+                for (int j = 0; j < dmh.getDriverList().size(); j++)
+                {
+                    if (dmh.getDriverList().get(j) instanceof ModbusProtocolHandler)
+                    {
+                        ((ModbusProtocolHandler)(dmh.getDriverList().get(j))).setOutgoingSettings((ModbusProtocolRecord)mappingRecords.get(i).outgoingRecord);
+                    }
+                }
+            }
+        }
+    }
     public void constructSettingsFromGui()
     {
         mappingRecords.clear();

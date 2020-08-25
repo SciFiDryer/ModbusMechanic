@@ -29,4 +29,6 @@ public interface ProtocolHandler {
     public String[] getIncomingMenuNames();
     public String[] getOutgoingMenuNames();
     public boolean getIncomingPanelReady();
+    public void setIncomingSettings(ProtocolRecord protocolRecord);
+    public void setOutgoingSettings(ProtocolRecord protocolRecord);
 }

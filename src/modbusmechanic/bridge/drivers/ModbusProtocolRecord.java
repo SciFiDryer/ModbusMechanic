@@ -51,6 +51,26 @@ public class ModbusProtocolRecord implements ProtocolRecord {
         byteSwap = aByteSwap;
         wordSwap = aWordSwap;
     }
+    public ModbusProtocolRecord()
+    {
+        
+    }
+    public void setProtocolType(int aProtocolType)
+    {
+        protocolType = aProtocolType;
+    }
+    public int getProtocolType()
+    {
+        return protocolType;
+    }
+    public void setFormatType(int aFormatType)
+    {
+        formatType = aFormatType;
+    }
+    public int getFormatType()
+    {
+        return formatType;
+    }
     public double getValue()
     {
         byte[] workingValue = rawValue;
