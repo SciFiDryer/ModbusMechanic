@@ -236,13 +236,14 @@ public class BridgeFrame extends javax.swing.JFrame {
         {
             java.io.File f = chooser.getSelectedFile();
             String filename = f.getName();
-            if (!filename.substring(filename.length()-4).equalsIgnoreCase(".cfg"))
+            if (filename.length() > 4 && !filename.substring(filename.length()-4).equalsIgnoreCase(".cfg"))
             {
                 f = new File(f.getParent() + File.separator + f.getName() + ".cfg");
             }
             try
             {
                 XMLEncoder xmle = new XMLEncoder(new FileOutputStream(f));
+                manager.constructSettingsFromGui();
                 xmle.writeObject(manager.mappingRecords);
                 xmle.close();
             }
@@ -265,7 +266,7 @@ public class BridgeFrame extends javax.swing.JFrame {
         {
             java.io.File f = chooser.getSelectedFile();
             String filename = f.getName();
-            if (!filename.substring(filename.length()-4).equalsIgnoreCase(".cfg"))
+            if (filename.length() > 4 && !filename.substring(filename.length()-4).equalsIgnoreCase(".cfg"))
             {
                 f = new File(f.getParent() + File.separator + f.getName() + ".cfg");
             }

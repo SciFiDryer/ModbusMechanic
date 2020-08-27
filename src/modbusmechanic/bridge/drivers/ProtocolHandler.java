@@ -25,7 +25,8 @@ public interface ProtocolHandler {
     static int PANE_TYPE_INCOMING = 1;
     static int PANE_TYPE_OUTGOING = 2;
     public void buildProtocolPane(int paneType, String selectedItem);
-    public BridgeMappingRecord getBridgeMappingRecord();
+    public ProtocolRecord getIncomingProtocolRecord();
+    public ProtocolRecord getOutgoingProtocolRecord(ProtocolRecord incomingRecord);
     public String[] getIncomingMenuNames();
     public String[] getOutgoingMenuNames();
     public boolean getIncomingPanelReady();

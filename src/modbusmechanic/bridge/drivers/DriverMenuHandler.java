@@ -23,7 +23,7 @@ import modbusmechanic.bridge.*;
  * @author Matt Jamesson <scifidryer@gmail.com>
  */
 
-public class DriverMenuHandler implements ActionListener{
+public class DriverMenuHandler implements ActionListener, java.io.Serializable{
     JComboBox incomingDataSelector = null;
     public JComboBox outgoingDataSelector = null;
     BridgeFrame parentFrame = null;

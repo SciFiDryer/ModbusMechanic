@@ -30,13 +30,13 @@ public class ModbusProtocolRecord implements ProtocolRecord {
     public int functionCode = 0;
     public String slaveHost = null;
     public int slavePort = 502;
-    static int PROTOCOL_TYPE_SLAVE = 1;
-    static int PROTOCOL_TYPE_MASTER = 2;
-    static int FORMAT_TYPE_RAW = 1;
-    static int FORMAT_TYPE_FLOAT = 2;
-    static int FORMAT_TYPE_UINT_16 = 3;
-    static int FORMAT_TYPE_UINT_32 = 4;
-    static int HOLDING_REGISTER_FUNCTION = 3;
+    public static int PROTOCOL_TYPE_SLAVE = 1;
+    public static int PROTOCOL_TYPE_MASTER = 2;
+    public static int FORMAT_TYPE_RAW = 1;
+    public static int FORMAT_TYPE_FLOAT = 2;
+    public static int FORMAT_TYPE_UINT_16 = 3;
+    public static int FORMAT_TYPE_UINT_32 = 4;
+    public static int HOLDING_REGISTER_FUNCTION = 3;
     public boolean wordSwap = false;
     public boolean byteSwap = false;
     public ModbusProtocolRecord(int protocol, String host, int port, int format, int aFunctionCode, int aStartingRegister, int aQuantity, boolean aWordSwap, boolean aByteSwap)

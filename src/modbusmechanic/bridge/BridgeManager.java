@@ -162,8 +162,16 @@ public class BridgeManager{
         mappingRecords.clear();
         for (int i = 0; i < bridgeMapList.size(); i++)
         {
-            modbusmechanic.bridge.drivers.ProtocolHandler currentRecord = bridgeMapList.get(i).incomingHandler;
-            BridgeMappingRecord bmr = currentRecord.getBridgeMappingRecord();
+            ProtocolRecord incomingRecord = bridgeMapList.get(i).incomingHandler.getIncomingProtocolRecord();
+            ProtocolRecord outgoingRecord = bridgeMapList.get(i).outgoingHandler.getOutgoingProtocolRecord(incomingRecord);            
+            BridgeMappingRecord bmr = new BridgeMappingRecord(incomingRecord, outgoingRecord);
+            if (incomingRecord instanceof ModbusProtocolRecord && outgoingRecord instanceof ModbusProtocolRecord)
+            {
+                if (((ModbusProtocolRecord)(incomingRecord)).getFormatType() == ModbusProtocolRecord.FORMAT_TYPE_RAW && ((ModbusProtocolRecord)(outgoingRecord)).getFormatType() == ModbusProtocolRecord.FORMAT_TYPE_RAW)
+                {
+                    bmr.modbusBlockRemap = true;
+                }
+            }
             mappingRecords.add(bmr);
         }
     }

@@ -64,23 +64,18 @@ public class ModbusProtocolHandler implements ProtocolHandler{
         ModbusProtocolRecord modbusRecord = (ModbusProtocolRecord)protocolRecord;
         ArrayList currentLevel = null;
         JComboBox incomingMenu = (JComboBox)parentEntryContainer.incomingSettings.get(0).get(0);
-        boolean isMaster = false;
-        if (modbusRecord.protocolType == ModbusProtocolRecord.PROTOCOL_TYPE_MASTER)
-        {
-            isMaster = true;
-        }
         for (int i = 0; i < incomingMenu.getItemCount(); i++)
         {
-            if (isMaster && incomingMenu.getItemAt(i).equals(incomingMenuNames[0]))
+            if (modbusRecord.protocolType == ModbusProtocolRecord.PROTOCOL_TYPE_MASTER && incomingMenu.getItemAt(i).equals(incomingMenuNames[0]))
             {
                 incomingMenu.setSelectedIndex(i);
             }
-            if (!isMaster && incomingMenu.getItemAt(i).equals(incomingMenuNames[1]))
+            if (modbusRecord.protocolType == ModbusProtocolRecord.PROTOCOL_TYPE_MASTER && incomingMenu.getItemAt(i).equals(incomingMenuNames[1]))
             {
                 incomingMenu.setSelectedIndex(i);
             }
         }
-        if (isMaster)
+        if (modbusRecord.protocolType == ModbusProtocolRecord.PROTOCOL_TYPE_MASTER)
         {
              buildProtocolPane(PANE_TYPE_INCOMING, incomingMenuNames[0]);
              currentLevel = parentEntryContainer.incomingSettings.get(1);
@@ -123,7 +118,6 @@ public class ModbusProtocolHandler implements ProtocolHandler{
              ((JComboBox)(currentLevel.get(0))).setSelectedIndex(3);
              currentLevel = parentEntryContainer.incomingSettings.get(3);
              ((JTextField)(currentLevel.get(0))).setText(modbusRecord.startingRegister + "");
-             //boolean wordSwap = ((JCheckBox)(currentLevel.get(1))).isSelected();
              ((JCheckBox)(currentLevel.get(2))).setSelected(modbusRecord.byteSwap);
          }
          else if (modbusRecord.formatType == ModbusProtocolRecord.FORMAT_TYPE_UINT_32)
@@ -527,7 +521,6 @@ public class ModbusProtocolHandler implements ProtocolHandler{
             format = ModbusProtocolRecord.FORMAT_TYPE_UINT_16;
             currentLevel = parentEntryContainer.incomingSettings.get(3);
             int register = Integer.parseInt(((JTextField)(currentLevel.get(0))).getText());
-            //boolean wordSwap = ((JCheckBox)(currentLevel.get(1))).isSelected();
             boolean byteSwap = ((JCheckBox)(currentLevel.get(1))).isSelected();
             incomingProtocolRecord = new ModbusProtocolRecord(type, slaveHost, slavePort, format, functionCode, register, 1, false, byteSwap);
         }
@@ -623,19 +616,5 @@ public class ModbusProtocolHandler implements ProtocolHandler{
             outgoingProtocolRecord = new ModbusProtocolRecord(type, slaveHost, slavePort, format, functionCode, register, 1, false, byteSwap);
         }
         return outgoingProtocolRecord;
-    }
-    public BridgeMappingRecord getBridgeMappingRecord()
-    {
-        ProtocolRecord incomingProtocolRecord = getIncomingProtocolRecord();
-        ProtocolRecord outgoingProtocolRecord = getOutgoingProtocolRecord(incomingProtocolRecord);
-        BridgeMappingRecord bmr = new BridgeMappingRecord(incomingProtocolRecord, outgoingProtocolRecord);
-        if (incomingProtocolRecord instanceof ModbusProtocolRecord && outgoingProtocolRecord instanceof ModbusProtocolRecord)
-        {
-            if (((ModbusProtocolRecord)(incomingProtocolRecord)).formatType == ModbusProtocolRecord.FORMAT_TYPE_RAW && ((ModbusProtocolRecord)(outgoingProtocolRecord)).formatType == ModbusProtocolRecord.FORMAT_TYPE_RAW)
-            {
-                bmr.modbusBlockRemap = true;
-            }
-        }
-        return bmr;
     }
 }
