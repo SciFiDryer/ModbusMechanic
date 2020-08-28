@@ -74,6 +74,10 @@ public class ModbusProtocolRecord implements ProtocolRecord {
     public double getValue()
     {
         byte[] workingValue = rawValue;
+        if (workingValue == null)
+        {
+            return 0;
+        }
         if (wordSwap)
         {
             workingValue = ModbusMechanic.wordSwap(rawValue);

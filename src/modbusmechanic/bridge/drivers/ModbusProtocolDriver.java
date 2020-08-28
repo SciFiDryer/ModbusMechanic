@@ -320,7 +320,7 @@ public class ModbusProtocolDriver implements ProtocolDriver{
     }
     public void mapIncomingValues()
     {
-        for (int i = 0; i < manager.bridgeMapList.size(); i++)
+        for (int i = 0; i < manager.mappingRecords.size(); i++)
         {
             if (manager.mappingRecords.get(i).incomingRecord instanceof ModbusProtocolRecord)
             {
@@ -345,6 +345,10 @@ public class ModbusProtocolDriver implements ProtocolDriver{
                 for (int j = 0; j < currentSlave.registerRecords.size(); j++)
                 {
                     RegisterRecord rr = currentSlave.registerRecords.get(j);
+                    if (rr.value == null)
+                    {
+                        return null;
+                    }
                     if (rr.register >= startingRegister && rr.register < startingRegister + quantity)
                     {
                         try

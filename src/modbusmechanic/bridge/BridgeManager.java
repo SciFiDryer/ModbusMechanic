@@ -48,6 +48,7 @@ public class BridgeManager{
             bridgeFrame.setVisible(true);
         }
         driverList.add(new ModbusProtocolDriver(this));
+        driverList.add(new CIPProtocolDriver(this));
         if (headless)
         {
             loadConfig(fileName);
@@ -117,7 +118,7 @@ public class BridgeManager{
             currentDriver.mapIncomingValues();
         }
         //set outgoing records
-        for (int i = 0; i < bridgeMapList.size(); i++)
+        for (int i = 0; i < mappingRecords.size(); i++)
         {
             BridgeMappingRecord currentRecord = mappingRecords.get(i);
             currentRecord.outgoingRecord.setValue(currentRecord.incomingRecord.getValue());
@@ -145,6 +146,17 @@ public class BridgeManager{
                     }
                 }
             }
+            if (mappingRecords.get(i).incomingRecord instanceof CIPProtocolRecord)
+            {
+                bridgeFrame.addMapping();
+                for (int j = 0; j < dmh.getDriverList().size(); j++)
+                {
+                    if (dmh.getDriverList().get(j) instanceof CIPProtocolHandler)
+                    {
+                        ((CIPProtocolHandler)(dmh.getDriverList().get(j))).setIncomingSettings((CIPProtocolRecord)mappingRecords.get(i).incomingRecord);
+                    }
+                }
+            }
             if (mappingRecords.get(i).outgoingRecord instanceof ModbusProtocolRecord)
             {
                 for (int j = 0; j < dmh.getDriverList().size(); j++)
@@ -152,6 +164,16 @@ public class BridgeManager{
                     if (dmh.getDriverList().get(j) instanceof ModbusProtocolHandler)
                     {
                         ((ModbusProtocolHandler)(dmh.getDriverList().get(j))).setOutgoingSettings((ModbusProtocolRecord)mappingRecords.get(i).outgoingRecord);
+                    }
+                }
+            }
+            if (mappingRecords.get(i).outgoingRecord instanceof CIPProtocolRecord)
+            {
+                for (int j = 0; j < dmh.getDriverList().size(); j++)
+                {
+                    if (dmh.getDriverList().get(j) instanceof CIPProtocolHandler)
+                    {
+                        ((CIPProtocolHandler)(dmh.getDriverList().get(j))).setOutgoingSettings((CIPProtocolRecord)mappingRecords.get(i).outgoingRecord);
                     }
                 }
             }

@@ -54,6 +54,7 @@ public class DriverMenuHandler implements ActionListener, java.io.Serializable{
     public void loadDrivers()
     {
         driverList.add(new ModbusProtocolHandler(this, parentFrame, parentEntryContainer, incomingDataSettings, outgoingPanel));
+        driverList.add(new CIPProtocolHandler(this, parentFrame, parentEntryContainer, incomingDataSettings, outgoingPanel));
         ArrayList<String> menuItems = new ArrayList();
         menuItems.add("Select");
         for (int i = 0; i < driverList.size(); i++)
@@ -133,17 +134,22 @@ public class DriverMenuHandler implements ActionListener, java.io.Serializable{
         settings.clear();
         JPanel outgoingDataDest = new JPanel();
         outgoingDataDest.add(new JLabel("Outgoing Data Destination"));
-        ArrayList incomingSettings = parentEntryContainer.incomingSettings.get(2);
-        boolean runDriverList = true;
         ArrayList<String> driverNames = new ArrayList();
+        boolean runDriverList = true;
         driverNames.add("Select");
-        if (incomingSettings.get(0) != null && incomingSettings.get(0) instanceof JComboBox)
+        if (parentEntryContainer.incomingSettings.size() > 2)
         {
-            JComboBox incomingSelector = (JComboBox)incomingSettings.get(0);
-            if (incomingSelector.getSelectedItem().equals("Block Read"))
+            ArrayList incomingSettings = parentEntryContainer.incomingSettings.get(2);
+            
+            
+            if (incomingSettings.get(0) != null && incomingSettings.get(0) instanceof JComboBox)
             {
-                runDriverList = false;
-                driverNames.add("To Modbus Slave");
+                JComboBox incomingSelector = (JComboBox)incomingSettings.get(0);
+                if (incomingSelector.getSelectedItem().equals("Block Read"))
+                {
+                    runDriverList = false;
+                    driverNames.add("To Modbus Slave");
+                }
             }
         }
         if (runDriverList)

@@ -70,7 +70,7 @@ public class ModbusProtocolHandler implements ProtocolHandler{
             {
                 incomingMenu.setSelectedIndex(i);
             }
-            if (modbusRecord.protocolType == ModbusProtocolRecord.PROTOCOL_TYPE_MASTER && incomingMenu.getItemAt(i).equals(incomingMenuNames[1]))
+            if (modbusRecord.protocolType == ModbusProtocolRecord.PROTOCOL_TYPE_SLAVE && incomingMenu.getItemAt(i).equals(incomingMenuNames[1]))
             {
                 incomingMenu.setSelectedIndex(i);
             }
@@ -210,7 +210,7 @@ public class ModbusProtocolHandler implements ProtocolHandler{
         {
             constructOutgoingDataSettings(outgoingPanel, selectedItem);
         }
-        if (!incomingPanelReady)
+        if (parentEntryContainer.incomingHandler != null && !parentEntryContainer.incomingHandler.getIncomingPanelReady())
         {
             resetOutgoingPanel();
         }
@@ -339,7 +339,7 @@ public class ModbusProtocolHandler implements ProtocolHandler{
             });
             
             
-            if (readTypeSelector.getSelectedIndex() == 1)
+            if (readTypeSelector != null && readTypeSelector.getSelectedIndex() == 1)
             {
                 mainPanel.add(new JLabel("Block write start address"));
                 JTextField registerField = new JTextField();
@@ -577,7 +577,7 @@ public class ModbusProtocolHandler implements ProtocolHandler{
         
         currentLevel = parentEntryContainer.outgoingSettings.get(2);
         int format = 0;
-        if (((ModbusProtocolRecord)(incomingProtocolRecord)).formatType == ModbusProtocolRecord.FORMAT_TYPE_RAW)
+        if (incomingProtocolRecord instanceof ModbusProtocolRecord && ((ModbusProtocolRecord)(incomingProtocolRecord)).formatType == ModbusProtocolRecord.FORMAT_TYPE_RAW)
         {
             format = ModbusProtocolRecord.FORMAT_TYPE_RAW;
         }
