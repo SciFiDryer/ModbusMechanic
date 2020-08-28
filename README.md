@@ -6,7 +6,9 @@ Frustrated by the lack of GUI Modbus testing tools available that could interpre
 
 Modbus Mechanic aims to be a tool that can quickly read a float32, unsigned int16, unsigned int32, or raw hex from an instrument without the need for anything other than the dependant jar files, and the java runtime environment. It also aims to be 100% driverless. It is a work in progress.
 
-I am not a software engineer, so suggestions to improve coding conventions are welcome. I'm sure there are opportunities for improvement within my code.
+This is a project that is evolving, so suggestions to improve coding conventions are welcome. I'm sure there are opportunities for improvement within my code.
+
+My testing capabilities are limited, so if you notice a problem, please open an issue.
 
 JlibModbus is a seperate, independant project that this application depends on.
 
@@ -48,13 +50,20 @@ stopbits | Stop bits for serial port. 1=1 2=2 3=1.5 | 1
   ```
   $ java -jar ModbusMechanic.jar -gateway gateway.cfg
   ```
-## Bridge
+## Bridging to other protocols
 
-This feature is in beta. The bridge functionality allows data from modbus devices to "bridged" to a different type of data.
+This feature is in beta. The bridge functionality allows data to or from modbus devices to be "bridged" to a different type of data.
 
 For example, you can retrieve modbus slave registers from different network devices and make them available on a local slave with consectutive registers. Floats can be converted to Ints and vice versa. Word swapping is also supported. If you have a modbus device that doesn't support word swapping or floats, you can run the data through the bridge to format it correctly and pass it along to the device.
 
+If you have an Allen-Bradley PLC and you want to pipe modbus data into it over the network for testing this is also possible with the bridge.
+
 The data is updated followed by a rest period specified in the bridge. If 1000ms is specified, the data update interval will be slightly longer than 1000ms due to the time it takes to retrieve the data.
+
+After saving the bridge config to a file such as "bridge.cfg", if you want to start a headless instance of the bridge use the following command:
+```
+$ java -jar ModbusMechanic.jar -bridge bridge.cfg
+```
 
 ## Dependencies
 
