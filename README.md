@@ -67,10 +67,11 @@ $ java -jar ModbusMechanic.jar -bridge bridge.cfg
 
 ## Dependencies
 
-This project depends on the JLibModbus library and the PureJavaComm library for serial functionality. Serial library selector coming soon.
+This project depends on the JLibModbus library and the PureJavaComm library for serial functionality. It depends on EtherIP for CIP functionality.
 
 https://github.com/kochedykov/jlibmodbus  
 https://github.com/nyholku/purejavacomm
+https://github.com/EPICSTools/etherip
 
 ## Building from source
 
