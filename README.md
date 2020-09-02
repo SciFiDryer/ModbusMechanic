@@ -52,7 +52,7 @@ stopbits | Stop bits for serial port. 1=1 2=2 3=1.5 | 1
   ```
 ## Bridging to other protocols
 
-This functionality is still available in ModbusMechanic, but is being moved to a seperate project [ProtocolWhisperer](https://github.com/SciFiDryer/ProtocolWhisperer)
+This functionality is still available in ModbusMechanic, but is being moved to a stand alone project [ProtocolWhisperer](https://github.com/SciFiDryer/ProtocolWhisperer)
 
 ## Dependencies
 
