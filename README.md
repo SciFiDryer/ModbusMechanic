@@ -52,18 +52,7 @@ stopbits | Stop bits for serial port. 1=1 2=2 3=1.5 | 1
   ```
 ## Bridging to other protocols
 
-This feature is in beta. The bridge functionality allows data to or from modbus devices to be "bridged" to a different type of data.
-
-For example, you can retrieve modbus slave registers from different network devices and make them available on a local slave with consectutive registers. Floats can be converted to Ints and vice versa. Word swapping is also supported. If you have a modbus device that doesn't support word swapping or floats, you can run the data through the bridge to format it correctly and pass it along to the device.
-
-If you have an Allen-Bradley PLC and you want to pipe modbus data into it over the network for testing this is also possible with the bridge.
-
-The data is updated followed by a rest period specified in the bridge. If 1000ms is specified, the data update interval will be slightly longer than 1000ms due to the time it takes to retrieve the data.
-
-After saving the bridge config to a file such as "bridge.cfg", if you want to start a headless instance of the bridge use the following command:
-```
-$ java -jar ModbusMechanic.jar -bridge bridge.cfg
-```
+This functionality is still available in ModbusMechanic, but is being moved to a seperate project [ProtocolWhisperer](https://github.com/SciFiDryer/ProtocolWhisperer)
 
 ## Dependencies
 
