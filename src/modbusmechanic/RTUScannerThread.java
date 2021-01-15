@@ -89,7 +89,10 @@ public class RTUScannerThread extends Thread {
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            if (ModbusMechanic.debug)
+            {
+                e.printStackTrace();
+            }
         }
         parentFrame.repaint();
     }
