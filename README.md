@@ -16,6 +16,10 @@ JlibModbus is a seperate, independant project that this application depends on.
 
 Download & extract the [latest release](#latest-release) and double click ModbusMechanic.jar.
 
+## RTU scanner
+
+The RTU scanner tool allows scanning of the entire RTU network for active nodes. This is useful if there is a slave device on the network for which the address is not known. For best results, the scanner should be the only master on the network.
+
 ## Gateway
 
 The gateway function allows exposing an RTU network to a TCP network. TCP master devices can send Modbus transactions to the machine running ModbusMechanic, and ModbusMechanic will obtain a response from the RTU network if possible.
@@ -74,7 +78,7 @@ https://scifidryer.github.io/ModbusMechanic/
 
 ## Latest release
 
-[ModbusMechanic.v1.3.zip](https://github.com/SciFiDryer/ModbusMechanic/releases/download/v1.3/ModbusMechanic.v1.3.zip)
+[ModbusMechanic.v1.4.zip](https://github.com/SciFiDryer/ModbusMechanic/releases/download/v1.4/ModbusMechanic.v1.4.zip)
 
 ## Completed features and planned features in GUI
 
