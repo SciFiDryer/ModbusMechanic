@@ -72,26 +72,42 @@ public class RTUScannerFrame extends javax.swing.JFrame {
    Color color;
    int nodeNum = 0;
    ArrayList<Color> cellColors = new ArrayList();
+   ArrayList<String> toolTips = new ArrayList();
    public ScannerRenderer() {
       super();
       initColors();
    }
-   public void setNodeColor(int node, Color aColor)
+   public void setNodeColor(int node, Color color)
+   {
+       setCellAttribs(node, color, null);
+   }
+   public void setCellAttribs(int node, Color aColor, String toolTip)
    {
        cellColors.set(node-1, aColor);
+       if (toolTip != null)
+       {
+           toolTips.set(node-1, toolTip);
+       }
    }
    public void initColors()
    {
        cellColors.clear();
+       toolTips.clear();
        for (int i = 0; i < 256; i++)
        {
+           toolTips.add(null);
            cellColors.add(Color.WHITE);
        }
    }
    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,   boolean hasFocus, int row, int column) {
-        Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        JLabel cell = (JLabel)super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         int currentNode = row*16 + column;
         cell.setBackground(cellColors.get(currentNode));
+        String toolTip = toolTips.get(currentNode);
+        if (toolTip != null)
+        {
+            cell.setToolTipText(toolTip);
+        }
         return cell;
    }
 }

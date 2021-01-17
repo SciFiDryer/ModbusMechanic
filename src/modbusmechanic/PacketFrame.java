@@ -663,8 +663,11 @@ public class PacketFrame extends javax.swing.JFrame {
         }
         if (customMessageButton.isSelected() && customMessageButton.isEnabled())
         {
-            transactionId = Integer.parseInt(transactionField.getText());
-            protocolId = Integer.parseInt(protoIdField.getText());
+            if (!rtuMsgButton.isSelected())
+            {
+                transactionId = Integer.parseInt(transactionField.getText());
+                protocolId = Integer.parseInt(protoIdField.getText());
+            }
             quantity = Integer.parseInt(quantityField.getText());
         }
         lastFunctionCode = functionCode;
@@ -1358,8 +1361,11 @@ public class PacketFrame extends javax.swing.JFrame {
             asciiReadButton.setEnabled(true);
             if (customMessageButton.isSelected())
             {
-                transactionField.setEnabled(true);
-                protoIdField.setEnabled(true);
+                if (!rtuMsgButton.isSelected())
+                {
+                    transactionField.setEnabled(true);
+                    protoIdField.setEnabled(true);
+                }
                 quantityField.setEnabled(true);
             }
             if (readFloatButton.isSelected())

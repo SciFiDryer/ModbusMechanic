@@ -42,7 +42,7 @@ public class RTUScannerThread extends Thread {
             SerialPort port = (SerialPort)portId.open(this.getClass().getName(), 1000);
             port.setSerialPortParams(Integer.parseInt(parentFrame.baudRateSelector.getSelectedItem().toString()), Integer.parseInt(parentFrame.dataBitsField.getText()), Integer.parseInt(parentFrame.stopBitsField.getText()), parentFrame.paritySelector.getSelectedIndex());
             port.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
-            int timeout = 20;
+            long timeout = 20;
             timeout = Integer.parseInt(parentFrame.timeoutField.getText());
             OutputStream out = port.getOutputStream();
             InputStream in = port.getInputStream();
@@ -54,12 +54,15 @@ public class RTUScannerThread extends Thread {
                 baos.write(pingBytes);
 
                 baos.write(modbusmechanic.gateway.GatewayThreadTCP.getCRC(pingBytes));
+                long nanoStart = System.nanoTime();
                 out.write(baos.toByteArray());
                 out.flush();
                 long startTime = System.currentTimeMillis();
+                
                 while (System.currentTimeMillis() - startTime < timeout && in.available() == 0)
                 {
                 }
+                long pingTime = System.nanoTime() - nanoStart;
                 if (in.available() > 0)
                 {
                     byte[] buf = new byte[1024];
@@ -69,15 +72,17 @@ public class RTUScannerThread extends Thread {
                     resp = Arrays.copyOfRange(buf, 0, len);
                     if (modbusmechanic.gateway.GatewayThreadTCP.checkCRC(resp))
                     {
-
-                        parentFrame.sr.setNodeColor((int)resp[0], Color.GREEN);
-                        nodeFound = true;
+                        parentFrame.sr.setCellAttribs((int)resp[0], Color.GREEN, Math.floor(pingTime/100000) / 10 + "ms");
+                        if ((int)resp[0] == node)
+                        {
+                            nodeFound = true;
+                        }
 
                     }
                 }
                 if (!nodeFound)
                 {
-                    parentFrame.sr.setNodeColor(node, Color.RED);
+                    parentFrame.sr.setCellAttribs(node, Color.RED, "Node not active");
                 }
                 parentFrame.repaint();
             }
