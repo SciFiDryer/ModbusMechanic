@@ -30,6 +30,8 @@ import purejavacomm.SerialPort;
 public class RTUScannerThread extends Thread {
     RTUScannerFrame parentFrame = null;
     boolean keepScanning = true;
+    int functionCode = 3;
+    String scanRegister = "";
     public RTUScannerThread(RTUScannerFrame aParentFrame)
     {
         parentFrame = aParentFrame;
@@ -38,25 +40,39 @@ public class RTUScannerThread extends Thread {
     {
         try
         {
+            functionCode = parentFrame.functionCodeSelector.getSelectedIndex()+1;
+            scanRegister = parentFrame.scanRegisterField.getText();
             CommPortIdentifier portId = CommPortIdentifier.getPortIdentifier(parentFrame.comPortSelector.getSelectedItem().toString());
             SerialPort port = (SerialPort)portId.open(this.getClass().getName(), 1000);
             port.setSerialPortParams(Integer.parseInt(parentFrame.baudRateSelector.getSelectedItem().toString()), Integer.parseInt(parentFrame.dataBitsField.getText()), Integer.parseInt(parentFrame.stopBitsField.getText()), parentFrame.paritySelector.getSelectedIndex());
             port.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
-            long timeout = 20;
+            long timeout = 50;
             timeout = Integer.parseInt(parentFrame.timeoutField.getText());
             OutputStream out = port.getOutputStream();
             InputStream in = port.getInputStream();
-            for (int node = 1; node < 255 && keepScanning; node++)
+            for (int node = 1; node < 248 && keepScanning; node++)
             {
+                if (ModbusMechanic.debug)
+                {
+                    System.out.println("Node: " + node);
+                }
                 boolean nodeFound = false;
-                byte[] pingBytes = new byte[] { (byte)node, 0x03, 0x00, 0x01, 0x00, 0x01};
+                byte[] regBytes = ModbusMechanic.int16ToBytes(scanRegister);
+                byte[] pingBytes = new byte[] { (byte)node, (byte)functionCode, regBytes[0], regBytes[1], 0x00, 0x01};
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 baos.write(pingBytes);
-
                 baos.write(modbusmechanic.gateway.GatewayThreadTCP.getCRC(pingBytes));
                 long nanoStart = System.nanoTime();
+                if (ModbusMechanic.debug)
+                {
+                    System.out.println("Preparing write");
+                }
                 out.write(baos.toByteArray());
                 out.flush();
+                if (ModbusMechanic.debug)
+                {
+                    System.out.println("Flushed output buffer");
+                }
                 long startTime = System.currentTimeMillis();
                 
                 while (System.currentTimeMillis() - startTime < timeout && in.available() == 0)
@@ -68,16 +84,27 @@ public class RTUScannerThread extends Thread {
                     byte[] buf = new byte[1024];
 
                     int len = in.read(buf);
-                    byte[] resp = new byte[len];
-                    resp = Arrays.copyOfRange(buf, 0, len);
-                    if (modbusmechanic.gateway.GatewayThreadTCP.checkCRC(resp))
+                    if (ModbusMechanic.debug)
                     {
-                        parentFrame.sr.setCellAttribs((int)resp[0], Color.GREEN, Math.floor(pingTime/100000) / 10 + "ms");
-                        if ((int)resp[0] == node)
+                        System.out.println("Got " + len + " bytes on wire");
+                    }
+                    if (len > 3)
+                    {
+                        byte[] resp = new byte[len];
+                        resp = Arrays.copyOfRange(buf, 0, len);
+                        if (modbusmechanic.gateway.GatewayThreadTCP.checkCRC(resp))
                         {
-                            nodeFound = true;
-                        }
+                            if (ModbusMechanic.debug)
+                            {
+                                System.out.println("Checksum passed, valid response from node " + (int)resp[0]);
+                            }
+                            parentFrame.sr.setCellAttribs((int)resp[0], Color.GREEN, Math.floor(pingTime/100000) / 10 + "ms");
+                            if ((int)resp[0] == node)
+                            {
+                                nodeFound = true;
+                            }
 
+                        }
                     }
                 }
                 if (!nodeFound)

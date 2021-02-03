@@ -60,7 +60,7 @@ public class RTUScannerFrame extends javax.swing.JFrame {
         
         for (int i = 0; i < 16; i++)
         {
-            if (count < 255)
+            if (count < 248)
             {
                 rows.add("" + count);
                 count++;
@@ -121,6 +121,7 @@ public class RTUScannerFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jTextField1 = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
         jLabel14 = new javax.swing.JLabel();
@@ -139,12 +140,20 @@ public class RTUScannerFrame extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         timeoutField = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        functionCodeSelector = new javax.swing.JComboBox<>();
+        jLabel4 = new javax.swing.JLabel();
+        scanRegisterField = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
         scanButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         scannerTable = new javax.swing.JTable();
 
+        jTextField1.setText("jTextField1");
+
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(452, 670));
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.Y_AXIS));
 
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.Y_AXIS));
@@ -203,7 +212,8 @@ public class RTUScannerFrame extends javax.swing.JFrame {
         jPanel5.add(jLabel1);
 
         timeoutField.setColumns(3);
-        timeoutField.setText("20");
+        timeoutField.setText("50");
+        timeoutField.setToolTipText("");
         timeoutField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 timeoutFieldActionPerformed(evt);
@@ -215,6 +225,22 @@ public class RTUScannerFrame extends javax.swing.JFrame {
         jPanel5.add(jLabel2);
 
         jPanel1.add(jPanel5);
+
+        jLabel3.setText("Function Code");
+        jPanel4.add(jLabel3);
+
+        functionCodeSelector.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Read Coils", "Read Discrete Inputs", "Read Holding Registers", "Read Input Registers" }));
+        functionCodeSelector.setSelectedIndex(2);
+        jPanel4.add(functionCodeSelector);
+
+        jLabel4.setText("Scan Register");
+        jPanel4.add(jLabel4);
+
+        scanRegisterField.setColumns(4);
+        scanRegisterField.setText("1");
+        jPanel4.add(scanRegisterField);
+
+        jPanel1.add(jPanel4);
 
         scanButton.setText("Scan");
         scanButton.addActionListener(new java.awt.event.ActionListener() {
@@ -241,7 +267,7 @@ public class RTUScannerFrame extends javax.swing.JFrame {
 
         getContentPane().add(jScrollPane1);
 
-        setBounds(0, 0, 476, 442);
+        setBounds(0, 0, 476, 470);
     }// </editor-fold>//GEN-END:initComponents
 
     private void scanButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scanButtonActionPerformed
@@ -311,6 +337,7 @@ public class RTUScannerFrame extends javax.swing.JFrame {
     public javax.swing.JComboBox<String> baudRateSelector;
     public javax.swing.JComboBox<String> comPortSelector;
     public javax.swing.JTextField dataBitsField;
+    public javax.swing.JComboBox<String> functionCodeSelector;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
@@ -319,14 +346,19 @@ public class RTUScannerFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField jTextField1;
     public javax.swing.JComboBox<String> paritySelector;
     public javax.swing.JButton scanButton;
+    public javax.swing.JTextField scanRegisterField;
     private javax.swing.JTable scannerTable;
     public javax.swing.JTextField stopBitsField;
     public javax.swing.JTextField timeoutField;
