@@ -14,7 +14,7 @@ JlibModbus is a seperate, independant project that this application depends on.
 
 ## Quickstart
 
-Download & extract the [latest release](#latest-release) and double click ModbusMechanic.jar.
+If you don't have Java installed, head to [adoptopenjdk.net](https://adoptopenjdk.net/) to download and install the Java runtime. Then, download & extract the [latest release](#latest-release) and double click ModbusMechanic.jar.
 
 ## RTU scanner
 
@@ -78,7 +78,7 @@ https://scifidryer.github.io/ModbusMechanic/
 
 ## Latest release
 
-[ModbusMechanic.v1.5.zip](https://github.com/SciFiDryer/ModbusMechanic/releases/download/v1.5/ModbusMechanic.v1.5.zip)
+[ModbusMechanic.v1.6.zip](https://github.com/SciFiDryer/ModbusMechanic/releases/download/v1.6/ModbusMechanic.v1.6.zip)
 
 ## Completed features and planned features in GUI
 
