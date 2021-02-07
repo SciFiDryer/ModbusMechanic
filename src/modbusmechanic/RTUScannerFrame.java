@@ -77,6 +77,10 @@ public class RTUScannerFrame extends javax.swing.JFrame {
       super();
       initColors();
    }
+   public Color getNodeColor(int node)
+   {
+       return cellColors.get(node-1);
+   }
    public void setNodeColor(int node, Color color)
    {
        setCellAttribs(node, color, null);
@@ -212,7 +216,7 @@ public class RTUScannerFrame extends javax.swing.JFrame {
         jPanel5.add(jLabel1);
 
         timeoutField.setColumns(3);
-        timeoutField.setText("50");
+        timeoutField.setText("20");
         timeoutField.setToolTipText("");
         timeoutField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
