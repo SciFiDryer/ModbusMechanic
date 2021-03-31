@@ -1,5 +1,6 @@
 # Modbus Mechanic
 Cross platform GUI tool for reading and testing MODBUS TCP and RTU instruments
+![Screenshot](https://raw.githubusercontent.com/SciFiDryer/ModbusMechanic/master/docs/screenshot.png)
 ## Overview
 
 Frustrated by the lack of GUI Modbus testing tools available that could interpret data types (float, unsigned int) I built this application on top of the JLibModbus library.
