@@ -46,6 +46,8 @@ public class ModbusMechanic {
     /**
      * @param args the command line arguments
      */
+    //version in numeric form major,minor,rev
+    public static int[] versionArray = { 1,7,0 };
     public static int RESPONSE_TYPE_ASCII = 1;
     public static int RESPONSE_TYPE_FLOAT = 2;
     public static int RESPONSE_TYPE_UINT16 = 3;
@@ -109,6 +111,7 @@ public class ModbusMechanic {
         if (startGui)
         {
             new PacketFrame().setVisible(true);
+            UpdateFrame.updateCheck(true);
         }
         if (debug)
         {

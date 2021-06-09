@@ -184,6 +184,9 @@ public class PacketFrame extends javax.swing.JFrame {
         updateBookmarkItem = new javax.swing.JMenuItem();
         deleteBookmarkItem = new javax.swing.JMenuItem();
         bookmarksMenu = new javax.swing.JMenu();
+        jMenu3 = new javax.swing.JMenu();
+        jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem5 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Modbus Mechanic");
@@ -599,6 +602,26 @@ public class PacketFrame extends javax.swing.JFrame {
         addBookmarkItems(bookmarksMenu);
 
         jMenuBar1.add(jMenu1);
+
+        jMenu3.setText("About");
+
+        jMenuItem4.setText("Check for Updates...");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem4);
+
+        jMenuItem5.setText("Check for updates at launch");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem5);
+
+        jMenuBar1.add(jMenu3);
 
         setJMenuBar(jMenuBar1);
 
@@ -1579,6 +1602,25 @@ public class PacketFrame extends javax.swing.JFrame {
         (new RTUScannerFrame()).setVisible(true);
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+        UpdateFrame.updateCheck(false);
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
+
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+        try
+        {
+            File f = new File(".updatecheckdisabled");
+            f.delete();
+        }
+        catch (Exception e)
+        {
+            if (ModbusMechanic.debug)
+            {
+                e.printStackTrace();
+            }
+        }
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
+
     private DefaultComboBoxModel getPortNames()
     {
         String[] portNames =  ModbusMechanic.getPortNames();
@@ -1662,10 +1704,13 @@ public class PacketFrame extends javax.swing.JFrame {
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
