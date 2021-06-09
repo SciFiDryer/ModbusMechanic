@@ -1,5 +1,8 @@
 # Modbus Mechanic
 Cross platform GUI tool for reading and testing MODBUS TCP and RTU instruments
+![Screenshot](https://raw.githubusercontent.com/SciFiDryer/ModbusMechanic/master/docs/screenshot.png)
+
+[More screenshots](https://modbusmechanic.scifidryer.com)
 ## Overview
 
 Frustrated by the lack of GUI Modbus testing tools available that could interpret data types (float, unsigned int) I built this application on top of the JLibModbus library.
@@ -14,7 +17,7 @@ JlibModbus is a seperate, independant project that this application depends on.
 
 ## Quickstart
 
-Download & extract the [latest release](#latest-release) and double click ModbusMechanic.jar.
+If you don't have Java installed, head to [adoptopenjdk.net](https://adoptopenjdk.net/) to download and install the Java runtime. Then, download & extract the [latest release](#latest-release) and double click ModbusMechanic.jar.
 
 ## RTU scanner
 
@@ -78,7 +81,7 @@ https://scifidryer.github.io/ModbusMechanic/
 
 ## Latest release
 
-[ModbusMechanic.v1.5.zip](https://github.com/SciFiDryer/ModbusMechanic/releases/download/v1.5/ModbusMechanic.v1.5.zip)
+[ModbusMechanic.v1.6.zip](https://github.com/SciFiDryer/ModbusMechanic/releases/download/v1.6/ModbusMechanic.v1.6.zip)
 
 ## Completed features and planned features in GUI
 
