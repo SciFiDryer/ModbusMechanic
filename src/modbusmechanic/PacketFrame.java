@@ -972,7 +972,14 @@ public class PacketFrame extends javax.swing.JFrame {
             }
             if (e instanceof ModbusIOException)
             {
-                JOptionPane.showMessageDialog(this, e.getMessage(), "IO Error", JOptionPane.ERROR_MESSAGE);
+                if (e.getMessage().contains("purejavacomm.PortInUseException"))    
+                {
+                    JOptionPane.showMessageDialog(this, "Port in use or insufficient permissions. If the port is not in use running as administrator or root can elevate permissions.", "Serial port error", JOptionPane.ERROR_MESSAGE);
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(this, e.getMessage(), "IO Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
             if (ModbusMechanic.debug)
             {
