@@ -43,7 +43,7 @@ public class UpdateFrame extends javax.swing.JFrame {
                     {
                         System.out.println("Got current version string " + line);
                     }
-                    if (versionCheck(line))
+                    if (versionCheck(line, atLaunch))
                     {
                         new UpdateFrame(atLaunch).setVisible(true);
                     }
@@ -113,7 +113,7 @@ public class UpdateFrame extends javax.swing.JFrame {
         }
         return timeToCheck;
     }
-    public static boolean versionCheck(String version)
+    public static boolean versionCheck(String version, boolean atLaunch)
     {
         boolean checkError = false;
         try
@@ -147,7 +147,7 @@ public class UpdateFrame extends javax.swing.JFrame {
             }
             checkError = true;
         }
-        if (checkError)
+        if (checkError && !atLaunch)
         {
             JOptionPane.showMessageDialog(null, "Failed to check for update.", "Error", JOptionPane.ERROR_MESSAGE);
         }
