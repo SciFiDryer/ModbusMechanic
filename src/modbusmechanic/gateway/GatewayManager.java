@@ -32,6 +32,7 @@ public class GatewayManager {
     GatewayFrame parentFrame = null;
     boolean isCommandLine = false;
     ModbusSlaveGatewayTCP slave = null;
+    GatewayMonitorServer server = null;
     String comPort = null;
     int baud = 0;
     int dataBits = 0;
@@ -39,6 +40,7 @@ public class GatewayManager {
     int parity = 0;
     int tcpPort = 0;
     SerialPort port = null;
+    boolean allowMonitor = false;
     RTUQueueManager queueManager = null;
 
     public GatewayManager(File propFile) throws Exception
@@ -53,6 +55,11 @@ public class GatewayManager {
         dataBits = Integer.parseInt(prop.getProperty("databits", "8"));
         stopBits = Integer.parseInt(prop.getProperty("stopbits", "1"));
         parity = Integer.parseInt(prop.getProperty("parity", "0"));
+        int allowMonitorRaw = Integer.parseInt(prop.getProperty("allowmonitor", "0"));
+        if (allowMonitorRaw == 1)
+        {
+            allowMonitor = true;
+        }
     }
     public GatewayManager(GatewayFrame aParentFrame)
     {
@@ -100,9 +107,15 @@ public class GatewayManager {
                     dataBits = Integer.parseInt(parentFrame.dataBitsField.getText());
                     stopBits = Integer.parseInt(parentFrame.stopBitsField.getText());
                     parity = parentFrame.paritySelector.getSelectedIndex();
+                    allowMonitor = parentFrame.remoteMonitoringCheckbox.isSelected();
                 }
                 queueManager = new RTUQueueManager(this);
                 slave = new ModbusSlaveGatewayTCP(this);
+                if (allowMonitor)
+                {
+                    server = new GatewayMonitorServer();
+                    server.start();
+                }
             }
             catch (Exception e)
             {
@@ -122,6 +135,10 @@ public class GatewayManager {
             {
                 slave.stop();
                 queueManager.interrupt();
+                if (server != null)
+                {
+                    server.stopServer();
+                }
                 slave = null;
                 if (!isCommandLine)
                 {
@@ -135,6 +152,7 @@ public class GatewayManager {
                 handleException(e);
             }
         }
+        
     }
     public void updateTrafficMonitor(String msg, byte[] buf)
     {
@@ -142,18 +160,18 @@ public class GatewayManager {
     }
     public void updateTrafficMonitor(String msg, byte[] buf, int length)
     {
+        String hexMsg = "";
+        int endIndex = buf.length;
+        if (length != -1)
+        {
+            endIndex = length;
+        }
+        for (int i = 0; i<endIndex; i++)
+        {
+            hexMsg = hexMsg + String.format("%02X", buf[i]);
+        }
         if (ModbusMechanic.debug || (!isCommandLine && parentFrame.gatewayMonitorCheckbox.isSelected()))
         {
-            String hexMsg = "";
-            int endIndex = buf.length;
-            if (length != -1)
-            {
-                endIndex = length;
-            }
-            for (int i = 0; i<endIndex; i++)
-            {
-                hexMsg = hexMsg + String.format("%02X", buf[i]);
-            }
             if ((!isCommandLine && parentFrame.gatewayMonitorCheckbox.isSelected()))
             {
                 parentFrame.gatewayMonitorTextArea.setText(parentFrame.gatewayMonitorTextArea.getText() + msg + hexMsg + "\n");
@@ -164,5 +182,6 @@ public class GatewayManager {
                 System.out.println(msg + hexMsg);
             }
         }
+        server.sendToClients(msg + hexMsg);
     }
 }

@@ -65,6 +65,7 @@ public class GatewayFrame extends javax.swing.JFrame {
         jPanel5 = new javax.swing.JPanel();
         jLabel17 = new javax.swing.JLabel();
         paritySelector = new javax.swing.JComboBox<>();
+        remoteMonitoringCheckbox = new javax.swing.JCheckBox();
         jSeparator2 = new javax.swing.JSeparator();
         jPanel9 = new javax.swing.JPanel();
         gatewayMonitorCheckbox = new javax.swing.JCheckBox();
@@ -156,6 +157,9 @@ public class GatewayFrame extends javax.swing.JFrame {
             }
         });
         jPanel5.add(paritySelector);
+
+        remoteMonitoringCheckbox.setText("Allow remote telnet monitoring");
+        jPanel5.add(remoteMonitoringCheckbox);
 
         getContentPane().add(jPanel5);
         getContentPane().add(jSeparator2);
@@ -308,6 +312,12 @@ public class GatewayFrame extends javax.swing.JFrame {
         prop.put("databits", dataBitsField.getText());
         prop.put("stopbits", stopBitsField.getText());
         prop.put("parity", paritySelector.getSelectedIndex() + "");
+        String allowMonitor = "0";
+        if (remoteMonitoringCheckbox.isSelected())
+        {
+            allowMonitor = "1";
+        }
+        prop.put("allowmonitor", allowMonitor);
         try
         {
             FileOutputStream fos = new FileOutputStream(f);
@@ -355,6 +365,7 @@ public class GatewayFrame extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JPanel monitorPane;
     public javax.swing.JComboBox<String> paritySelector;
+    public javax.swing.JCheckBox remoteMonitoringCheckbox;
     private javax.swing.JButton saveButton;
     public javax.swing.JButton startStopButton;
     public javax.swing.JLabel statusLabel;
