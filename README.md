@@ -67,6 +67,10 @@ Enable remote frame monitoring (see above) and connect to the gateway's IP addre
 
 This functionality is still available in ModbusMechanic, but is being moved to a stand alone project [ProtocolWhisperer](https://github.com/SciFiDryer/ProtocolWhisperer)
 
+## My language localizations are wrong, how can I report errors?
+
+I am using automated translation to do localizations and am not a native speaker of all localizations. As a result, the terms in certain languages describing certain functions may be wrong. If you run across lingustic errors and would like to report them, please [open an issue](https://github.com/SciFiDryer/ModbusMechanic/issues).
+
 ## Dependencies
 
 This project depends on the JLibModbus library and the PureJavaComm library for serial functionality. It depends on EtherIP for CIP functionality.
@@ -87,7 +91,7 @@ https://scifidryer.github.io/ModbusMechanic/
 
 ## Latest release
 
-[ModbusMechanic.v1.8.zip](https://github.com/SciFiDryer/ModbusMechanic/releases/download/v1.8/ModbusMechanic.v1.8.zip)
+[ModbusMechanic.v1.9.zip](https://github.com/SciFiDryer/ModbusMechanic/releases/download/v1.9/ModbusMechanic.v1.9.zip)
 
 ## Completed features and planned features in GUI
 
@@ -105,5 +109,3 @@ https://scifidryer.github.io/ModbusMechanic/
 - [x] Bookmarks
 - [x] Master simulator
 - [x] Slave simulator
-- [ ] ASCII bus monitor
-- [ ] Data logger
