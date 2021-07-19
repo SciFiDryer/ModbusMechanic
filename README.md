@@ -44,6 +44,7 @@ baud=19200
 parity=0
 databits=8
 stopbits=1
+allowmonitor=0
 ```
 Attribute | Descrtiption | Default
 --------- | ------------ | -------
@@ -53,10 +54,15 @@ baud | Baud rate for the serial port. | 9600
 parity | Parity for the serial port. 0=None 1=Odd 2=Even 3=Mark 4=Space | 0
 databits | Data bits for serial port. 5-8 are acceptible. | 8
 stopbits | Stop bits for serial port. 1=1 2=2 3=1.5 | 1
+allowmonitor | Allow remote frame monitor via telnet 0=no 1=yes | 0
 3. Launch ModbusMechanic with the -gateway argument followed by the path to the config file. Example on Linux for config file named "gateway.cfg".
   ```
   $ java -jar ModbusMechanic.jar -gateway gateway.cfg
   ```
+## Monitoring frames on a headless gateway
+
+Enable remote frame monitoring (see above) and connect to the gateway's IP address with a telnet client. You will be able to see frames as they would be displayed in the watch window.
+
 ## Bridging to other protocols
 
 This functionality is still available in ModbusMechanic, but is being moved to a stand alone project [ProtocolWhisperer](https://github.com/SciFiDryer/ProtocolWhisperer)
@@ -81,7 +87,7 @@ https://scifidryer.github.io/ModbusMechanic/
 
 ## Latest release
 
-[ModbusMechanic.v1.7.zip](https://github.com/SciFiDryer/ModbusMechanic/releases/download/v1.7/ModbusMechanic.v1.7.zip)
+[ModbusMechanic.v1.8.zip](https://github.com/SciFiDryer/ModbusMechanic/releases/download/v1.8/ModbusMechanic.v1.8.zip)
 
 ## Completed features and planned features in GUI
 
