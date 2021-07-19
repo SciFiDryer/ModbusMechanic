@@ -189,18 +189,19 @@ public class PacketFrame extends javax.swing.JFrame {
         jMenuItem5 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Modbus Mechanic");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("modbusmechanic/Bundle"); // NOI18N
+        setTitle(bundle.getString("PacketFrame.title")); // NOI18N
         setSize(new java.awt.Dimension(751, 700));
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.Y_AXIS));
 
         typePanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        jLabel11.setText("Type:");
+        jLabel11.setText(bundle.getString("PacketFrame.jLabel11.text")); // NOI18N
         typePanel.add(jLabel11);
 
         buttonGroup2.add(tcpMsgButton);
         tcpMsgButton.setSelected(true);
-        tcpMsgButton.setText("TCP");
+        tcpMsgButton.setText(bundle.getString("PacketFrame.tcpMsgButton.text")); // NOI18N
         tcpMsgButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tcpMsgButtonActionPerformed(evt);
@@ -209,7 +210,7 @@ public class PacketFrame extends javax.swing.JFrame {
         typePanel.add(tcpMsgButton);
 
         buttonGroup2.add(rtuMsgButton);
-        rtuMsgButton.setText("RTU");
+        rtuMsgButton.setText(bundle.getString("PacketFrame.rtuMsgButton.text")); // NOI18N
         rtuMsgButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rtuMsgButtonActionPerformed(evt);
@@ -217,7 +218,7 @@ public class PacketFrame extends javax.swing.JFrame {
         });
         typePanel.add(rtuMsgButton);
 
-        displayTtySerial.setText("Display tty serial ports");
+        displayTtySerial.setText(bundle.getString("PacketFrame.displayTtySerial.text")); // NOI18N
         displayTtySerial.setEnabled(false);
         displayTtySerial.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -229,10 +230,10 @@ public class PacketFrame extends javax.swing.JFrame {
         getContentPane().add(typePanel);
         getContentPane().add(jSeparator1);
 
-        jLabel14.setText("Serial settings");
+        jLabel14.setText(bundle.getString("PacketFrame.jLabel14.text")); // NOI18N
         serialPanel.add(jLabel14);
 
-        jLabel12.setText("Port");
+        jLabel12.setText(bundle.getString("PacketFrame.jLabel12.text")); // NOI18N
         serialPanel.add(jLabel12);
 
         comPortSelector.setModel(getPortNames());
@@ -243,27 +244,27 @@ public class PacketFrame extends javax.swing.JFrame {
         });
         serialPanel.add(comPortSelector);
 
-        jLabel13.setText("Baud");
+        jLabel13.setText(bundle.getString("PacketFrame.jLabel13.text")); // NOI18N
         serialPanel.add(jLabel13);
 
         baudRateSelector.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "4800", "9600", "14400", "19200", "38400", "57600" }));
         serialPanel.add(baudRateSelector);
 
-        jLabel15.setText("Data bits");
+        jLabel15.setText(bundle.getString("PacketFrame.jLabel15.text")); // NOI18N
         serialPanel.add(jLabel15);
 
         dataBitsField.setColumns(2);
-        dataBitsField.setText("8");
+        dataBitsField.setText(bundle.getString("PacketFrame.dataBitsField.text")); // NOI18N
         serialPanel.add(dataBitsField);
 
-        jLabel16.setText("Stop bits");
+        jLabel16.setText(bundle.getString("PacketFrame.jLabel16.text")); // NOI18N
         serialPanel.add(jLabel16);
 
         stopBitsField.setColumns(2);
-        stopBitsField.setText("1");
+        stopBitsField.setText(bundle.getString("PacketFrame.stopBitsField.text")); // NOI18N
         serialPanel.add(stopBitsField);
 
-        jLabel17.setText("Parity");
+        jLabel17.setText(bundle.getString("PacketFrame.jLabel17.text")); // NOI18N
         serialPanel.add(jLabel17);
 
         paritySelector.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "None", "Odd", "Even", "Mark", "Space" }));
@@ -279,7 +280,7 @@ public class PacketFrame extends javax.swing.JFrame {
 
         modbusPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        jLabel1.setText("IP");
+        jLabel1.setText(bundle.getString("PacketFrame.jLabel1.text")); // NOI18N
         modbusPanel.add(jLabel1);
 
         destHostField.setColumns(12);
@@ -290,21 +291,21 @@ public class PacketFrame extends javax.swing.JFrame {
         });
         modbusPanel.add(destHostField);
 
-        jLabel18.setText("Port");
+        jLabel18.setText(bundle.getString("PacketFrame.jLabel18.text")); // NOI18N
         modbusPanel.add(jLabel18);
 
         portField.setColumns(3);
-        portField.setText("502");
-        portField.setToolTipText("");
+        portField.setText(bundle.getString("PacketFrame.portField.text")); // NOI18N
+        portField.setToolTipText(bundle.getString("PacketFrame.portField.toolTipText")); // NOI18N
         modbusPanel.add(portField);
 
-        jLabel2.setText("Slave Node");
+        jLabel2.setText(bundle.getString("PacketFrame.jLabel2.text")); // NOI18N
         modbusPanel.add(jLabel2);
 
         slaveNodeField.setColumns(3);
         modbusPanel.add(slaveNodeField);
 
-        jLabel5.setText("Function");
+        jLabel5.setText(bundle.getString("PacketFrame.jLabel5.text")); // NOI18N
         modbusPanel.add(jLabel5);
 
         jLayeredPane1.setLayout(new java.awt.CardLayout());
@@ -333,13 +334,13 @@ public class PacketFrame extends javax.swing.JFrame {
 
         modbusPanel2.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        jLabel6.setText("Register");
+        jLabel6.setText(bundle.getString("PacketFrame.jLabel6.text")); // NOI18N
         modbusPanel2.add(jLabel6);
 
         registerField.setColumns(4);
         modbusPanel2.add(registerField);
 
-        jLabel3.setText("Transaction");
+        jLabel3.setText(bundle.getString("PacketFrame.jLabel3.text")); // NOI18N
         modbusPanel2.add(jLabel3);
 
         transactionField.setColumns(5);
@@ -350,13 +351,13 @@ public class PacketFrame extends javax.swing.JFrame {
         });
         modbusPanel2.add(transactionField);
 
-        jLabel4.setText("Protocol ID");
+        jLabel4.setText(bundle.getString("PacketFrame.jLabel4.text")); // NOI18N
         modbusPanel2.add(jLabel4);
 
         protoIdField.setColumns(5);
         modbusPanel2.add(protoIdField);
 
-        jLabel7.setText("Quantity");
+        jLabel7.setText(bundle.getString("PacketFrame.jLabel7.text")); // NOI18N
         modbusPanel2.add(jLabel7);
 
         quantityField.setColumns(2);
@@ -365,12 +366,12 @@ public class PacketFrame extends javax.swing.JFrame {
         getContentPane().add(modbusPanel2);
         getContentPane().add(jSeparator3);
 
-        jLabel8.setText("Data value type");
+        jLabel8.setText(bundle.getString("PacketFrame.jLabel8.text")); // NOI18N
         messagePanel.add(jLabel8);
 
         buttonGroup1.add(customMessageButton);
         customMessageButton.setSelected(true);
-        customMessageButton.setText("Custom");
+        customMessageButton.setText(bundle.getString("PacketFrame.customMessageButton.text")); // NOI18N
         customMessageButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 customMessageButtonActionPerformed(evt);
@@ -379,7 +380,7 @@ public class PacketFrame extends javax.swing.JFrame {
         messagePanel.add(customMessageButton);
 
         buttonGroup1.add(readFloatButton);
-        readFloatButton.setText("Float");
+        readFloatButton.setText(bundle.getString("PacketFrame.readFloatButton.text")); // NOI18N
         readFloatButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 readFloatButtonActionPerformed(evt);
@@ -388,7 +389,7 @@ public class PacketFrame extends javax.swing.JFrame {
         messagePanel.add(readFloatButton);
 
         buttonGroup1.add(asciiReadButton);
-        asciiReadButton.setText("ASCII");
+        asciiReadButton.setText(bundle.getString("PacketFrame.asciiReadButton.text")); // NOI18N
         asciiReadButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 asciiReadButtonActionPerformed(evt);
@@ -397,7 +398,7 @@ public class PacketFrame extends javax.swing.JFrame {
         messagePanel.add(asciiReadButton);
 
         buttonGroup1.add(u16ReadButton);
-        u16ReadButton.setText("Unsigned Int16");
+        u16ReadButton.setText(bundle.getString("PacketFrame.u16ReadButton.text")); // NOI18N
         u16ReadButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 u16ReadButtonActionPerformed(evt);
@@ -406,7 +407,7 @@ public class PacketFrame extends javax.swing.JFrame {
         messagePanel.add(u16ReadButton);
 
         buttonGroup1.add(u32ReadButton);
-        u32ReadButton.setText("Unsigned Int32");
+        u32ReadButton.setText(bundle.getString("PacketFrame.u32ReadButton.text")); // NOI18N
         u32ReadButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 u32ReadButtonActionPerformed(evt);
@@ -416,7 +417,7 @@ public class PacketFrame extends javax.swing.JFrame {
 
         getContentPane().add(messagePanel);
 
-        transmitPacketButton.setText("Transmit packet");
+        transmitPacketButton.setText(bundle.getString("PacketFrame.transmitPacketButton.text")); // NOI18N
         transmitPacketButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 transmitPacketButtonActionPerformed(evt);
@@ -429,10 +430,10 @@ public class PacketFrame extends javax.swing.JFrame {
 
         interpPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        jLabel9.setText("Interpretation options");
+        jLabel9.setText(bundle.getString("PacketFrame.jLabel9.text")); // NOI18N
         interpPanel.add(jLabel9);
 
-        byteSwapCheckbox.setText("Byte Swap");
+        byteSwapCheckbox.setText(bundle.getString("PacketFrame.byteSwapCheckbox.text")); // NOI18N
         byteSwapCheckbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 byteSwapCheckboxActionPerformed(evt);
@@ -440,7 +441,7 @@ public class PacketFrame extends javax.swing.JFrame {
         });
         interpPanel.add(byteSwapCheckbox);
 
-        wordSwapCheckbox.setText("Word Swap");
+        wordSwapCheckbox.setText(bundle.getString("PacketFrame.wordSwapCheckbox.text")); // NOI18N
         wordSwapCheckbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 wordSwapCheckboxActionPerformed(evt);
@@ -453,7 +454,7 @@ public class PacketFrame extends javax.swing.JFrame {
 
         responsePanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        valueLabel.setText("Response value: ");
+        valueLabel.setText(bundle.getString("PacketFrame.valueLabel.text")); // NOI18N
         responsePanel.add(valueLabel);
 
         writeParentPane.setLayout(new java.awt.CardLayout());
@@ -476,12 +477,12 @@ public class PacketFrame extends javax.swing.JFrame {
         boolPane.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         buttonGroup3.add(offButton);
-        offButton.setText("Off");
+        offButton.setText(bundle.getString("PacketFrame.offButton.text")); // NOI18N
         boolPane.add(offButton);
 
         buttonGroup3.add(onButton);
         onButton.setSelected(true);
-        onButton.setText("On");
+        onButton.setText(bundle.getString("PacketFrame.onButton.text")); // NOI18N
         boolPane.add(onButton);
 
         writeParentPane.add(boolPane, "boolPane");
@@ -490,7 +491,7 @@ public class PacketFrame extends javax.swing.JFrame {
         responsePanel.add(writeParentPane);
         ((java.awt.CardLayout)(writeParentPane.getLayout())).show(writeParentPane, "blankPane");
 
-        bitsButton.setText("Individual Bits...");
+        bitsButton.setText(bundle.getString("PacketFrame.bitsButton.text")); // NOI18N
         bitsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bitsButtonActionPerformed(evt);
@@ -502,7 +503,7 @@ public class PacketFrame extends javax.swing.JFrame {
         getContentPane().add(responsePanel);
         getContentPane().add(jSeparator6);
 
-        jLabel10.setText("Raw packet:");
+        jLabel10.setText(bundle.getString("PacketFrame.jLabel10.text")); // NOI18N
         packetPanel.add(jLabel10);
 
         rawTextBox.setEditable(false);
@@ -515,9 +516,9 @@ public class PacketFrame extends javax.swing.JFrame {
 
         getContentPane().add(packetPanel);
 
-        jMenu2.setText("Tools");
+        jMenu2.setText(bundle.getString("PacketFrame.jMenu2.text")); // NOI18N
 
-        jMenuItem1.setText("Start Slave Simulator...");
+        jMenuItem1.setText(bundle.getString("PacketFrame.jMenuItem1.text")); // NOI18N
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem1ActionPerformed(evt);
@@ -525,7 +526,7 @@ public class PacketFrame extends javax.swing.JFrame {
         });
         jMenu2.add(jMenuItem1);
 
-        rtuSerialMonitorItem.setText("Start RTU Serial Monitor...");
+        rtuSerialMonitorItem.setText(bundle.getString("PacketFrame.rtuSerialMonitorItem.text")); // NOI18N
         rtuSerialMonitorItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rtuSerialMonitorItemActionPerformed(evt);
@@ -533,7 +534,7 @@ public class PacketFrame extends javax.swing.JFrame {
         });
         jMenu2.add(rtuSerialMonitorItem);
 
-        jMenuItem3.setText("RTU Scanner...");
+        jMenuItem3.setText(bundle.getString("PacketFrame.jMenuItem3.text")); // NOI18N
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem3ActionPerformed(evt);
@@ -541,8 +542,8 @@ public class PacketFrame extends javax.swing.JFrame {
         });
         jMenu2.add(jMenuItem3);
 
-        jMenuItem2.setText("Start TCP Slave->RTU Master gateway...");
-        jMenuItem2.setToolTipText("");
+        jMenuItem2.setText(bundle.getString("PacketFrame.jMenuItem2.text")); // NOI18N
+        jMenuItem2.setToolTipText(bundle.getString("PacketFrame.jMenuItem2.toolTipText")); // NOI18N
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem2ActionPerformed(evt);
@@ -550,8 +551,8 @@ public class PacketFrame extends javax.swing.JFrame {
         });
         jMenu2.add(jMenuItem2);
 
-        startModbusBridge.setText("Start Modbus Bridge [Experimental]...");
-        startModbusBridge.setToolTipText("");
+        startModbusBridge.setText(bundle.getString("PacketFrame.startModbusBridge.text")); // NOI18N
+        startModbusBridge.setToolTipText(bundle.getString("PacketFrame.startModbusBridge.toolTipText")); // NOI18N
         startModbusBridge.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 startModbusBridgeActionPerformed(evt);
@@ -561,9 +562,9 @@ public class PacketFrame extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu2);
 
-        jMenu1.setText("Bookmarks");
+        jMenu1.setText(bundle.getString("PacketFrame.jMenu1.text")); // NOI18N
 
-        addBookmarkItem.setText("Add current entry as new bookmark");
+        addBookmarkItem.setText(bundle.getString("PacketFrame.addBookmarkItem.text")); // NOI18N
         addBookmarkItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addBookmarkItemActionPerformed(evt);
@@ -571,7 +572,7 @@ public class PacketFrame extends javax.swing.JFrame {
         });
         jMenu1.add(addBookmarkItem);
 
-        updateBookmarkItem.setText("Update current bookmark...");
+        updateBookmarkItem.setText(bundle.getString("PacketFrame.updateBookmarkItem.text")); // NOI18N
         updateBookmarkItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 updateBookmarkItemActionPerformed(evt);
@@ -579,7 +580,7 @@ public class PacketFrame extends javax.swing.JFrame {
         });
         jMenu1.add(updateBookmarkItem);
 
-        deleteBookmarkItem.setText("Delete current bookmark");
+        deleteBookmarkItem.setText(bundle.getString("PacketFrame.deleteBookmarkItem.text")); // NOI18N
         deleteBookmarkItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 deleteBookmarkItemActionPerformed(evt);
@@ -587,7 +588,7 @@ public class PacketFrame extends javax.swing.JFrame {
         });
         jMenu1.add(deleteBookmarkItem);
 
-        bookmarksMenu.setText("Quick access bookmarks");
+        bookmarksMenu.setText(bundle.getString("PacketFrame.bookmarksMenu.text")); // NOI18N
         bookmarksMenu.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 bookmarksMenuStateChanged(evt);
@@ -603,9 +604,9 @@ public class PacketFrame extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu1);
 
-        jMenu3.setText("About");
+        jMenu3.setText(bundle.getString("PacketFrame.jMenu3.text")); // NOI18N
 
-        jMenuItem4.setText("Check for Updates...");
+        jMenuItem4.setText(bundle.getString("PacketFrame.jMenuItem4.text")); // NOI18N
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem4ActionPerformed(evt);
@@ -613,7 +614,7 @@ public class PacketFrame extends javax.swing.JFrame {
         });
         jMenu3.add(jMenuItem4);
 
-        jMenuItem5.setText("Check for updates at launch");
+        jMenuItem5.setText(bundle.getString("PacketFrame.jMenuItem5.text")); // NOI18N
         jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem5ActionPerformed(evt);
