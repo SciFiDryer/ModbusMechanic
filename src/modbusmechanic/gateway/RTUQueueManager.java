@@ -30,6 +30,7 @@ public class RTUQueueManager extends Thread
     GatewayManager manager = null;
     int responseBytes = 0;
     byte[] resp = null;
+    RollingFrameWindow window = new RollingFrameWindow();
     public RTUQueueManager(GatewayManager aManager)
     {
         manager = aManager;
@@ -58,6 +59,7 @@ public class RTUQueueManager extends Thread
                 }
                 isRunning = false;
             }
+            byte[] prevResp = null;
             while (isRunning)
             {
                 manager.updateTrafficMonitor("TCP Slave <<: ", buf);
@@ -103,7 +105,23 @@ public class RTUQueueManager extends Thread
                 }
                 if (responseBytes > 0)
                 {
-                    resp = Arrays.copyOfRange(resp, 0, responseBytes);
+                    resp = window.getCurrentFrame();
+                    if (!GatewayThreadTCP.checkCRC(resp))
+                    {
+                        //workaround for frame splitting
+                        try
+                        {
+                            wait(50);
+                        }
+                        catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+                        if (window.getLastTwoFrames() != null && GatewayThreadTCP.checkCRC(window.getLastTwoFrames()))
+                        {
+                            resp = window.getLastTwoFrames();
+                        }
+                    }
                     if (GatewayThreadTCP.checkCRC(resp))
                     {
                         int recvSlave = resp[0];
@@ -187,14 +205,40 @@ public class RTUQueueManager extends Thread
     }
     public void putMessage(int aResponseBytes, byte[] buf)
     {
+        responseBytes = aResponseBytes;
+        resp = Arrays.copyOfRange(buf, 0, responseBytes);
+        window.putFrame(resp);
         if (getState() == Thread.State.TIMED_WAITING)
         {
-            responseBytes = aResponseBytes;
-            resp = buf;
             synchronized (this)
             {
                 notify();
             }
+        }
+    }
+    class RollingFrameWindow
+    {
+        byte[] prevFrame = null;
+        byte[] currentFrame = null;
+        public void putFrame(byte[] buf)
+        {
+            prevFrame = currentFrame;
+            currentFrame = buf;
+        }
+        public byte[] getCurrentFrame()
+        {
+            return currentFrame;
+        }
+        public byte[] getLastTwoFrames()
+        {
+            if (currentFrame != null && prevFrame != null)
+            {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                baos.writeBytes(prevFrame);
+                baos.writeBytes(currentFrame);
+                return baos.toByteArray();
+            }
+            return null;
         }
     }
 }

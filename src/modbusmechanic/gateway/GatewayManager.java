@@ -182,6 +182,9 @@ public class GatewayManager {
                 System.out.println(msg + hexMsg);
             }
         }
-        server.sendToClients(msg + hexMsg);
+        if (server != null)
+        {
+            server.sendToClients(msg + hexMsg);
+        }
     }
 }

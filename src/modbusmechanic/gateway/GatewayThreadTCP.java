@@ -85,11 +85,21 @@ public class GatewayThreadTCP implements Runnable {
     }
     public static boolean checkCRC(byte[] b)
     {
-        byte[] crc = getCRC(Arrays.copyOfRange(b, 0, b.length-2));
-        byte[] frameCrc = new byte[] {b[b.length-2], b[b.length-1]};
-        if (crc[0] == frameCrc[0] && crc[1] == frameCrc[1])
+        try
         {
-            return true;
+            byte[] crc = getCRC(Arrays.copyOfRange(b, 0, b.length-2));
+            byte[] frameCrc = new byte[] {b[b.length-2], b[b.length-1]};
+            if (crc[0] == frameCrc[0] && crc[1] == frameCrc[1])
+            {
+                return true;
+            }
+        }
+        catch(IllegalArgumentException e)
+        {
+            if (ModbusMechanic.debug)
+            {
+                e.printStackTrace();
+            }
         }
         return false;
     }
