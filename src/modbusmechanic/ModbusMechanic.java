@@ -546,6 +546,9 @@ public class ModbusMechanic {
         @Override
         public void writeHoldingRegister(int offset, int value) throws IllegalDataAddressException, IllegalDataValueException {
             super.writeHoldingRegister(offset, value);
+            SimulatorRegisterHolder holder = ModbusMechanic.findRegisterHolderByRegister(registerList, 3, offset);
+            ModbusMechanic.refreshRegisterHolder(holder);
+            printToWatchWindow("Holding register write request at offset " + offset + " single");
 
         }
         @Override
@@ -590,6 +593,9 @@ public class ModbusMechanic {
         @Override
         public void writeCoil(int offset, boolean value) throws IllegalDataAddressException, IllegalDataValueException {
             super.writeCoil(offset, value);
+            SimulatorRegisterHolder holder = ModbusMechanic.findRegisterHolderByRegister(registerList, 1, offset);
+            ModbusMechanic.refreshRegisterHolder(holder);
+            printToWatchWindow("Coil write request at offset " + offset + " single");
         }
 
         @Override
