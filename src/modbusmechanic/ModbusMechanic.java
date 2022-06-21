@@ -58,6 +58,7 @@ public class ModbusMechanic {
     public static int READ_COILS_CODE = 1;
     public static int READ_DI_CODE = 2;
     public static int READ_INPUT_REGISTER_CODE = 4;
+    public static int WRITE_SINGLE_REGISTER_CODE = 6;
     public static int WRITE_COILS_CODE = 15;
     public static int WRITE_HOLDING_REGISTERS_CODE = 16;
     public static int SLAVE_SIMULATOR_TCP = 1;
@@ -345,7 +346,7 @@ public class ModbusMechanic {
         {
             master.connect();
         }
-        AbstractMultipleRequest request = null;
+        AbstractDataRequest request = null;
         if (functionCode == 1)
         {
             request = new ReadCoilsRequest();
@@ -362,6 +363,10 @@ public class ModbusMechanic {
         {
             request = new ReadInputRegistersRequest();
         }
+        else if (functionCode == 6)
+        {
+            request = new WriteSingleRegisterRequest();
+        }
         else if (functionCode == 15)
         {
             request = new WriteMultipleCoilsRequest();
@@ -372,7 +377,10 @@ public class ModbusMechanic {
         }
         request.setServerAddress(slaveNode);
         request.setStartAddress(register);
-        request.setQuantity(quantity);
+        if (request instanceof AbstractMultipleRequest)
+        {
+            ((AbstractMultipleRequest)(request)).setQuantity(quantity);
+        }
         if (request instanceof AbstractWriteMultipleRequest)
         {
             ((AbstractWriteMultipleRequest)(request)).setBytes(values);

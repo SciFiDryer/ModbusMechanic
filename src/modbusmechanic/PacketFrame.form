@@ -454,13 +454,14 @@
             <Component class="javax.swing.JComboBox" name="functionSelector">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="6">
+                  <StringArray count="7">
                     <StringItem index="0" value="Read Coils (0x01)"/>
                     <StringItem index="1" value="Read Discrete Inputs (0x02)"/>
                     <StringItem index="2" value="Read Holding Registers (0x03)"/>
                     <StringItem index="3" value="Read Input Registers (0x04)"/>
-                    <StringItem index="4" value="Write Coils (0x15)"/>
-                    <StringItem index="5" value="Write Holding Registers (0x16)"/>
+                    <StringItem index="4" value="Preset (Write) Single Register (0x06)"/>
+                    <StringItem index="5" value="Write Coils (0x15)"/>
+                    <StringItem index="6" value="Write Holding Registers (0x16)"/>
                   </StringArray>
                 </Property>
                 <Property name="selectedIndex" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">

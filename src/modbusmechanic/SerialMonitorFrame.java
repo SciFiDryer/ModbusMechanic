@@ -61,7 +61,7 @@ public class SerialMonitorFrame extends javax.swing.JFrame {
                     }
                     catch (Exception e)
                     {
-
+                        e.printStackTrace();
                     }
                 }
                 try
