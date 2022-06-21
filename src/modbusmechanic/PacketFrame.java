@@ -1630,6 +1630,7 @@ public class PacketFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_displayTtySerialActionPerformed
 
     private void startModbusBridgeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startModbusBridgeActionPerformed
+        JOptionPane.showMessageDialog(this, "Warning: this functionality has been moved to ProtocolWhisperer and will be removed from ModbusMechanic in future versions.", "Warning", JOptionPane.WARNING_MESSAGE);
         new modbusmechanic.bridge.BridgeManager(false, "");
     }//GEN-LAST:event_startModbusBridgeActionPerformed
 
