@@ -73,7 +73,7 @@ public class RTUScannerThread extends Thread {
         {
             if (e instanceof purejavacomm.PortInUseException)    
             {
-                JOptionPane.showMessageDialog(null, "Port in use or insufficient permissions. If the port is not in use running as administrator or root can elevate permissions.", "Serial port error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Port in use or insufficient permissions. If the port is not in use running as administrator or root can elevate permissions.\nOn Linux adding the user to the dialout group may elevate permissions.", "Serial port error", JOptionPane.ERROR_MESSAGE);
             }
             if (ModbusMechanic.debug)
             {
