@@ -40,6 +40,7 @@ public class PacketFrame extends javax.swing.JFrame {
     public ArrayList<String[]> bookmarkList = new ArrayList<String[]>();
     BitsFrame bitsFrame = null;
     boolean hasTtyPorts = false;
+    String lastField = "";
     public PacketFrame()
     {
         try
@@ -639,22 +640,33 @@ public class PacketFrame extends javax.swing.JFrame {
 
     private void transmitPacketButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_transmitPacketButtonActionPerformed
         //todo no thread dispatched when this action is performed which causes the UI to freeze for a few seconds
+        try
+        {
+            transmitPacket();
+        }
+        catch (NumberFormatException e)
+        {
+            JOptionPane.showMessageDialog(this, "Format error. " + lastField + " is a required field and must be a number.", "Parse error", JOptionPane.ERROR_MESSAGE);
+            if (ModbusMechanic.debug)
+            {
+                e.printStackTrace();
+            }
+        }
+    }//GEN-LAST:event_transmitPacketButtonActionPerformed
+    private void transmitPacket() throws NumberFormatException
+    {
         lastResponse = null;
+        lastField = "Slave node";
         int slaveNode = Integer.parseInt(slaveNodeField.getText());
+        lastField = "Register";
         int register = Integer.parseInt(registerField.getText());
         int functionCode = 0;
         int quantity = 0;
         int transactionId = 1;
         int protocolId = 0;
         int tcpPort = 502;
-        try
-        {
-            tcpPort = Integer.parseInt(portField.getText());
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+        lastField = "TCP Port";
+        tcpPort = Integer.parseInt(portField.getText());
         boolean writingFlag = false;
         boolean coilsFlag = false;
         byte[] values = null;
@@ -694,29 +706,34 @@ public class PacketFrame extends javax.swing.JFrame {
         {
             if (!rtuMsgButton.isSelected())
             {
+                lastField = "Transaction ID";
                 transactionId = Integer.parseInt(transactionField.getText());
+                lastField = "Protocol ID";
                 protocolId = Integer.parseInt(protoIdField.getText());
             }
-            quantity = Integer.parseInt(quantityField.getText());
         }
         lastFunctionCode = functionCode;
+        lastField = "Quantity";
         quantity = Integer.parseInt(quantityField.getText());
         if (writingFlag && !coilsFlag)
         {
             if (readFloatButton.isSelected())
             {
+                lastField = "Value";
                 float floatValue = Float.parseFloat(valueField.getText());
                 values = java.nio.ByteBuffer.allocate(4).putFloat(floatValue).array();
                 values = ModbusMechanic.wordSwap(values);
             }
             if (u16ReadButton.isSelected())
             {
+                lastField = "Value";
                 int intValue = Integer.parseInt(valueField.getText());
                 values = java.nio.ByteBuffer.allocate(4).putInt(intValue).array();
                 values = java.util.Arrays.copyOfRange(values, 2, 4);
             }
             if (u32ReadButton.isSelected())
             {
+                lastField = "Value";
                 long intValue = Long.parseLong(valueField.getText());
                 values = java.nio.ByteBuffer.allocate(8).putLong(intValue).array();
                 values = java.util.Arrays.copyOfRange(values, 4, 8);
@@ -803,7 +820,7 @@ public class PacketFrame extends javax.swing.JFrame {
             displayResponse();
             displayRaw();
         }
-    }//GEN-LAST:event_transmitPacketButtonActionPerformed
+    }
     public String[] getBookmarkNames()
     {
         bookmarkList.clear();

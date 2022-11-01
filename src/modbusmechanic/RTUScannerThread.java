@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.util.*;
 import purejavacomm.CommPortIdentifier;
 import purejavacomm.SerialPort;
+import javax.swing.*;
 
 /**
  *
@@ -66,15 +67,20 @@ public class RTUScannerThread extends Thread {
             port.close();
             parentFrame.scanButton.setText("Scan");
             parentFrame.repaint();
-            keepScanning = false;
-            
+            keepScanning = false; 
         }
         catch (Exception e)
         {
+            if (e instanceof purejavacomm.PortInUseException)    
+            {
+                JOptionPane.showMessageDialog(null, "Port in use or insufficient permissions. If the port is not in use running as administrator or root can elevate permissions.", "Serial port error", JOptionPane.ERROR_MESSAGE);
+            }
             if (ModbusMechanic.debug)
             {
                 e.printStackTrace();
             }
+            parentFrame.scanButton.setText("Scan");
+            keepScanning = false; 
         }
         parentFrame.repaint();
     }
