@@ -89,9 +89,15 @@ This is a NetBeans project. It can be built by pulling it in the NetBeans IDE or
 
 https://scifidryer.github.io/ModbusMechanic/
 
+## Debugging
+
+To obtain verbose debugging information start ModbusMechanic with the debug option.
+  ```
+  $ java -jar ModbusMechanic.jar -debug
+  ```
 ## Latest release
 
-[ModbusMechanic.v2.3.zip](https://github.com/SciFiDryer/ModbusMechanic/releases/download/v2.3/ModbusMechanic.v2.3.zip)
+[ModbusMechanic.v2.4.zip](https://github.com/SciFiDryer/ModbusMechanic/releases/download/v2.4/ModbusMechanic.v2.4.zip)
 
 ## Completed features and planned features in GUI
 
