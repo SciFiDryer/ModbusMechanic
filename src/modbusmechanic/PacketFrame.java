@@ -1572,7 +1572,7 @@ public class PacketFrame extends javax.swing.JFrame {
         SlaveSimulatorFrame theFrame = new SlaveSimulatorFrame(slaveId);
         if (simulatorType == 0)
         {
-            ModbusMechanic.startSlaveSimulatorTCP(502, theFrame.getRegisterList());
+            ModbusMechanic.startSlaveSimulatorTCP(slaveId, 502, theFrame.getRegisterList());
         }
         else
         {

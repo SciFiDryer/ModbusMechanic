@@ -47,7 +47,7 @@ public class ModbusMechanic {
      * @param args the command line arguments
      */
     //version in numeric form major,minor,rev
-    public static int[] versionArray = { 2,3,0 };
+    public static int[] versionArray = { 2,4,0 };
     public static int RESPONSE_TYPE_ASCII = 1;
     public static int RESPONSE_TYPE_FLOAT = 2;
     public static int RESPONSE_TYPE_UINT16 = 3;
@@ -431,7 +431,7 @@ public class ModbusMechanic {
         }
         return sb.toString();
     }
-    public static void startSlaveSimulatorTCP(int port, java.util.ArrayList registerList)
+    public static void startSlaveSimulatorTCP(int serverAddress, int port, java.util.ArrayList registerList)
     {
          
         try
@@ -440,7 +440,7 @@ public class ModbusMechanic {
             parameters.setHost(InetAddress.getLocalHost());
             parameters.setPort(port);
             slave = ModbusSlaveFactory.createModbusSlaveTCP(parameters);
-            slave.setServerAddress(1);
+            slave.setServerAddress(serverAddress);
             slave.setReadTimeout(30000);
             slave.setDataHolder(new SimulatorDataHolder(registerList));
             slave.listen();
