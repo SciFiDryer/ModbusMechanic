@@ -1576,7 +1576,7 @@ public class PacketFrame extends javax.swing.JFrame {
         }
         else
         {
-            ModbusMechanic.startSlaveSimulatorRTU(slaveId, comPortSelector.getItemAt(comPortSelector.getSelectedIndex()), Integer.parseInt(baudRateSelector.getItemAt(baudRateSelector.getSelectedIndex())), Integer.parseInt(dataBitsField.getText()), Integer.parseInt(stopBitsField.getText()), paritySelector.getSelectedIndex());
+            ModbusMechanic.startSlaveSimulatorRTU(slaveId, comPortSelector.getItemAt(comPortSelector.getSelectedIndex()), Integer.parseInt(baudRateSelector.getItemAt(baudRateSelector.getSelectedIndex())), Integer.parseInt(dataBitsField.getText()), Integer.parseInt(stopBitsField.getText()), paritySelector.getSelectedIndex(), theFrame.getRegisterList());
         }
         theFrame.setVisible(true);
         

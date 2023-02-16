@@ -450,7 +450,7 @@ public class ModbusMechanic {
             e.printStackTrace();
         }
     }
-    public static void startSlaveSimulatorRTU(int serverAddress, String comPort, int baud, int dataBits, int stopBits, int parity)
+    public static void startSlaveSimulatorRTU(int serverAddress, String comPort, int baud, int dataBits, int stopBits, int parity, java.util.ArrayList registerList)
     {
         try
         {
@@ -461,6 +461,7 @@ public class ModbusMechanic {
             parameters.setStopBits(stopBits);
             parameters.setParity(castToParity(parity));
             slave = ModbusSlaveFactory.createModbusSlaveRTU(parameters);
+            slave.setDataHolder(new SimulatorDataHolder(registerList));
             slave.setServerAddress(serverAddress);
             slave.listen();
         }
