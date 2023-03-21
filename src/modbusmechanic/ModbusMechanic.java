@@ -385,6 +385,14 @@ public class ModbusMechanic {
         {
             ((AbstractWriteMultipleRequest)(request)).setBytes(values);
         }
+        if (request instanceof WriteSingleRegisterRequest)
+        {
+            //cast the two bytes here to a short, because the only accepted input is a short
+            ByteBuffer bb = ByteBuffer.allocate(2);
+            bb.put(values[0]);
+            bb.put(values[1]);
+            ((WriteSingleRegisterRequest)(request)).setValue(bb.getShort(0));
+        }
         if (master instanceof ModbusMasterTCP)
         {
             master.setTransactionId(transactionId);
