@@ -179,6 +179,7 @@ public class PacketFrame extends javax.swing.JFrame {
         rtuSerialMonitorItem = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem6 = new javax.swing.JMenuItem();
         startModbusBridge = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
         addBookmarkItem = new javax.swing.JMenuItem();
@@ -551,6 +552,14 @@ public class PacketFrame extends javax.swing.JFrame {
             }
         });
         jMenu2.add(jMenuItem2);
+
+        jMenuItem6.setText(bundle.getString("PacketFrame.jMenuItem6.text")); // NOI18N
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem6);
 
         startModbusBridge.setText(bundle.getString("PacketFrame.startModbusBridge.text")); // NOI18N
         startModbusBridge.setToolTipText(bundle.getString("PacketFrame.startModbusBridge.toolTipText")); // NOI18N
@@ -1674,6 +1683,10 @@ public class PacketFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        (new RegisterScannerFrame()).setVisible(true);
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
+
     private DefaultComboBoxModel getPortNames()
     {
         String[] portNames =  ModbusMechanic.getPortNames();
@@ -1764,6 +1777,7 @@ public class PacketFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
