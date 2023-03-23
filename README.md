@@ -19,6 +19,10 @@ JlibModbus is a seperate, independant project that this application depends on.
 
 If you don't have Java installed, head to [adoptopenjdk.net](https://adoptopenjdk.net/) to download and install the Java runtime. Then, download & extract the [latest release](#latest-release) and double click ModbusMechanic.jar.
 
+## Register scanner
+
+The register scanner tool allows input and holding register ranges to be scanned for values. Nonexistant registers are excluded frm the results and there is an option to hide zero values. This tool may be able to help identify register ranges when they are not known. Note that full range scans can take some time as there are 65536 possible registers to scan in each of the holding register and input register groups.
+
 ## RTU scanner
 
 The RTU scanner tool allows scanning of the entire RTU network for active nodes. This is useful if there is a slave device on the network for which the address is not known. For best results, the scanner should be the only master on the network.
@@ -97,7 +101,7 @@ To obtain verbose debugging information start ModbusMechanic with the debug opti
   ```
 ## Latest release
 
-[ModbusMechanic.v2.5.zip](https://github.com/SciFiDryer/ModbusMechanic/releases/download/v2.5/ModbusMechanic.v2.5.zip)
+[ModbusMechanic.v2.6.zip](https://github.com/SciFiDryer/ModbusMechanic/releases/download/v2.6/ModbusMechanic.v2.6.zip)
 
 ## Completed features and planned features in GUI
 
