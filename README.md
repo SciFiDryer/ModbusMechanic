@@ -20,6 +20,7 @@ JlibModbus is a seperate, independant project that this application depends on.
 If you don't have Java installed, head to [adoptopenjdk.net](https://adoptopenjdk.net/) to download and install the Java runtime. Then, download & extract the [latest release](#latest-release) and double click ModbusMechanic.jar.
 
 ## Register scanner
+![Register scanner](https://raw.githubusercontent.com/SciFiDryer/ModbusMechanic/master/docs/registerscanner.png)
 
 The register scanner tool allows input and holding register ranges to be scanned for values. Nonexistant registers are excluded frm the results and there is an option to hide zero values. This tool may be able to help identify register ranges when they are not known. Note that full range scans can take some time as there are 65536 possible registers to scan in each of the holding register and input register groups.
 
