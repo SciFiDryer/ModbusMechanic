@@ -157,7 +157,6 @@ public class RTUScannerFrame extends javax.swing.JFrame {
         jTextField1.setText("jTextField1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(452, 670));
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.Y_AXIS));
 
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.Y_AXIS));
@@ -182,7 +181,7 @@ public class RTUScannerFrame extends javax.swing.JFrame {
         jLabel13.setText("Baud");
         jPanel2.add(jLabel13);
 
-        baudRateSelector.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "4800", "9600", "14400", "19200", "38400", "57600" }));
+        baudRateSelector.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "4800", "9600", "14400", "19200", "38400", "57600", "115200" }));
         jPanel2.add(baudRateSelector);
 
         jLabel15.setText("Data bits");

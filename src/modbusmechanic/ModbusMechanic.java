@@ -264,6 +264,10 @@ public class ModbusMechanic {
             {
                 baud = SerialPort.BaudRate.BAUD_RATE_57600;
             }
+            if (baudRate == 115200)
+            {
+                baud = SerialPort.BaudRate.BAUD_RATE_115200;
+            }
             return baud;
     }
     public static SerialPort.Parity castToParity(int parityTmp)

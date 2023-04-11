@@ -107,6 +107,7 @@ public class RegisterScannerFrame extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(486, 450));
 
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.Y_AXIS));
 
@@ -162,7 +163,7 @@ public class RegisterScannerFrame extends javax.swing.JFrame {
         jLabel13.setText(bundle.getString("PacketFrame.jLabel13.text")); // NOI18N
         serialPanel.add(jLabel13);
 
-        baudRateSelector.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "4800", "9600", "14400", "19200", "38400", "57600" }));
+        baudRateSelector.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "4800", "9600", "14400", "19200", "38400", "57600", "115200" }));
         baudRateSelector.setEnabled(false);
         serialPanel.add(baudRateSelector);
 
@@ -297,6 +298,8 @@ public class RegisterScannerFrame extends javax.swing.JFrame {
         jPanel1.add(jPanel4);
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.NORTH);
+
+        jPanel6.setLayout(new javax.swing.BoxLayout(jPanel6, javax.swing.BoxLayout.LINE_AXIS));
 
         registerTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {

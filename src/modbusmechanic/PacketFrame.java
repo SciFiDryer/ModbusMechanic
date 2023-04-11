@@ -249,7 +249,7 @@ public class PacketFrame extends javax.swing.JFrame {
         jLabel13.setText(bundle.getString("PacketFrame.jLabel13.text")); // NOI18N
         serialPanel.add(jLabel13);
 
-        baudRateSelector.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "4800", "9600", "14400", "19200", "38400", "57600" }));
+        baudRateSelector.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "4800", "9600", "14400", "19200", "38400", "57600", "115200" }));
         serialPanel.add(baudRateSelector);
 
         jLabel15.setText(bundle.getString("PacketFrame.jLabel15.text")); // NOI18N
