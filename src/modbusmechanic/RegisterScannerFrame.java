@@ -461,6 +461,7 @@ public class RegisterScannerFrame extends javax.swing.JFrame {
                     int total = endIndex - startIndex;
                     pm.setMaximum(total);
                     int count = 0;
+                    int transactionId = 0;
                     for (int i = 0; i < 65536 && !pm.isCanceled(); i++)
                     {
                         if (i >= startIndex && i <= endIndex)
@@ -469,14 +470,15 @@ public class RegisterScannerFrame extends javax.swing.JFrame {
                             {
                                 if (functionSelector.getSelectedIndex() == 0)
                                 {
-                                    ReadHoldingRegistersResponse response = (ReadHoldingRegistersResponse) master.generateModbusMessage(0, 0, Integer.parseInt(slaveNodeField.getText()), 3, i, 1, null);
+                                    ReadHoldingRegistersResponse response = (ReadHoldingRegistersResponse) master.generateModbusMessage(0, transactionId, Integer.parseInt(slaveNodeField.getText()), 3, i, 1, null);
                                     registers[i] = response.getBytes();
                                 }
                                 if (functionSelector.getSelectedIndex() == 1)
                                 {
-                                    ReadInputRegistersResponse response = (ReadInputRegistersResponse) master.generateModbusMessage(0, 0, Integer.parseInt(slaveNodeField.getText()), 4, i, 1, null);
+                                    ReadInputRegistersResponse response = (ReadInputRegistersResponse) master.generateModbusMessage(0, transactionId, Integer.parseInt(slaveNodeField.getText()), 4, i, 1, null);
                                     registers[i] = response.getBytes();
                                 }
+                                transactionId++;
                             }
                             catch (Exception e)
                             {
@@ -514,6 +516,7 @@ public class RegisterScannerFrame extends javax.swing.JFrame {
         model.addColumn("Value as U16");
         model.addColumn("Value as U32");
         model.addColumn("Value as Float");
+        model.addColumn("Value as ASCII");
         for (int i = 0; i < 65536; i++)
         {
             if (registers[i] != null)
@@ -531,6 +534,7 @@ public class RegisterScannerFrame extends javax.swing.JFrame {
                 String i16val = "" + (currentElement[0]*256 + currentElement[1]);
                 String i32val = "";
                 String floatval = "";
+                String asciival = new String(currentElement);
                 if (i+1 < 65536 && registers[i+1] != null)
                 {
                     byte[] nextElement = (byte[])registers[i+1];
@@ -554,7 +558,7 @@ public class RegisterScannerFrame extends javax.swing.JFrame {
                 }
                 if (!(bothZeros && hideZeroValCheckbox.isSelected()))
                 {
-                    model.addRow(new Object[] {"" + i, i16val, i32val, floatval});
+                    model.addRow(new Object[] {"" + i, i16val, i32val, floatval, asciival});
                 }
             }
         }
