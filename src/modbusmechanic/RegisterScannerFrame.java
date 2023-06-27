@@ -84,6 +84,8 @@ public class RegisterScannerFrame extends javax.swing.JFrame {
         startRegisterField = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         endRegisterField = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        responseTimeoutField = new javax.swing.JTextField();
         jPanel7 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         hideZeroValCheckbox = new javax.swing.JCheckBox();
@@ -107,7 +109,6 @@ public class RegisterScannerFrame extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(486, 450));
 
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.Y_AXIS));
 
@@ -252,9 +253,16 @@ public class RegisterScannerFrame extends javax.swing.JFrame {
         jLabel6.setText("End register:");
         jPanel5.add(jLabel6);
 
-        endRegisterField.setColumns(3);
+        endRegisterField.setColumns(4);
         endRegisterField.setText("65535");
         jPanel5.add(endRegisterField);
+
+        jLabel7.setText("Response timeout (ms):");
+        jPanel5.add(jLabel7);
+
+        responseTimeoutField.setColumns(4);
+        responseTimeoutField.setText("100");
+        jPanel5.add(responseTimeoutField);
 
         jPanel1.add(jPanel5);
 
@@ -435,7 +443,19 @@ public class RegisterScannerFrame extends javax.swing.JFrame {
                 }
                 if (master != null)
                 {
-                    master.setResponseTimeout(50);
+                    int responseTimeout = 100;
+                    try
+                    {
+                        responseTimeout = Integer.parseInt(responseTimeoutField.getText());
+                    }
+                    catch (Exception e)
+                    {
+                        if (ModbusMechanic.debug)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+                    master.setResponseTimeout(responseTimeout);
                     try
                     {
                         startIndex = Integer.parseInt(startRegisterField.getText());
@@ -642,6 +662,7 @@ public class RegisterScannerFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JPanel jPanel1;
@@ -656,6 +677,7 @@ public class RegisterScannerFrame extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> paritySelector;
     private javax.swing.JTextField portField;
     private javax.swing.JTable registerTable;
+    private javax.swing.JTextField responseTimeoutField;
     private javax.swing.JRadioButton rtuMsgButton;
     private javax.swing.JPanel serialPanel;
     private javax.swing.JTextField slaveNodeField;

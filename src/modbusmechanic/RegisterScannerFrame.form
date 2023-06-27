@@ -331,8 +331,19 @@
             </Component>
             <Component class="javax.swing.JTextField" name="endRegisterField">
               <Properties>
-                <Property name="columns" type="int" value="3"/>
+                <Property name="columns" type="int" value="4"/>
                 <Property name="text" type="java.lang.String" value="65535"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel7">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Response timeout (ms):"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="responseTimeoutField">
+              <Properties>
+                <Property name="columns" type="int" value="4"/>
+                <Property name="text" type="java.lang.String" value="100"/>
               </Properties>
             </Component>
           </SubComponents>
