@@ -54,6 +54,8 @@ public class ModbusMechanic {
     public static int RESPONSE_TYPE_UINT32 = 4;
     public static int RESPONSE_TYPE_RAW = 5;
     public static int RESPONSE_TYPE_BOOLEAN = 6;
+    public static int RESPONSE_TYPE_SINT16 = 7;
+    public static int RESPONSE_TYPE_SINT32 = 8;
     public static int READ_HOLDING_REGISTER_CODE = 3;
     public static int READ_COILS_CODE = 1;
     public static int READ_DI_CODE = 2;
@@ -735,5 +737,19 @@ public class ModbusMechanic {
     {
         int[] regs = DataUtils.BeToIntArray(buf);
         return ((long)regs[0]*65536) + (long)regs[1];
+    }
+    public static int bytesToShort(byte[] buf)
+    {
+        ByteBuffer bb = ByteBuffer.allocate(2);
+        bb.put(buf);
+        bb.rewind();
+        return bb.getShort();
+    }
+    public static int bytesToSint32(byte[] buf)
+    {
+        ByteBuffer bb = ByteBuffer.allocate(4);
+        bb.put(buf);
+        bb.rewind();
+        return bb.getInt();
     }
 }

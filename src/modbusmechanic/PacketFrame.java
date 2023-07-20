@@ -150,6 +150,9 @@ public class PacketFrame extends javax.swing.JFrame {
         asciiReadButton = new javax.swing.JRadioButton();
         u16ReadButton = new javax.swing.JRadioButton();
         u32ReadButton = new javax.swing.JRadioButton();
+        messagePanel3 = new javax.swing.JPanel();
+        s16ReadButton = new javax.swing.JRadioButton();
+        s32ReadButton = new javax.swing.JRadioButton();
         messagePanel2 = new javax.swing.JPanel();
         transmitPacketButton = new javax.swing.JButton();
         jSeparator4 = new javax.swing.JSeparator();
@@ -418,6 +421,26 @@ public class PacketFrame extends javax.swing.JFrame {
         messagePanel.add(u32ReadButton);
 
         getContentPane().add(messagePanel);
+
+        buttonGroup1.add(s16ReadButton);
+        s16ReadButton.setText(bundle.getString("PacketFrame.s16ReadButton.text")); // NOI18N
+        s16ReadButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                s16ReadButtonActionPerformed(evt);
+            }
+        });
+        messagePanel3.add(s16ReadButton);
+
+        buttonGroup1.add(s32ReadButton);
+        s32ReadButton.setText(bundle.getString("PacketFrame.s32ReadButton.text")); // NOI18N
+        s32ReadButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                s32ReadButtonActionPerformed(evt);
+            }
+        });
+        messagePanel3.add(s32ReadButton);
+
+        getContentPane().add(messagePanel3);
 
         transmitPacketButton.setText(bundle.getString("PacketFrame.transmitPacketButton.text")); // NOI18N
         transmitPacketButton.addActionListener(new java.awt.event.ActionListener() {
@@ -747,6 +770,18 @@ public class PacketFrame extends javax.swing.JFrame {
                 values = java.nio.ByteBuffer.allocate(8).putLong(intValue).array();
                 values = java.util.Arrays.copyOfRange(values, 4, 8);
             }
+            if (s16ReadButton.isSelected())
+            {
+                lastField = "Value";
+                short shortValue = Short.parseShort(valueField.getText());
+                values = java.nio.ByteBuffer.allocate(2).putShort(shortValue).array();
+            }
+            if (s32ReadButton.isSelected())
+            {
+                lastField = "Value";
+                int intValue = Integer.parseInt(valueField.getText());
+                values = java.nio.ByteBuffer.allocate(8).putInt(intValue).array();
+            }
             if (asciiReadButton.isSelected())
             {
                 values = valueField.getText().getBytes();
@@ -811,6 +846,14 @@ public class PacketFrame extends javax.swing.JFrame {
         if (u32ReadButton.isSelected())
         {
             lastResponseType = ModbusMechanic.RESPONSE_TYPE_UINT32;
+        }
+        if (s16ReadButton.isSelected())
+        {
+            lastResponseType = ModbusMechanic.RESPONSE_TYPE_SINT16;
+        }
+        if (s32ReadButton.isSelected())
+        {
+            lastResponseType = ModbusMechanic.RESPONSE_TYPE_SINT32;
         }
         if (customMessageButton.isSelected())
         {
@@ -942,6 +985,14 @@ public class PacketFrame extends javax.swing.JFrame {
             if (lastResponseType == ModbusMechanic.RESPONSE_TYPE_UINT32)
             {
                  valueLabel.setText("Response value: " + ModbusMechanic.bytesToInt32(result));
+            }
+            if (lastResponseType == ModbusMechanic.RESPONSE_TYPE_SINT16)
+            {
+                 valueLabel.setText("Response value: " + ModbusMechanic.bytesToShort(result));
+            }
+            if (lastResponseType == ModbusMechanic.RESPONSE_TYPE_SINT32)
+            {
+                 valueLabel.setText("Response value: " + ModbusMechanic.bytesToSint32(result));
             }
             if (lastResponseType == ModbusMechanic.RESPONSE_TYPE_BOOLEAN)
             {
@@ -1393,6 +1444,8 @@ public class PacketFrame extends javax.swing.JFrame {
             readFloatButton.setEnabled(false);
             u16ReadButton.setEnabled(false);
             u32ReadButton.setEnabled(false);
+            s16ReadButton.setEnabled(false);
+            s32ReadButton.setEnabled(false);
             asciiReadButton.setEnabled(false);
             transactionField.setEnabled(false);
             protoIdField.setEnabled(false);
@@ -1427,6 +1480,7 @@ public class PacketFrame extends javax.swing.JFrame {
             readFloatButton.setEnabled(false);
             asciiReadButton.setEnabled(false);
             u32ReadButton.setEnabled(false);
+            s32ReadButton.setEnabled(false);
             quantityField.setText("1");
             quantityField.setEnabled(false);
             if (u16ReadButton.isSelected())
@@ -1441,6 +1495,8 @@ public class PacketFrame extends javax.swing.JFrame {
             readFloatButton.setEnabled(true);
             u16ReadButton.setEnabled(true);
             u32ReadButton.setEnabled(true);
+            s16ReadButton.setEnabled(true);
+            s32ReadButton.setEnabled(true);
             asciiReadButton.setEnabled(true);
             if (customMessageButton.isSelected())
             {
@@ -1479,6 +1535,20 @@ public class PacketFrame extends javax.swing.JFrame {
                 quantityField.setText("1");
             }
             if (u32ReadButton.isSelected())
+            {
+                protoIdField.setEnabled(false);
+                transactionField.setEnabled(false);
+                quantityField.setEnabled(false);
+                quantityField.setText("2");
+            }
+            if (s16ReadButton.isSelected())
+            {
+                protoIdField.setEnabled(false);
+                transactionField.setEnabled(false);
+                quantityField.setEnabled(false);
+                quantityField.setText("1");
+            }
+            if (s32ReadButton.isSelected())
             {
                 protoIdField.setEnabled(false);
                 transactionField.setEnabled(false);
@@ -1687,6 +1757,14 @@ public class PacketFrame extends javax.swing.JFrame {
         (new RegisterScannerFrame()).setVisible(true);
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
+    private void s16ReadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_s16ReadButtonActionPerformed
+        fireSelectionEvent();
+    }//GEN-LAST:event_s16ReadButtonActionPerformed
+
+    private void s32ReadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_s32ReadButtonActionPerformed
+        fireSelectionEvent();
+    }//GEN-LAST:event_s32ReadButtonActionPerformed
+
     private DefaultComboBoxModel getPortNames()
     {
         String[] portNames =  ModbusMechanic.getPortNames();
@@ -1788,6 +1866,7 @@ public class PacketFrame extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator6;
     private javax.swing.JPanel messagePanel;
     private javax.swing.JPanel messagePanel2;
+    private javax.swing.JPanel messagePanel3;
     private javax.swing.JPanel modbusPanel;
     private javax.swing.JPanel modbusPanel2;
     private javax.swing.JRadioButton offButton;
@@ -1803,6 +1882,8 @@ public class PacketFrame extends javax.swing.JFrame {
     private javax.swing.JPanel responsePanel;
     private javax.swing.JRadioButton rtuMsgButton;
     private javax.swing.JMenuItem rtuSerialMonitorItem;
+    private javax.swing.JRadioButton s16ReadButton;
+    private javax.swing.JRadioButton s32ReadButton;
     private javax.swing.JPanel serialPanel;
     private javax.swing.JTextField slaveNodeField;
     private javax.swing.JMenuItem startModbusBridge;
