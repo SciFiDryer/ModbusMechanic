@@ -547,7 +547,7 @@ public class RegisterScannerFrame extends javax.swing.JFrame {
                 {
                     currentElement = ModbusMechanic.byteSwap(currentElement);
                 }
-                if (currentElement[0] > 0 || currentElement[1] > 0)
+                if (currentElement[0] != 0 || currentElement[1] != 0)
                 {
                     bothZeros = false;
                 }
@@ -558,7 +558,7 @@ public class RegisterScannerFrame extends javax.swing.JFrame {
                 if (i+1 < 65536 && registers[i+1] != null)
                 {
                     byte[] nextElement = (byte[])registers[i+1];
-                    if (nextElement[0] > 0 || nextElement[1] > 0)
+                    if (nextElement[0] != 0 || nextElement[1] != 0)
                     {
                         bothZeros = false;
                     }

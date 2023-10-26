@@ -3,3 +3,5 @@
 /release/
 /bookmarks.csv
 .nextupdatetime
+/nbproject/private/
+/build/
