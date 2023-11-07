@@ -33,6 +33,10 @@ public class RegisterScannerFrame extends javax.swing.JFrame {
     ProgressMonitor pm = null;
     DefaultTableModel model = null;
     Object[] registers = null;
+    int intFilterValue = 0;
+    double doubleFilterValue = 0;
+    boolean intFilter = false;
+    boolean doubleFilter = false;
     /**
      * Creates new form RegisterScannerFrame
      */
@@ -91,6 +95,12 @@ public class RegisterScannerFrame extends javax.swing.JFrame {
         hideZeroValCheckbox = new javax.swing.JCheckBox();
         byteSwapCheckbox = new javax.swing.JCheckBox();
         wordSwapCheckbox = new javax.swing.JCheckBox();
+        jPanel8 = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        filterField = new javax.swing.JTextField();
+        u16FilterEnabled = new javax.swing.JCheckBox();
+        u32FilterEnabled = new javax.swing.JCheckBox();
+        floatFilterEnabled = new javax.swing.JCheckBox();
         jPanel4 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
@@ -294,6 +304,51 @@ public class RegisterScannerFrame extends javax.swing.JFrame {
         jPanel7.add(wordSwapCheckbox);
 
         jPanel1.add(jPanel7);
+
+        jLabel8.setText("Search for register value:");
+        jPanel8.add(jLabel8);
+
+        filterField.setColumns(5);
+        filterField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filterFieldActionPerformed(evt);
+            }
+        });
+        filterField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                filterFieldKeyReleased(evt);
+            }
+        });
+        jPanel8.add(filterField);
+
+        u16FilterEnabled.setSelected(true);
+        u16FilterEnabled.setText("Match U16");
+        u16FilterEnabled.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                u16FilterEnabledActionPerformed(evt);
+            }
+        });
+        jPanel8.add(u16FilterEnabled);
+
+        u32FilterEnabled.setSelected(true);
+        u32FilterEnabled.setText("Match U32");
+        u32FilterEnabled.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                u32FilterEnabledActionPerformed(evt);
+            }
+        });
+        jPanel8.add(u32FilterEnabled);
+
+        floatFilterEnabled.setSelected(true);
+        floatFilterEnabled.setText("Match Float");
+        floatFilterEnabled.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                floatFilterEnabledActionPerformed(evt);
+            }
+        });
+        jPanel8.add(floatFilterEnabled);
+
+        jPanel1.add(jPanel8);
 
         jButton1.setText("Scan");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -531,6 +586,7 @@ public class RegisterScannerFrame extends javax.swing.JFrame {
     }
     public void updateTable()
     {
+        long startTime = System.currentTimeMillis();
         model = new DefaultTableModel();
         model.addColumn("Register");
         model.addColumn("Value as U16");
@@ -552,9 +608,16 @@ public class RegisterScannerFrame extends javax.swing.JFrame {
                     bothZeros = false;
                 }
                 String i16val = "" + (currentElement[0]*256 + currentElement[1]);
+                boolean int16FilterMatch = false;
+                if (u16FilterEnabled.isSelected() && intFilter && currentElement[0]*256 + currentElement[1] == intFilterValue)
+                {
+                    int16FilterMatch = true;
+                }
                 String i32val = "";
                 String floatval = "";
                 String asciival = new String(currentElement);
+                boolean int32FilterMatch = false;
+                boolean doubleFilterMatch = false;
                 if (i+1 < 65536 && registers[i+1] != null)
                 {
                     byte[] nextElement = (byte[])registers[i+1];
@@ -574,15 +637,39 @@ public class RegisterScannerFrame extends javax.swing.JFrame {
                         buf = ModbusMechanic.byteSwap(buf);
                     }
                     i32val = "" + ModbusMechanic.bytesToInt32(buf);
+                    if (u32FilterEnabled.isSelected() && intFilter && ModbusMechanic.bytesToInt32(buf) == intFilterValue)
+                    {
+                        int32FilterMatch = true;
+                    }
                     floatval = "" + DataUtils.toFloat(buf);
+                    if (floatFilterEnabled.isSelected() && doubleFilter && DataUtils.toFloat(buf) == (float)doubleFilterValue)
+                    {
+                        doubleFilterMatch = true;
+                    }
                 }
                 if (!(bothZeros && hideZeroValCheckbox.isSelected()))
                 {
-                    model.addRow(new Object[] {"" + i, i16val, i32val, floatval, asciival});
+                    boolean hideRow = false;
+                    if (intFilter || doubleFilter)
+                    {
+                        hideRow = true;
+                        if (int16FilterMatch || int32FilterMatch || doubleFilterMatch)
+                        {
+                            hideRow = false;
+                        }
+                    }
+                    if (!hideRow)
+                    {
+                        model.addRow(new Object[] {"" + i, i16val, i32val, floatval, asciival});
+                    }
                 }
             }
         }
         registerTable.setModel(model);
+        if (ModbusMechanic.debug)
+        {
+            System.out.println("Table update completed in " + (System.currentTimeMillis() - startTime) + "ms");
+        }
     }
     private void displayTtySerialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_displayTtySerialActionPerformed
 
@@ -600,6 +687,59 @@ public class RegisterScannerFrame extends javax.swing.JFrame {
     private void hideZeroValCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hideZeroValCheckboxActionPerformed
         updateTable();
     }//GEN-LAST:event_hideZeroValCheckboxActionPerformed
+
+    private void filterFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_filterFieldActionPerformed
+
+    private void filterFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_filterFieldKeyReleased
+        intFilter = false;
+        doubleFilter = false;
+        if (ModbusMechanic.debug)
+        {
+            System.out.println("Got filter key event");
+        }
+        if (!filterField.getText().equals(""))
+        {     
+            try
+            {
+                intFilterValue = Integer.parseInt(filterField.getText());
+                intFilter = true;
+            }
+            catch (Exception e)
+            {
+                if (ModbusMechanic.debug)
+                {
+                    e.printStackTrace();
+                }
+            }
+            try
+            {
+                doubleFilterValue = Double.parseDouble(filterField.getText());
+                doubleFilter = true;
+            }
+            catch (Exception e)
+            {
+                if (ModbusMechanic.debug)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+        updateTable();
+    }//GEN-LAST:event_filterFieldKeyReleased
+
+    private void u16FilterEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_u16FilterEnabledActionPerformed
+        updateTable();
+    }//GEN-LAST:event_u16FilterEnabledActionPerformed
+
+    private void u32FilterEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_u32FilterEnabledActionPerformed
+        updateTable();
+    }//GEN-LAST:event_u32FilterEnabledActionPerformed
+
+    private void floatFilterEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_floatFilterEnabledActionPerformed
+        updateTable();
+    }//GEN-LAST:event_floatFilterEnabledActionPerformed
 
     /**
      * @param args the command line arguments
@@ -646,6 +786,8 @@ public class RegisterScannerFrame extends javax.swing.JFrame {
     private javax.swing.JTextField destHostField;
     private javax.swing.JCheckBox displayTtySerial;
     private javax.swing.JTextField endRegisterField;
+    private javax.swing.JTextField filterField;
+    private javax.swing.JCheckBox floatFilterEnabled;
     private javax.swing.JComboBox<String> functionSelector;
     private javax.swing.JCheckBox hideZeroValCheckbox;
     private javax.swing.JButton jButton1;
@@ -663,6 +805,7 @@ public class RegisterScannerFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JPanel jPanel1;
@@ -672,6 +815,7 @@ public class RegisterScannerFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel modbusPanel;
     private javax.swing.JComboBox<String> paritySelector;
@@ -684,6 +828,8 @@ public class RegisterScannerFrame extends javax.swing.JFrame {
     private javax.swing.JTextField startRegisterField;
     private javax.swing.JTextField stopBitsField;
     private javax.swing.JRadioButton tcpMsgButton;
+    private javax.swing.JCheckBox u16FilterEnabled;
+    private javax.swing.JCheckBox u32FilterEnabled;
     private javax.swing.JCheckBox wordSwapCheckbox;
     // End of variables declaration//GEN-END:variables
 }
