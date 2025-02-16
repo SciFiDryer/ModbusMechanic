@@ -59,7 +59,7 @@ public class BridgeManager{
     {
         try
         {
-            XMLDecoder xmld = new XMLDecoder(new FileInputStream(fileName));
+            XMLDecoder xmld = new XMLDecoder(new FileInputStream(fileName), null, null, new FilteredClassLoader());
             mappingRecords = (ArrayList<BridgeMappingRecord>)xmld.readObject();
             xmld.close();
         }
@@ -212,6 +212,22 @@ public class BridgeManager{
             driverList.get(i).shutdown();
         }
     }
-    
+    public class FilteredClassLoader extends ClassLoader
+    {
+        
+        public Class<?> loadClass(String name) throws ClassNotFoundException
+        {
+            System.out.println("got load class " + name);
+            if (name.equals("java.beans.XMLDecoder") || name.equals("java.util.ArrayList") || name.startsWith("modbusmechanic."))
+            {
+                return super.loadClass(name);
+            }
+            System.out.println("Insecure deserialiaztion attempt, exiting now");
+            System.exit(0);
+            return null;
+
+        }
+    }
+
     
 }
