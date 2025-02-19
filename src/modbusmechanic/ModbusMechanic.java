@@ -47,7 +47,7 @@ public class ModbusMechanic {
      * @param args the command line arguments
      */
     //version in numeric form major,minor,rev
-    public static int[] versionArray = { 3,0,0 };
+    public static int[] versionArray = { 3,1,0 };
     public static int RESPONSE_TYPE_ASCII = 1;
     public static int RESPONSE_TYPE_FLOAT = 2;
     public static int RESPONSE_TYPE_UINT16 = 3;
