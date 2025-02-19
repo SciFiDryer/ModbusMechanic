@@ -217,7 +217,7 @@ public class BridgeManager{
         
         public Class<?> loadClass(String name) throws ClassNotFoundException
         {
-            if (ModbusMechanic.debug)
+            if (modbusmechanic.ModbusMechanic.debug)
             {
                 System.out.println("Debug: got load class " + name);
             }
