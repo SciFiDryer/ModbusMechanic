@@ -102,7 +102,7 @@ To obtain verbose debugging information start ModbusMechanic with the debug opti
   ```
 ## Latest release
 
-[ModbusMechanic.v3.0.zip](https://github.com/SciFiDryer/ModbusMechanic/releases/download/v3.0/ModbusMechanic.v3.0.zip)
+[ModbusMechanic.v3.1.zip](https://github.com/SciFiDryer/ModbusMechanic/releases/download/v3.1/ModbusMechanic.v3.1.zip)
 
 ## Completed features and planned features in GUI
 
