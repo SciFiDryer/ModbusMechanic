@@ -886,9 +886,9 @@ public class PacketFrame extends javax.swing.JFrame {
             line = br.readLine();
             while (line != null)
             {
-                //storing by position for now friendlyname,tcp/rtu,port,baud,databits,stopbits,parity,ip,slavenode,function,register,transaction,protocolid,quantity,messagetype,byteswap,wordswap
+                //storing by position for now friendlyname,tcp/rtu,port,baud,databits,stopbits,parity,ip,slavenode,function,register,transaction,protocolid,quantity,messagetype,byteswap,wordswap,port
                 String[] bookmark = line.split(",");
-                if (bookmark.length== 17)
+                if (bookmark.length >= 17)
                 {
                     bookmarkList.add(bookmark);
                 }
@@ -1079,7 +1079,10 @@ public class PacketFrame extends javax.swing.JFrame {
         }
         catch (NumberFormatException e)
         {
-            System.err.println("Unparsable bookmark field found");
+            if (ModbusMechanic.debug)
+            {
+                System.err.println("Unparsable bookmark field found. Field contents {" + field + "}");
+            }
         }
         return "";
     }
@@ -1180,6 +1183,14 @@ public class PacketFrame extends javax.swing.JFrame {
         {
             destHostField.setText(currentBookmark[7]);
         }
+        if (portField.isEnabled() && currentBookmark.length > 17)
+        {
+            String portText = parseFieldToText(currentBookmark[17]);
+            if (!portText.equals(""))
+            {
+                portField.setText(portText);
+            }
+        }
         slaveNodeField.setText(parseFieldToText(currentBookmark[8]));
         functionCodeField.setText(parseFieldToText(currentBookmark[9]));
         if (currentBookmark[9].equals("3"))
@@ -1236,7 +1247,7 @@ public class PacketFrame extends javax.swing.JFrame {
     public void saveBookmark(int addIndex, String friendlyName)
     {
         
-        String[] currentBookmark = new String[17];
+        String[] currentBookmark = new String[18];
         
         currentBookmark[0] = friendlyName;
         if (tcpMsgButton.isSelected())
@@ -1357,6 +1368,7 @@ public class PacketFrame extends javax.swing.JFrame {
         }
         currentBookmark[15] = byteSwap;
         currentBookmark[16] = wordSwap;
+        currentBookmark[17] = portField.getText();
         bookmarkList.add(addIndex, currentBookmark);
         
         writeBookmarks();
@@ -1370,7 +1382,7 @@ public class PacketFrame extends javax.swing.JFrame {
         try
         {
             PrintWriter pw = new PrintWriter(new FileWriter("bookmarks.csv"));
-            pw.println("friendlyname,tcp/rtu,port,baud,databits,stopbits,parity,ip,slavenode,function,register,transaction,protocolid,quantity,messagetype,byteswap,wordswap");
+            pw.println("friendlyname,tcp/rtu,port,baud,databits,stopbits,parity,ip,slavenode,function,register,transaction,protocolid,quantity,messagetype,byteswap,wordswap,port");
             for (int i = 0; i < bookmarkList.size(); i++)
             {
                 String theLine = bookmarkList.get(i)[0];
